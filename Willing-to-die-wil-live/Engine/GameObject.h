@@ -11,6 +11,8 @@ class ParticleSystem;
 class Terrain;
 class BaseCollider;
 class Animator;
+class Player;
+class TestCameraScript;
 
 class GameObject : public Object, public enable_shared_from_this<GameObject>
 {
@@ -34,6 +36,8 @@ public:
 	shared_ptr<Terrain> GetTerrain();
 	shared_ptr<BaseCollider> GetCollider();
 	shared_ptr<Animator> GetAnimator();
+	shared_ptr<Player> GetPlayer();
+	shared_ptr<TestCameraScript> GetTestCameraScript();
 
 	void AddComponent(shared_ptr<Component> component);
 

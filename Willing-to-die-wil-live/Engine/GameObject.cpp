@@ -9,6 +9,8 @@
 #include "Terrain.h"
 #include "BaseCollider.h"
 #include "Animator.h"
+#include "Player.h"
+#include "TestCameraScript.h"
 
 GameObject::GameObject() : Object(OBJECT_TYPE::GAMEOBJECT)
 {
@@ -138,6 +140,18 @@ shared_ptr<Animator> GameObject::GetAnimator()
 {
 	shared_ptr<Component> component = GetFixedComponent(COMPONENT_TYPE::ANIMATOR);
 	return static_pointer_cast<Animator>(component);
+}
+
+shared_ptr<Player> GameObject::GetPlayer()
+{
+	shared_ptr<Component> component = GetFixedComponent(COMPONENT_TYPE::PLAYER);
+	return static_pointer_cast<Player>(component);
+}
+
+shared_ptr<TestCameraScript> GameObject::GetTestCameraScript()
+{
+	shared_ptr<Component> component = GetFixedComponent(COMPONENT_TYPE::TESTCAMERASCRIPT);
+	return static_pointer_cast<TestCameraScript>(component);
 }
 
 void GameObject::AddComponent(shared_ptr<Component> component)

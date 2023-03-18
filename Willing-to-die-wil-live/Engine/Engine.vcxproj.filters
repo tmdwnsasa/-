@@ -156,6 +156,9 @@
     <ClInclude Include="Animator.h">
       <Filter>Object\Component</Filter>
     </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Object\Component</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TableDescriptorHeap.cpp">
@@ -279,6 +282,9 @@
       <Filter>Utils</Filter>
     </ClCompile>
     <ClCompile Include="Animator.cpp">
+      <Filter>Object\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
       <Filter>Object\Component</Filter>
     </ClCompile>
   </ItemGroup>

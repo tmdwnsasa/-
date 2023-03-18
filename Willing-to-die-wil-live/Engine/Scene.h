@@ -14,6 +14,8 @@ public:
 
 	shared_ptr<class Camera> GetMainCamera();
 
+	void GetPlayerPosToCam(wstring objectname);
+
 	void Render();
 
 	void ClearRTV();
