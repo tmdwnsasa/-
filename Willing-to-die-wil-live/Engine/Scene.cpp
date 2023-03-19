@@ -7,6 +7,8 @@
 #include "Light.h"
 #include "Engine.h"
 #include "Resources.h"
+#include "Transform.h"
+#include "TestCameraScript.h"
 
 void Scene::Awake()
 {
@@ -37,6 +39,8 @@ void Scene::LateUpdate()
 	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
 	{
 		gameObject->LateUpdate();
+		if (gameObject->GetName() == L"Main_Camera")
+			GetPlayerPosToCam(L"Main_Camera");
 	}
 }
 
@@ -204,4 +208,17 @@ void Scene::RemoveGameObject(shared_ptr<GameObject> gameObject)
 	auto findIt = std::find(_gameObjects.begin(), _gameObjects.end(), gameObject);
 	if (findIt != _gameObjects.end())
 		_gameObjects.erase(findIt);
+}
+
+void Scene::GetPlayerPosToCam(wstring objectname)
+{
+	Vec3 PlayerPos;
+
+	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
+		if (gameObject->GetName() == L"Player")
+			PlayerPos = gameObject->GetTransform()->GetLocalPosition();
+
+	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
+		if (gameObject->GetName() == L"Main_Camera")
+			gameObject->GetTransform()->SetLocalPosition(PlayerPos);
 }
