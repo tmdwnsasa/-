@@ -62,8 +62,10 @@ private:
 	inline KEY_STATE GetState(KEY_TYPE key) { return _states[static_cast<uint8>(key)]; }
 
 private:
-	HWND _hwnd;
-	vector<KEY_STATE> _states;
-	POINT _mousePos = {};
+	HWND						_hwnd;
+	vector<KEY_STATE>			_states;
+	POINT						_mousePos = {};
+	POINT						_oldmousePos;
+	float						cxdelta = 0.0f, cydelta = 0.0f;
 };
 

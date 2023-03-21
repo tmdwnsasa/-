@@ -82,9 +82,12 @@ void Engine::ResizeWindow(int32 width, int32 height)
 void Engine::ShowFps()
 {
 	uint32 fps = GET_SINGLE(Timer)->GetFps();
+	POINT _mousePos = {};
+	::GetCursorPos(&_mousePos);
+	::ScreenToClient(GEngine->GetWindow().hwnd, &_mousePos);
 
 	WCHAR text[100] = L"";
-	::wsprintf(text, L"FPS : %d", fps);
+	::wsprintf(text, L"FPS : %d,  X : %d, Y : %d", fps, _mousePos.x, _mousePos.y);
 
 	::SetWindowText(_window.hwnd, text);
 }
