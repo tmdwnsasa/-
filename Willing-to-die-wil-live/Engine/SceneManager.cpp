@@ -19,6 +19,8 @@
 #include "TestDragon.h"
 #include "Player.h"
 
+#include <iostream>
+
 void SceneManager::Update()
 {
 	if (_activeScene == nullptr)
@@ -294,19 +296,47 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 	{
 		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\batman.fbx");
 
+
+		
+		
 		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
 
 		for (auto& gameObject : gameObjects)
 		{
 			gameObject->SetName(L"Player");
 			gameObject->SetCheckFrustum(false);
-			gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 100.f));
+			gameObject->GetTransform()->SetLocalPosition(Vec3(-100.f, -100.f, -100.f));
 			gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
 			scene->AddGameObject(gameObject);
 			gameObject->AddComponent(make_shared<Player>());
 		}
+	
 	}
+
+	{
+		shared_ptr<MeshData> ZombieMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\kkk.fbx");
+
+		for (int32 i = 0; i < 2; i++)
+		{
+			vector<shared_ptr<GameObject>> gameObjects = ZombieMesh->Instantiate();
+
+			for (auto& gameObject : gameObjects)
+			{
+				gameObject->SetName(L"Riple");
+				gameObject->SetCheckFrustum(false);
+				gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 100.f + 50 * i));
+				gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+				gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
+				scene->AddGameObject(gameObject);
+			}
+
+		}
+		
+			
+	}
+
+	
 #pragma endregion
 
 	return scene;

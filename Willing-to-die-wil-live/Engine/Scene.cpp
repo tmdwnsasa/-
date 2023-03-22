@@ -9,6 +9,8 @@
 #include "Resources.h"
 #include "Transform.h"
 #include "TestCameraScript.h"
+#include "MeshRenderer.h"
+#include "Material.h"
 
 void Scene::Awake()
 {
@@ -28,6 +30,33 @@ void Scene::Start()
 
 void Scene::Update()
 {
+	map<wstring, pair<uint32,vector<shared_ptr<GameObject>>>> name;
+	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
+	{
+		name[gameObject->GetName()].first++;
+		name[gameObject->GetName()].second.push_back(gameObject);
+	}
+
+	for (auto& object : name)
+	{
+		if (object.first != L"")
+		{
+			if (object.second.first > 1)
+			{
+				for (auto& nameObject : object.second.second)
+					if (nameObject->GetMeshRenderer() != NULL)
+						nameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 1);
+			}
+
+			else
+				if ((*object.second.second.begin())->GetMeshRenderer() != NULL)
+				{
+					(*object.second.second.begin())->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
+				}
+
+		}
+	}
+	
 	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
 	{
 		gameObject->Update();
