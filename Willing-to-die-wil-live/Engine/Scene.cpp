@@ -14,7 +14,6 @@
 
 void Scene::Awake()
 {
-	CursorClipping();
 	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
 	{
 		gameObject->Awake();
@@ -37,6 +36,7 @@ void Scene::Update()
 		name[gameObject->GetName()].first++;
 		name[gameObject->GetName()].second.push_back(gameObject);
 	}
+	//CursorClipping();
 
 	for (auto& object : name)
 	{

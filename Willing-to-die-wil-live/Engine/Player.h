@@ -14,9 +14,15 @@ enum class PLAYER_STATE : uint8
 class Player : public MonoBehaviour
 {
 public:
+	Player();
+	virtual ~Player();
+public:
 	virtual void Update() override;
+	void PlayerRotate();
 
 private:
-	float			_speed = 100.0f;
+	float		_speed = 100.0f;
+	POINT		_mousePos = {};
+	POINT		_oldMousePos = {};
+	float		cxdelta = 0.f;
 };
-

@@ -11,7 +11,6 @@
 TestCameraScript::TestCameraScript()
 {
 	_oldMousePos = { GEngine->GetWindow().width/2, GEngine->GetWindow().height/2};
-	//::ScreenToClient(GEngine->GetWindow().hwnd, &_oldMousePos);
 }
 
 TestCameraScript::~TestCameraScript()
@@ -20,16 +19,8 @@ TestCameraScript::~TestCameraScript()
 
 void TestCameraScript::Update()
 {
-	Vec3 rotation = GetTransform()->GetLocalRotation();
-	POINT tempForSetCursor = _oldMousePos;
-	_mousePos = INPUT->GetMousePos();
-	cxdelta += (_mousePos.x - _oldMousePos.x) / 300.f;
-	cydelta += (_mousePos.y - _oldMousePos.y) / 300.f;
-	ClientToScreen(GEngine->GetWindow().hwnd, &tempForSetCursor);
-	SetCursorPos(tempForSetCursor.x, tempForSetCursor.y);
-	rotation.x = cydelta;
-	rotation.y = cxdelta;
-	GetTransform()->SetLocalRotation(rotation);
+	if(_isOn == true)
+		CameraRotation();
 }
 
 void TestCameraScript::LateUpdate()
@@ -76,11 +67,41 @@ void TestCameraScript::LateUpdate()
 		GetTransform()->SetLocalRotation(rotation);
 	}
 
+	if (INPUT->GetButtonDown(KEY_TYPE::LBUTTON))
+	{
+		if (_isOn == false)
+		{
+			POINT tempForSetCursor = _oldMousePos;
+			ClientToScreen(GEngine->GetWindow().hwnd, &tempForSetCursor);
+			SetCursorPos(tempForSetCursor.x, tempForSetCursor.y);
+			_isOn = true;
+		}
+	}
+
 	if (INPUT->GetButtonDown(KEY_TYPE::RBUTTON))
 	{
 		const POINT& pos = INPUT->GetMousePos();
 		GET_SINGLE(SceneManager)->Pick(pos.x, pos.y);
 	}
 
+	if (INPUT->GetButtonDown(KEY_TYPE::TAB))
+	{
+		_isOn = false;
+	}
+
 	GetTransform()->SetLocalPosition(pos);
+}
+
+void TestCameraScript::CameraRotation()
+{
+	Vec3 rotation = GetTransform()->GetLocalRotation();
+	POINT tempForSetCursor = _oldMousePos;
+	_mousePos = INPUT->GetMousePos();
+	cxdelta += (_mousePos.x - _oldMousePos.x) / 300.f;
+	cydelta += (_mousePos.y - _oldMousePos.y) / 300.f;
+	ClientToScreen(GEngine->GetWindow().hwnd, &tempForSetCursor);
+	SetCursorPos(tempForSetCursor.x, tempForSetCursor.y);
+	rotation.x = cydelta;
+	rotation.y = cxdelta;
+	GetTransform()->SetLocalRotation(rotation);
 }

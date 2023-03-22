@@ -1,9 +1,20 @@
 #include "pch.h"
+#include "Engine.h"
 #include "Player.h"
 #include "Input.h"
 #include "Animator.h"
 #include "Transform.h"
 #include "Timer.h"
+
+Player::Player()
+{
+	_oldMousePos = { GEngine->GetWindow().width / 2, GEngine->GetWindow().height / 2 };
+}
+
+Player::~Player()
+{
+
+}
 
 void Player::Update()
 {
@@ -38,6 +49,15 @@ void Player::Update()
 		int32 index = (currentIndex - 1 + count) % count;
 		GetAnimator()->Play(index);
 	}
-
+	PlayerRotate();
 	GetTransform()->SetLocalPosition(pos);
+}
+
+void Player::PlayerRotate()
+{
+	Vec3 rotation = GetTransform()->GetLocalRotation();
+	_mousePos = INPUT->GetMousePos();
+	cxdelta += (_mousePos.x - _oldMousePos.x) / 300.f;
+	rotation.y = cxdelta;
+	GetTransform()->SetLocalRotation(rotation);
 }
