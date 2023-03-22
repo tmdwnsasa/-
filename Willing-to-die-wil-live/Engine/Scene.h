@@ -27,6 +27,7 @@ public:
 
 	void RenderForward();
 
+	void CursorClipping();
 private:
 	void PushLightData();
 
@@ -40,5 +41,8 @@ private:
 	vector<shared_ptr<GameObject>>		_gameObjects;
 	vector<shared_ptr<class Camera>>	_cameras;
 	vector<shared_ptr<class Light>>		_lights;
+
+	bool			_clipcursor = false;
+	RECT			rc;
 };
 

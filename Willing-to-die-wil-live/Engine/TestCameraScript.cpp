@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "TestCameraScript.h"
+#include "Engine.h"
 #include "Transform.h"
 #include "Camera.h"
 #include "GameObject.h"
@@ -9,10 +10,26 @@
 
 TestCameraScript::TestCameraScript()
 {
+	_oldMousePos = { GEngine->GetWindow().width/2, GEngine->GetWindow().height/2};
+	//::ScreenToClient(GEngine->GetWindow().hwnd, &_oldMousePos);
 }
 
 TestCameraScript::~TestCameraScript()
 {
+}
+
+void TestCameraScript::Update()
+{
+	Vec3 rotation = GetTransform()->GetLocalRotation();
+	POINT tempForSetCursor = _oldMousePos;
+	_mousePos = INPUT->GetMousePos();
+	cxdelta += (_mousePos.x - _oldMousePos.x) / 300.f;
+	cydelta += (_mousePos.y - _oldMousePos.y) / 300.f;
+	ClientToScreen(GEngine->GetWindow().hwnd, &tempForSetCursor);
+	SetCursorPos(tempForSetCursor.x, tempForSetCursor.y);
+	rotation.x = cydelta;
+	rotation.y = cxdelta;
+	GetTransform()->SetLocalRotation(rotation);
 }
 
 void TestCameraScript::LateUpdate()

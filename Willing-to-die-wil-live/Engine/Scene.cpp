@@ -14,6 +14,7 @@
 
 void Scene::Awake()
 {
+	CursorClipping();
 	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
 	{
 		gameObject->Awake();
@@ -250,4 +251,24 @@ void Scene::GetPlayerPosToCam(wstring objectname)
 	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
 		if (gameObject->GetName() == L"Main_Camera")
 			gameObject->GetTransform()->SetLocalPosition(PlayerPos);
+}
+
+void Scene::CursorClipping()
+{
+	POINT p1, p2;
+	::GetClientRect(GEngine->GetWindow().hwnd, &rc);
+	p1.x = rc.left;
+	p1.y = rc.top;
+	p2.x = rc.right;
+	p2.y = rc.bottom;
+
+	::ClientToScreen(GEngine->GetWindow().hwnd, &p1);
+	::ClientToScreen(GEngine->GetWindow().hwnd, &p2);
+
+	rc.left = p1.x;
+	rc.top = p1.y;
+	rc.right = p2.x;
+	rc.bottom = p2.y;
+
+	::ClipCursor(&rc);
 }
