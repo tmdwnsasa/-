@@ -82,5 +82,7 @@ void TestCameraScript::LateUpdate()
 		GET_SINGLE(SceneManager)->Pick(pos.x, pos.y);
 	}
 
+
+
 	GetTransform()->SetLocalPosition(pos);
 }

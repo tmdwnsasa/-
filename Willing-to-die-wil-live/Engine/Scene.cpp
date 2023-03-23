@@ -14,7 +14,7 @@
 
 void Scene::Awake()
 {
-	CursorClipping();
+	//CursorClipping();
 	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
 	{
 		gameObject->Awake();
@@ -69,8 +69,8 @@ void Scene::LateUpdate()
 	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
 	{
 		gameObject->LateUpdate();
-		if (gameObject->GetName() == L"Main_Camera")
-			GetPlayerPosToCam(L"Main_Camera");
+		//if (gameObject->GetName() == L"Main_Camera")
+		//	GetPlayerPosToCam(L"Main_Camera");
 	}
 }
 
@@ -240,7 +240,7 @@ void Scene::RemoveGameObject(shared_ptr<GameObject> gameObject)
 		_gameObjects.erase(findIt);
 }
 
-void Scene::GetPlayerPosToCam(wstring objectname)
+/*void Scene::GetPlayerPosToCam(wstring objectname)
 {
 	Vec3 PlayerPos;
 
@@ -251,7 +251,7 @@ void Scene::GetPlayerPosToCam(wstring objectname)
 	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
 		if (gameObject->GetName() == L"Main_Camera")
 			gameObject->GetTransform()->SetLocalPosition(PlayerPos);
-}
+}*/
 
 void Scene::CursorClipping()
 {

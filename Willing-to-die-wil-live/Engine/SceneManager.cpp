@@ -294,7 +294,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 
 #pragma region FBX
 	{
-		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\batman.fbx");
+		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Test2.fbx");
 
 
 		
@@ -314,8 +314,8 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 	
 	}
 
-	{
-		shared_ptr<MeshData> ZombieMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\kkk.fbx");
+	/* {
+		shared_ptr<MeshData> ZombieMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Building.fbx");
 
 		for (int32 i = 0; i < 2; i++)
 		{
@@ -334,7 +334,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		}
 		
 			
-	}
+	}*/
 
 	
 #pragma endregion
