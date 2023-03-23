@@ -11,12 +11,14 @@ public:
 
 	virtual void LateUpdate() override;
 
+	void CameraRotation();
+
 private:
 	float		_speed = 100.f;
 
+	bool		_isOn = true;
 	POINT		_mousePos = {};
 	POINT		_oldMousePos = {};
 	float		cxdelta = 0.f;
 	float		cydelta = 0.f;
 };
-

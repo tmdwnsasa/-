@@ -24,6 +24,8 @@ enum class KEY_TYPE
 
 	LBUTTON = VK_LBUTTON,
 	RBUTTON = VK_RBUTTON,
+
+	TAB = VK_TAB,
 };
 
 enum class KEY_STATE
