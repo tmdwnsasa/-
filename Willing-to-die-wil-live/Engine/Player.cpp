@@ -21,10 +21,10 @@ void Player::Update()
 	Vec3 pos = GetTransform()->GetLocalPosition();
 
 	if (INPUT->GetButton(KEY_TYPE::W))
-		pos -= GetTransform()->GetLook() * _speed * DELTA_TIME;
+		pos += GetTransform()->GetLook() * _speed * DELTA_TIME;
 
 	if (INPUT->GetButton(KEY_TYPE::S))
-		pos += GetTransform()->GetLook() * _speed * DELTA_TIME;
+		pos -= GetTransform()->GetLook() * _speed * DELTA_TIME;
 
 	if (INPUT->GetButton(KEY_TYPE::A))
 		pos -= GetTransform()->GetRight() * _speed * DELTA_TIME;
