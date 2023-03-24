@@ -86,6 +86,8 @@ void Engine::ShowFps()
 	::GetCursorPos(&_mousePos);
 	::ScreenToClient(GEngine->GetWindow().hwnd, &_mousePos);
 
+
+
 	WCHAR text[100] = L"";
 	::wsprintf(text, L"FPS : %d,  X : %d, Y : %d", fps, _mousePos.x, _mousePos.y);
 

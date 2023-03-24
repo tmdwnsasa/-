@@ -11,6 +11,7 @@
 #include "TestCameraScript.h"
 #include "MeshRenderer.h"
 #include "Material.h"
+#include <iostream>
 
 void Scene::Awake()
 {
@@ -37,6 +38,19 @@ void Scene::Update()
 		name[gameObject->GetName()].first++;
 		name[gameObject->GetName()].second.push_back(gameObject);
 	}
+
+	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
+	{
+		if (gameObject->GetName() == L"Player")
+		{
+			float x,y,z;
+			x = gameObject->GetTransform()->GetLocalPosition().x;
+			y = gameObject->GetTransform()->GetLocalPosition().y;
+			z = gameObject->GetTransform()->GetLocalPosition().y;
+		}
+	}
+
+
 
 	for (auto& object : name)
 	{
@@ -69,8 +83,8 @@ void Scene::LateUpdate()
 	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
 	{
 		gameObject->LateUpdate();
-		//if (gameObject->GetName() == L"Main_Camera")
-		//	GetPlayerPosToCam(L"Main_Camera");
+		if (gameObject->GetName() == L"Main_Camera")
+			GetPlayerPosToCam(L"Main_Camera");
 	}
 }
 
@@ -240,7 +254,7 @@ void Scene::RemoveGameObject(shared_ptr<GameObject> gameObject)
 		_gameObjects.erase(findIt);
 }
 
-/*void Scene::GetPlayerPosToCam(wstring objectname)
+void Scene::GetPlayerPosToCam(wstring objectname)
 {
 	Vec3 PlayerPos;
 
@@ -251,7 +265,7 @@ void Scene::RemoveGameObject(shared_ptr<GameObject> gameObject)
 	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
 		if (gameObject->GetName() == L"Main_Camera")
 			gameObject->GetTransform()->SetLocalPosition(PlayerPos);
-}*/
+}
 
 void Scene::CursorClipping()
 {
