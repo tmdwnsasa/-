@@ -313,7 +313,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 	}
 
 	 {
-		shared_ptr<MeshData> ZombieMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\kkk.fbx");
+		shared_ptr<MeshData> ZombieMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\carzx.fbx");
 
 		vector<shared_ptr<GameObject>> gameObjects = ZombieMesh->Instantiate();
 
@@ -321,11 +321,11 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		{
 			gameObject->SetName(L"Riple");
 			gameObject->SetCheckFrustum(false);
-			gameObject->GetTransform()->SetLocalPosition(Vec3(-100.f, -100.f, -100.f ));
-			gameObject->GetTransform()->SetLocalScale(Vec3(10.f, 10.f, 10.f));
-			gameObject->GetTransform()->SetLocalRotation(Vec3(-90.f, 0.f, 0.f));
+			gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, -100.f ));
+			gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
 			scene->AddGameObject(gameObject);
-			gameObject->AddComponent(make_shared<Enemy>());
+			//gameObject->AddComponent(make_shared<Enemy>());
 		}
 
 		
