@@ -28,6 +28,9 @@
     <Filter Include="Object\Test">
       <UniqueIdentifier>{2f41ac5b-281d-4acd-9319-cfadf605b793}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Astar">
+      <UniqueIdentifier>{f4f31752-f74c-43ae-8c60-223437b305e1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SwapChain.h">
@@ -162,6 +165,18 @@
     <ClInclude Include="Enemy.h">
       <Filter>Object\Component</Filter>
     </ClInclude>
+    <ClInclude Include="Astar.h">
+      <Filter>Astar</Filter>
+    </ClInclude>
+    <ClInclude Include="PathFinder.h">
+      <Filter>Astar</Filter>
+    </ClInclude>
+    <ClInclude Include="TileMap.h">
+      <Filter>Astar</Filter>
+    </ClInclude>
+    <ClInclude Include="TileNode.h">
+      <Filter>Astar</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TableDescriptorHeap.cpp">
@@ -292,6 +307,18 @@
     </ClCompile>
     <ClCompile Include="Enemy.cpp">
       <Filter>Object\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Astar.cpp">
+      <Filter>Astar</Filter>
+    </ClCompile>
+    <ClCompile Include="PathFinder.cpp">
+      <Filter>Astar</Filter>
+    </ClCompile>
+    <ClCompile Include="TileMap.cpp">
+      <Filter>Astar</Filter>
+    </ClCompile>
+    <ClCompile Include="TileNode.cpp">
+      <Filter>Astar</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

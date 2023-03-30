@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animator.h" />
+    <ClInclude Include="Astar.h" />
     <ClInclude Include="BaseCollider.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CommandQueue.h" />
@@ -44,6 +45,7 @@
     <ClInclude Include="Monobehaviour.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="ParticleSystem.h" />
+    <ClInclude Include="PathFinder.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="RenderTargetGroup.h" />
@@ -61,11 +63,14 @@
     <ClInclude Include="TestCameraScript.h" />
     <ClInclude Include="TestDragon.h" />
     <ClInclude Include="Texture.h" />
+    <ClInclude Include="TileMap.h" />
+    <ClInclude Include="TileNode.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Transform.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Animator.cpp" />
+    <ClCompile Include="Astar.cpp" />
     <ClCompile Include="BaseCollider.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CommandQueue.cpp" />
@@ -89,6 +94,7 @@
     <ClCompile Include="MonoBehaviour.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="ParticleSystem.cpp" />
+    <ClCompile Include="PathFinder.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -111,6 +117,8 @@
     <ClCompile Include="TestCameraScript.cpp" />
     <ClCompile Include="TestDragon.cpp" />
     <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="TileMap.cpp" />
+    <ClCompile Include="TileNode.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Transform.cpp" />
   </ItemGroup>
@@ -317,7 +325,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;_SILENCE_STDEXT_HASH_DEPRECATION_WARNINGS=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
