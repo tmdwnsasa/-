@@ -295,7 +295,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 
 #pragma region FBX
 	{
-		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\untitled.fbx");
+		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\AWP_Dragon_Lore.fbx");
 
 		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
 
@@ -313,25 +313,29 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 	}
 
 	 {
-		shared_ptr<MeshData> ZombieMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\carzx.fbx");
+		shared_ptr<MeshData> ZombieMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\craw.fbx");
 
-		vector<shared_ptr<GameObject>> gameObjects = ZombieMesh->Instantiate();
-
-		for (auto& gameObject : gameObjects)
+		for (int i = 0; i < 2; i++)
 		{
-			gameObject->SetName(L"Riple");
-			gameObject->SetCheckFrustum(false);
-			gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, -100.f ));
-			gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
-			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
-			scene->AddGameObject(gameObject);
-			//gameObject->AddComponent(make_shared<Enemy>());
-		}
 
-		
-		
-			
-	}
+			vector<shared_ptr<GameObject>> gameObjects = ZombieMesh->Instantiate();
+
+
+			for (auto& gameObject : gameObjects)
+			{
+				gameObject->SetName(L"Enemy");
+				gameObject->SetCheckFrustum(false);
+				gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, -100.f * i, -100.f));
+				gameObject->GetTransform()->SetLocalScale(Vec3(0.01f, 0.01f, 0.01f));
+				gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
+				gameObject->AddComponent(make_shared<Enemy>());
+				scene->AddGameObject(gameObject);
+				
+			}
+		}
+	 }
+
+	
 
 	
 #pragma endregion

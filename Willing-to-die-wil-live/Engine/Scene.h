@@ -3,6 +3,23 @@
 class GameObject;
 
 
+static const int Width = 10;
+static const int Height = 10;
+
+static int tileMap[Height][Width] =
+{
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 1, 1, 1, 1, 0, 0, 0, 0,
+	0, 0, 1, 0, 0, 1, 0, 0, 0, 0,
+	0, 0, 1, 0, 0, 1, 0, 0, 0, 0,
+	2, 0, 1, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 1, 0, 0, 1, 3, 0, 0, 0,
+	0, 0, 1, 0, 0, 1, 1, 1, 1, 1,
+	0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
+};
+
 class Scene
 {
 public:
@@ -28,6 +45,7 @@ public:
 	void RenderForward();
 
 	void CursorClipping();
+	int (*CreateMap())[Height];
 private:
 	void PushLightData();
 

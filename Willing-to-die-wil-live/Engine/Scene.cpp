@@ -11,6 +11,8 @@
 #include "TestCameraScript.h"
 #include "MeshRenderer.h"
 #include "Material.h"
+#include "Astar.h"
+#include "TileMap.h"
 #include <iostream>
 
 void Scene::Awake()
@@ -286,3 +288,29 @@ void Scene::CursorClipping()
 
 	::ClipCursor(&rc);
 }
+
+int(*Scene::CreateMap())[kHeight]
+{
+	for (int x = 0; x < kWidth; ++x)
+	{
+		for (int y = 0; y < kHeight; ++y)
+		{
+			tileMap[x][y] = 1;
+		}
+	}
+	int x, y;
+	/*for (const shared_ptr<GameObject>& gameObject : _gameObjects)
+	{
+		if (gameObject->GetName() == L"Player")
+		{
+			x = gameObject->GetTransform()->GetLocalPosition().x; // 계산식 추가
+			y = gameObject->GetTransform()->GetLocalPosition().z; // 계산식 추가
+			tileMapArray[x][y] = 3;
+		}
+		else if (gameObject->GetName() == L"Wall")
+			tileMapArray[1][1] = 1;
+	}*/
+
+	return tileMap;
+}
+
