@@ -12,6 +12,7 @@
 #include "Player.h"
 #include "TestCameraScript.h"
 #include "Font.h"
+#include "Enemy.h"
 
 GameObject::GameObject() : Object(OBJECT_TYPE::GAMEOBJECT)
 {
@@ -147,6 +148,12 @@ shared_ptr<Player> GameObject::GetPlayer()
 {
 	shared_ptr<Component> component = GetFixedComponent(COMPONENT_TYPE::PLAYER);
 	return static_pointer_cast<Player>(component);
+}
+
+shared_ptr<Enemy> GameObject::GetEnemy()
+{
+	shared_ptr<Component> component = GetFixedComponent(COMPONENT_TYPE::ENEMY);
+	return static_pointer_cast<Enemy>(component);
 }
 
 shared_ptr<TestCameraScript> GameObject::GetTestCameraScript()

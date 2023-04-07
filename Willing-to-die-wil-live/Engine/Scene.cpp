@@ -11,9 +11,11 @@
 #include "TestCameraScript.h"
 #include "MeshRenderer.h"
 #include "Material.h"
+#include <iostream>
 
 void Scene::Awake()
 {
+	//CursorClipping();
 	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
 	{
 		gameObject->Awake();
@@ -36,7 +38,19 @@ void Scene::Update()
 		name[gameObject->GetName()].first++;
 		name[gameObject->GetName()].second.push_back(gameObject);
 	}
-	//CursorClipping();
+
+	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
+	{
+		if (gameObject->GetName() == L"Player")
+		{
+			float x,y,z;
+			x = gameObject->GetTransform()->GetLocalPosition().x;
+			y = gameObject->GetTransform()->GetLocalPosition().y;
+			z = gameObject->GetTransform()->GetLocalPosition().y;
+		}
+	}
+
+
 
 	for (auto& object : name)
 	{

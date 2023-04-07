@@ -11,6 +11,7 @@
 TestCameraScript::TestCameraScript()
 {
 	_oldMousePos = { GEngine->GetWindow().width/2, GEngine->GetWindow().height/2};
+	//::ScreenToClient(GEngine->GetWindow().hwnd, &_oldMousePos);
 }
 
 TestCameraScript::~TestCameraScript()
@@ -19,7 +20,7 @@ TestCameraScript::~TestCameraScript()
 
 void TestCameraScript::Update()
 {
-	if(_isOn == true)
+	if (_isOn == true)
 		CameraRotation();
 }
 
@@ -88,6 +89,7 @@ void TestCameraScript::LateUpdate()
 	{
 		_isOn = false;
 	}
+
 
 	GetTransform()->SetLocalPosition(pos);
 }
