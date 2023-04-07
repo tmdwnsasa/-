@@ -162,11 +162,6 @@
     <ClInclude Include="Player.h">
       <Filter>Object\Component</Filter>
     </ClInclude>
-<<<<<<< HEAD
-    <ClInclude Include="Font.h">
-      <Filter>Object\Component</Filter>
-    </ClInclude>
-=======
     <ClInclude Include="Enemy.h">
       <Filter>Object\Component</Filter>
     </ClInclude>
@@ -182,7 +177,9 @@
     <ClInclude Include="TileNode.h">
       <Filter>Astar</Filter>
     </ClInclude>
->>>>>>> 044dbfdb957c9577fab403c9696a73623c83b55f
+    <ClInclude Include="Font.h">
+      <Filter>Object\Component</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TableDescriptorHeap.cpp">
@@ -311,11 +308,9 @@
     <ClCompile Include="Player.cpp">
       <Filter>Object\Component</Filter>
     </ClCompile>
-<<<<<<< HEAD
     <ClCompile Include="Font.cpp">
       <Filter>Object\Component</Filter>
     </ClCompile>
-=======
     <ClCompile Include="Enemy.cpp">
       <Filter>Object\Component</Filter>
     </ClCompile>
@@ -331,7 +326,6 @@
     <ClCompile Include="TileNode.cpp">
       <Filter>Astar</Filter>
     </ClCompile>
->>>>>>> 044dbfdb957c9577fab403c9696a73623c83b55f
   </ItemGroup>
   <ItemGroup>
     <None Include="SimpleMath.inl">

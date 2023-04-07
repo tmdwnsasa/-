@@ -13,11 +13,8 @@ class BaseCollider;
 class Animator;
 class Player;
 class TestCameraScript;
-<<<<<<< HEAD
-class Font;
-=======
 class Enemy;
->>>>>>> 044dbfdb957c9577fab403c9696a73623c83b55f
+class Font;
 
 class GameObject : public Object, public enable_shared_from_this<GameObject>
 {

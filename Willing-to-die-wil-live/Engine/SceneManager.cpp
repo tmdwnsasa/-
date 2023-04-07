@@ -19,11 +19,8 @@
 #include "TestDragon.h"
 
 #include "Player.h"
-<<<<<<< HEAD
 #include "Font.h"
-=======
 #include "Enemy.h"
->>>>>>> 044dbfdb957c9577fab403c9696a73623c83b55f
 
 #include <iostream>
 
@@ -329,24 +326,6 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 
 
 #pragma region FBX
-<<<<<<< HEAD
-	//{
-	//	shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\batman.fbx");
-
-	//	vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
-
-	//	for (auto& gameObject : gameObjects)
-	//	{
-	//		gameObject->SetName(L"Player");
-	//		gameObject->SetCheckFrustum(false);
-	//		gameObject->GetTransform()->SetLocalPosition(Vec3(-100.f, -100.f, -100.f));
-	//		gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
-	//		gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
-	//		scene->AddGameObject(gameObject);
-	//		gameObject->AddComponent(make_shared<Player>());
-	//	}
-	//}
-=======
 	{
 		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\untitled.fbx");
 
@@ -364,26 +343,12 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		}
 	
 	}
->>>>>>> 044dbfdb957c9577fab403c9696a73623c83b55f
 
 	 {
 		shared_ptr<MeshData> ZombieMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\carzx.fbx");
 
 		vector<shared_ptr<GameObject>> gameObjects = ZombieMesh->Instantiate();
 
-<<<<<<< HEAD
-	//		for (auto& gameObject : gameObjects)
-	//		{
-	//			gameObject->SetName(L"Riple");
-	//			gameObject->SetCheckFrustum(false);
-	//			gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 100.f + 50 * i));
-	//			gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
-	//			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
-	//			scene->AddGameObject(gameObject);
-	//		}
-	//	}
-	//}
-=======
 		for (auto& gameObject : gameObjects)
 		{
 			gameObject->SetName(L"Riple");
@@ -399,7 +364,6 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		
 			
 	}
->>>>>>> 044dbfdb957c9577fab403c9696a73623c83b55f
 
 	
 #pragma endregion

@@ -11,8 +11,8 @@
 #include "Animator.h"
 #include "Player.h"
 #include "TestCameraScript.h"
-#include "Font.h"
 #include "Enemy.h"
+#include "Font.h"
 
 GameObject::GameObject() : Object(OBJECT_TYPE::GAMEOBJECT)
 {
