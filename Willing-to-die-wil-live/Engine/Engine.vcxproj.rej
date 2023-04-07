@@ -1,0 +1,9 @@
+diff a/Willing-to-die-wil-live/Engine/Engine.vcxproj b/Willing-to-die-wil-live/Engine/Engine.vcxproj	(rejected hunks)
+@@ -88,6 +88,7 @@
+     <ClCompile Include="Object.cpp" />
+     <ClCompile Include="ParticleSystem.cpp" />
+     <ClCompile Include="pch.cpp">
++<<<<<<< HEAD
+       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+     </ClCompile>
+ =======
