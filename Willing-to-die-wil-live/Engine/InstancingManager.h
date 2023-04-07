@@ -19,4 +19,3 @@ private:
 private:
 	map<uint64/*instanceId*/, shared_ptr<InstancingBuffer>> _buffers;
 };
-

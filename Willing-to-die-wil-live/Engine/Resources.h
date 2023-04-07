@@ -20,6 +20,9 @@ public:
 	bool Add(const wstring& key, shared_ptr<T> object);
 
 	template<typename T>
+	bool Replace(const wstring& key, shared_ptr<T> object);
+
+	template<typename T>
 	shared_ptr<T> Get(const wstring& Key);
 
 	template<typename T>
@@ -30,6 +33,7 @@ public:
 	shared_ptr<Mesh> LoadCubeMesh();
 	shared_ptr<Mesh> LoadSphereMesh();
 	shared_ptr<Mesh> LoadTerrainMesh(int32 sizeX = 15, int32 sizeZ = 15);
+	shared_ptr<Mesh> LoadFontMesh(vector<Vertex> vec);
 
 	shared_ptr<Texture> CreateTexture(const wstring& name, DXGI_FORMAT format, uint32 width, uint32 height,
 		const D3D12_HEAP_PROPERTIES& heapProperty, D3D12_HEAP_FLAGS heapFlags,
@@ -74,6 +78,17 @@ bool Resources::Add(const wstring& key, shared_ptr<T> object)
 	auto findIt = keyObjMap.find(key);
 	if (findIt != keyObjMap.end())
 		return false;
+
+	keyObjMap[key] = object;
+
+	return true;
+}
+
+template<typename T>
+bool Resources::Replace(const wstring& key, shared_ptr<T> object)
+{
+	OBJECT_TYPE objectType = GetObjectType<T>();
+	KeyObjMap& keyObjMap = _resources[static_cast<uint8>(objectType)];
 
 	keyObjMap[key] = object;
 

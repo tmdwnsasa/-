@@ -159,6 +159,9 @@
     <ClInclude Include="Player.h">
       <Filter>Object\Component</Filter>
     </ClInclude>
+    <ClInclude Include="Font.h">
+      <Filter>Object\Component</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TableDescriptorHeap.cpp">
@@ -287,6 +290,9 @@
     <ClCompile Include="Player.cpp">
       <Filter>Object\Component</Filter>
     </ClCompile>
+    <ClCompile Include="Font.cpp">
+      <Filter>Object\Component</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="SimpleMath.inl">
@@ -331,6 +337,9 @@
       <Filter>Shader</Filter>
     </FxCompile>
     <FxCompile Include="..\Resources\Shader\lighting.fx">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Resources\Shader\font.fx">
       <Filter>Shader</Filter>
     </FxCompile>
   </ItemGroup>

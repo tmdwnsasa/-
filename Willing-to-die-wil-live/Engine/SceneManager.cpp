@@ -17,7 +17,9 @@
 #include "SphereCollider.h"
 #include "MeshData.h"
 #include "TestDragon.h"
+
 #include "Player.h"
+#include "Font.h"
 
 #include <iostream>
 
@@ -248,7 +250,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		obj->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
 		obj->AddComponent(make_shared<Transform>());
 		obj->GetTransform()->SetLocalScale(Vec3(100.f, 100.f, 100.f));
-		obj->GetTransform()->SetLocalPosition(Vec3(-350.f + (i * 120), 250.f, 500.f));
+		obj->GetTransform()->SetLocalPosition(Vec3(-350.f + (i * 120), 500.f, 500.f));
 		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 		{
 			shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
@@ -275,6 +277,36 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 	}
 #pragma endregion
 
+#pragma region Text
+	shared_ptr<GameObject> obj = make_shared<GameObject>();
+	obj->SetName(L"HealthText");
+	obj->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
+	obj->AddComponent(make_shared<Transform>());
+	obj->GetTransform()->SetLocalScale(Vec3(10.f, 10.f, 10.f));
+	obj->GetTransform()->SetLocalPosition(Vec3(-300.f, -200.f, 500.f));
+	shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+
+	shared_ptr<Font> font = make_shared<Font>();
+	font->BuildFont();
+	//font->GetTextVB("100")
+	shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadFontMesh(font->GetTextVB("100"));
+	meshRenderer->SetMesh(mesh);
+
+	{
+		shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Font");
+
+		shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"original", L"..\\Resources\\Font\\text.png");;
+
+		shared_ptr<Material> material = make_shared<Material>();
+		material->SetShader(shader);
+		material->SetTexture(0, texture);
+		meshRenderer->SetMaterial(material);
+		obj->AddComponent(meshRenderer);
+		obj->AddComponent(font);
+		scene->AddGameObject(obj);
+	}
+#pragma endregion
+
 #pragma region Directional Light
 	{
 		shared_ptr<GameObject> light = make_shared<GameObject>();
@@ -293,25 +325,22 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 
 
 #pragma region FBX
-	{
-		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\batman.fbx");
+	//{
+	//	shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\batman.fbx");
 
+	//	vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
 
-		
-		
-		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
-
-		for (auto& gameObject : gameObjects)
-		{
-			gameObject->SetName(L"Player");
-			gameObject->SetCheckFrustum(false);
-			gameObject->GetTransform()->SetLocalPosition(Vec3(-100.f, -100.f, -100.f));
-			gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
-			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
-			scene->AddGameObject(gameObject);
-			gameObject->AddComponent(make_shared<Player>());
-		}
-	}
+	//	for (auto& gameObject : gameObjects)
+	//	{
+	//		gameObject->SetName(L"Player");
+	//		gameObject->SetCheckFrustum(false);
+	//		gameObject->GetTransform()->SetLocalPosition(Vec3(-100.f, -100.f, -100.f));
+	//		gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+	//		gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
+	//		scene->AddGameObject(gameObject);
+	//		gameObject->AddComponent(make_shared<Player>());
+	//	}
+	//}
 
 	//{
 	//	shared_ptr<MeshData> ZombieMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\kkk.fbx");
@@ -329,10 +358,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 	//			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
 	//			scene->AddGameObject(gameObject);
 	//		}
-
 	//	}
-	//	
-	//		
 	//}
 
 	
