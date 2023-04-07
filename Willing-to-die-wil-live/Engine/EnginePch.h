@@ -15,6 +15,7 @@
 using namespace std;
 
 #include <filesystem>
+#include <fstream>
 namespace fs = std::filesystem;
 
 #include "d3dx12.h"
@@ -185,6 +186,12 @@ struct AnimFrameParams
 	Vec4	scale;
 	Vec4	rotation; // Quaternion
 	Vec4	translation;
+};
+
+struct FontType
+{
+	float left, right;
+	int size;
 };
 
 extern unique_ptr<class Engine> GEngine;

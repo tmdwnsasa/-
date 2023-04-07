@@ -2,6 +2,7 @@
 #include "Resources.h"
 #include "Engine.h"
 #include "MeshData.h"
+#include "Font.h"
 
 void Resources::Init()
 {
@@ -54,6 +55,36 @@ shared_ptr<Mesh> Resources::LoadRectangleMesh()
 	shared_ptr<Mesh> mesh = make_shared<Mesh>();
 	mesh->Create(vec, idx);
 	Add(L"Rectangle", mesh);
+
+	return mesh;
+}
+
+shared_ptr<Mesh> Resources::LoadFontMesh(vector<Vertex> vec)
+{
+	shared_ptr<Mesh> findMesh = Get<Mesh>(L"Font");
+	if (findMesh)
+		return findMesh;
+
+	vector<uint32> idx(vec.size()/4*6);
+
+	// ¾Õ¸é
+	for (size_t i = 0, k = 0; i < idx.size(); i += 6, k += 4)
+	{
+		// 0 3
+		// 1 2
+
+		idx[i + 0] = (uint32)k + 0;
+		idx[i + 1] = (uint32)k + 1;
+		idx[i + 2] = (uint32)k + 2;
+
+		idx[i + 3] = (uint32)k + 0;
+		idx[i + 4] = (uint32)k + 2;
+		idx[i + 5] = (uint32)k + 3;
+	}
+
+	shared_ptr<Mesh> mesh = make_shared<Mesh>();
+	mesh->Create(vec, idx);
+	Replace(L"Font", mesh);
 
 	return mesh;
 }
@@ -397,6 +428,30 @@ void Resources::CreateDefaultShader()
 		Add<Shader>(L"Texture", shader);
 	}
 
+	// Font
+	{
+		ShaderInfo info =
+		{
+			SHADER_TYPE::FORWARD,
+			RASTERIZER_TYPE::CULL_NONE,
+			DEPTH_STENCIL_TYPE::NO_DEPTH_TEST_NO_WRITE,
+			BLEND_TYPE::ALPHA_BLEND
+		};
+
+		ShaderArg arg =
+		{
+			"VS_Font",
+			"",
+			"",
+			"",
+			"PS_Font"
+		};
+
+		shared_ptr<Shader> shader = make_shared<Shader>();
+		shader->CreateGraphicsShader(L"..\\Resources\\Shader\\font.fx", info, arg);
+		Add<Shader>(L"Font", shader);
+	}
+
 	// DirLight
 	{
 		ShaderInfo info =
@@ -659,6 +714,16 @@ void Resources::CreateDefaultMaterial()
 		material->SetTexture(0, texture);
 		material->SetTexture(1, texture2);
 		Add<Material>(L"GameObject", material);
+	}
+
+	// Font
+	{
+		shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Font");
+		shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Font", L"..\\Resources\\Font\\text.png");
+		shared_ptr<Material> material = make_shared<Material>();
+		material->SetShader(shader);
+		material->SetTexture(0, texture);
+		Add<Material>(L"Font", material);
 	}
 
 	// Shadow

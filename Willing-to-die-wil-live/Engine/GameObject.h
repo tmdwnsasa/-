@@ -14,6 +14,7 @@ class Animator;
 class Player;
 class TestCameraScript;
 class Enemy;
+class Font;
 
 class GameObject : public Object, public enable_shared_from_this<GameObject>
 {
@@ -40,6 +41,7 @@ public:
 	shared_ptr<Player> GetPlayer();
 	shared_ptr<Enemy> GetEnemy();
 	shared_ptr<TestCameraScript> GetTestCameraScript();
+	shared_ptr<Font> GetFont();
 
 	void AddComponent(shared_ptr<Component> component);
 
