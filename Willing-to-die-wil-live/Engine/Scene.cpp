@@ -52,8 +52,8 @@ void Scene::Update()
 		}
 	}
 
-
-
+	SetPlayerPosToEnemy();
+	
 	for (auto& object : name)
 	{
 		if (object.first != L"")
@@ -66,7 +66,7 @@ void Scene::Update()
 			}
 
 			else
-				if ((*object.second.second.begin())->GetMeshRenderer() != NULL)
+			if ((*object.second.second.begin())->GetMeshRenderer() != NULL)
 				{
 					(*object.second.second.begin())->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
 				}
@@ -267,6 +267,29 @@ void Scene::GetPlayerPosToCam(wstring objectname)
 	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
 		if (gameObject->GetName() == L"Main_Camera")
 			gameObject->GetTransform()->SetLocalPosition(PlayerPos);
+		
+}
+
+
+void Scene::SetPlayerPosToEnemy()
+{
+	Vec3 PlayerPos;
+	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
+		if (gameObject->GetName() == L"Player")
+			PlayerPos = gameObject->GetTransform()->GetLocalPosition();
+	
+	PlayerObPos = PlayerPos;
+
+}
+
+void Scene::SetWallPosToEnemy()
+{
+	Vec3 WallPos;
+	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
+		if (gameObject->GetName() == L"Wall")
+			WallPos = gameObject->GetTransform()->GetLocalPosition();
+
+	WallObPos = WallPos;
 }
 
 void Scene::CursorClipping()
@@ -287,30 +310,5 @@ void Scene::CursorClipping()
 	rc.bottom = p2.y;
 
 	::ClipCursor(&rc);
-}
-
-int(*Scene::CreateMap())[kHeight]
-{
-	for (int x = 0; x < kWidth; ++x)
-	{
-		for (int y = 0; y < kHeight; ++y)
-		{
-			tileMap[x][y] = 1;
-		}
-	}
-	int x, y;
-	/*for (const shared_ptr<GameObject>& gameObject : _gameObjects)
-	{
-		if (gameObject->GetName() == L"Player")
-		{
-			x = gameObject->GetTransform()->GetLocalPosition().x; // 계산식 추가
-			y = gameObject->GetTransform()->GetLocalPosition().z; // 계산식 추가
-			tileMapArray[x][y] = 3;
-		}
-		else if (gameObject->GetName() == L"Wall")
-			tileMapArray[1][1] = 1;
-	}*/
-
-	return tileMap;
 }
 

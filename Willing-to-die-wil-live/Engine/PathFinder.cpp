@@ -4,6 +4,7 @@
 #include "PathFinder.h"
 #include "TileMap.h"
 
+
 //#define _OPTIMIZED_
 
 PathFinder::PathFinder(const TileMap* tileMap)

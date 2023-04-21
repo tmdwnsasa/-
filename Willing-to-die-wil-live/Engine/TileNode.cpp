@@ -3,6 +3,7 @@
 #include "TileNode.h"
 
 
+
 bool TileNodeLess::operator() (TileNode* a0, TileNode* a1) const
 {
 	if (a0->GetFCost() == a1->GetFCost())

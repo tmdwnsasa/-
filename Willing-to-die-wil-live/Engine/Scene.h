@@ -3,22 +3,6 @@
 class GameObject;
 
 
-static const int Width = 10;
-static const int Height = 10;
-
-static int tileMap[Height][Width] =
-{
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 1, 1, 1, 1, 0, 0, 0, 0,
-	0, 0, 1, 0, 0, 1, 0, 0, 0, 0,
-	0, 0, 1, 0, 0, 1, 0, 0, 0, 0,
-	2, 0, 1, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 1, 0, 0, 1, 3, 0, 0, 0,
-	0, 0, 1, 0, 0, 1, 1, 1, 1, 1,
-	0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
-};
 
 class Scene
 {
@@ -32,7 +16,10 @@ public:
 	shared_ptr<class Camera> GetMainCamera();
 
 	void GetPlayerPosToCam(wstring objectname);
-
+	Vec3 GetPlayerPosToEnemy() { return PlayerObPos; };
+	void SetPlayerPosToEnemy();
+	Vec3 GetWallPosToEnemy() { return WallObPos; };
+	void SetWallPosToEnemy();
 	void Render();
 
 	void ClearRTV();
@@ -45,7 +32,6 @@ public:
 	void RenderForward();
 
 	void CursorClipping();
-	int (*CreateMap())[Height];
 private:
 	void PushLightData();
 
@@ -54,7 +40,8 @@ public:
 	void RemoveGameObject(shared_ptr<GameObject> gameObject);
 
 	const vector<shared_ptr<GameObject>>& GetGameObjects() { return _gameObjects; }
-
+	Vec3			PlayerObPos;
+	Vec3			WallObPos;
 private:
 	vector<shared_ptr<GameObject>>		_gameObjects;
 	vector<shared_ptr<class Camera>>	_cameras;
@@ -62,5 +49,7 @@ private:
 
 	bool			_clipcursor = false;
 	RECT			rc;
+
+	
 };
 
