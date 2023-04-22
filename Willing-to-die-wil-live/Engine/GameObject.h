@@ -10,11 +10,14 @@ class MonoBehaviour;
 class ParticleSystem;
 class Terrain;
 class BaseCollider;
+class BoxCollider;
+class SphereCollider;
 class Animator;
 class Player;
 class TestCameraScript;
 class Enemy;
 class Font;
+class Bullet;
 
 class GameObject : public Object, public enable_shared_from_this<GameObject>
 {
@@ -36,9 +39,12 @@ public:
 	shared_ptr<Light> GetLight();
 	shared_ptr<ParticleSystem> GetParticleSystem();
 	shared_ptr<Terrain> GetTerrain();
-	shared_ptr<BaseCollider> GetCollider();
+	shared_ptr<BaseCollider> GetBaseCollider();
+	shared_ptr<BoxCollider> GetBoxCollider();
+	shared_ptr<SphereCollider> GetSphereCollider();
 	shared_ptr<Animator> GetAnimator();
 	shared_ptr<Player> GetPlayer();
+	shared_ptr<Bullet> GetBullet();
 	shared_ptr<Enemy> GetEnemy();
 	shared_ptr<TestCameraScript> GetTestCameraScript();
 	shared_ptr<Font> GetFont();
@@ -62,4 +68,3 @@ private:
 	uint8 _layerIndex = 0;
 	bool _static = true;
 };
-

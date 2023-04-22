@@ -20,6 +20,8 @@ public:
 	void SetPlayerPosToEnemy();
 	Vec3 GetWallPosToEnemy() { return WallObPos; };
 	void SetWallPosToEnemy();
+	void SetCameraPosToPlayer();
+
 	void Render();
 
 	void ClearRTV();
@@ -32,6 +34,9 @@ public:
 	void RenderForward();
 
 	void CursorClipping();
+
+
+	shared_ptr<GameObject> CollisionCheck(GameObject& other, GameObject other2);
 private:
 	void PushLightData();
 
@@ -49,7 +54,5 @@ private:
 
 	bool			_clipcursor = false;
 	RECT			rc;
-
-	
 };
 

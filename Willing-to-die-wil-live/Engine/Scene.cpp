@@ -13,11 +13,16 @@
 #include "Material.h"
 #include "Astar.h"
 #include "TileMap.h"
+#include "Player.h"
+#include "Input.h"
+#include "BoxCollider.h"
+#include "Font.h"
 #include <iostream>
 
 void Scene::Awake()
 {
 	//CursorClipping();
+	_gameObjects.reserve(1000);
 	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
 	{
 		gameObject->Awake();
@@ -34,26 +39,45 @@ void Scene::Start()
 
 void Scene::Update()
 {
-	map<wstring, pair<uint32,vector<shared_ptr<GameObject>>>> name;
+	// 플레이어 위치 저장
+	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
+	{
+		if (gameObject->GetName() == L"Player")
+		{
+			float x, y, z;
+			x = gameObject->GetTransform()->GetLocalPosition().x;
+			y = gameObject->GetTransform()->GetLocalPosition().y;
+			z = gameObject->GetTransform()->GetLocalPosition().z;
+		}
+	}
+
+	// 총알 생성
+	int temp = 0;
+	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
+	{
+		if (gameObject->GetName() == L"Player")
+		{
+			for (const shared_ptr<GameObject>& bullet : (gameObject->GetPlayer()->getBullet()))
+			{
+				if (bullet->GetBullet()->GetState() == BULLET_STATE::LIVE)
+				{
+					_gameObjects.push_back(bullet);
+					bullet->GetBullet()->SetState(BULLET_STATE::SHOOT);
+				}
+			}
+		}
+	}
+
+	SetPlayerPosToEnemy();
+	
+	//복수 생성
+	map<wstring, pair<uint32, vector<shared_ptr<GameObject>>>> name;
 	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
 	{
 		name[gameObject->GetName()].first++;
 		name[gameObject->GetName()].second.push_back(gameObject);
 	}
 
-	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
-	{
-		if (gameObject->GetName() == L"Player")
-		{
-			float x,y,z;
-			x = gameObject->GetTransform()->GetLocalPosition().x;
-			y = gameObject->GetTransform()->GetLocalPosition().y;
-			z = gameObject->GetTransform()->GetLocalPosition().y;
-		}
-	}
-
-	SetPlayerPosToEnemy();
-	
 	for (auto& object : name)
 	{
 		if (object.first != L"")
@@ -66,14 +90,14 @@ void Scene::Update()
 			}
 
 			else
-			if ((*object.second.second.begin())->GetMeshRenderer() != NULL)
+				if ((*object.second.second.begin())->GetMeshRenderer() != NULL)
 				{
 					(*object.second.second.begin())->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
 				}
 
 		}
 	}
-	
+
 	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
 	{
 		gameObject->Update();
@@ -86,7 +110,42 @@ void Scene::LateUpdate()
 	{
 		gameObject->LateUpdate();
 		if (gameObject->GetName() == L"Main_Camera")
-			GetPlayerPosToCam(L"Main_Camera");
+			SetCameraPosToPlayer();
+
+		//총알 <-> 적  충돌처리
+		if (gameObject->GetName() == L"Bullet")
+		{
+			for (const shared_ptr<GameObject>& Object : _gameObjects)
+			{
+				if (Object->GetName() == L"Enemy")
+				{
+					if (Object->GetBoxCollider()->Intersects(gameObject->GetBoxCollider()->GetColliderBox()) == true)
+					{
+						//적 공격받는 함수
+						float x = gameObject->GetTransform()->GetLocalPosition().x;
+						float y = gameObject->GetTransform()->GetLocalPosition().y;
+					}
+				}
+			}
+		}
+
+		//체력 출력
+		if (gameObject->GetName() == L"Player")
+		{
+			for (const shared_ptr<GameObject>& Object : _gameObjects)
+			{
+				if (Object->GetName() == L"HealthText")
+				{
+					shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+					Object->GetMeshRenderer()->SetMesh(GET_SINGLE(Resources)->LoadFontMesh(Object->GetFont()->GetTextVB(to_string(gameObject->GetPlayer()->GetHP()))));
+				}
+				if (Object->GetName() == L"BulletText")
+				{
+					shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+					Object->GetMeshRenderer()->SetMesh(GET_SINGLE(Resources)->LoadFontMesh(Object->GetFont()->GetTextVB(to_string(gameObject->GetPlayer()->GetCurrAmmo()))));
+				}
+			}
+		}
 	}
 }
 
@@ -256,9 +315,11 @@ void Scene::RemoveGameObject(shared_ptr<GameObject> gameObject)
 		_gameObjects.erase(findIt);
 }
 
-void Scene::GetPlayerPosToCam(wstring objectname)
+void Scene::SetCameraPosToPlayer()	//플레이어와 카메라에게 서로의 위치를 준다.
 {
 	Vec3 PlayerPos;
+	Vec3 CameraPos;
+	Vec3 CameraLook;
 
 	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
 		if (gameObject->GetName() == L"Player")
@@ -266,8 +327,18 @@ void Scene::GetPlayerPosToCam(wstring objectname)
 
 	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
 		if (gameObject->GetName() == L"Main_Camera")
+		{
 			gameObject->GetTransform()->SetLocalPosition(PlayerPos);
-		
+			CameraPos = gameObject->GetTransform()->GetLocalPosition();
+			CameraLook = gameObject->GetTransform()->GetLook();
+		}
+
+	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
+		if (gameObject->GetName() == L"Player")
+		{
+			gameObject->GetPlayer()->SetBulletPos(CameraPos);
+			gameObject->GetPlayer()->SetBulletLook(CameraLook);
+		}
 }
 
 
