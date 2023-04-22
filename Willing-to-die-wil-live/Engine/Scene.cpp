@@ -74,6 +74,8 @@ void Scene::Update()
 		}
 	}
 
+	SetPlayerPosToEnemy();
+	
 	//복수 생성
 	map<wstring, pair<uint32, vector<shared_ptr<GameObject>>>> name;
 	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
@@ -349,6 +351,28 @@ void Scene::SetCameraPosToPlayer()	//플레이어와 카메라에게 서로의 위치를 준다.
 		}
 }
 
+
+void Scene::SetPlayerPosToEnemy()
+{
+	Vec3 PlayerPos;
+	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
+		if (gameObject->GetName() == L"Player")
+			PlayerPos = gameObject->GetTransform()->GetLocalPosition();
+	
+	PlayerObPos = PlayerPos;
+
+}
+
+void Scene::SetWallPosToEnemy()
+{
+	Vec3 WallPos;
+	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
+		if (gameObject->GetName() == L"Wall")
+			WallPos = gameObject->GetTransform()->GetLocalPosition();
+
+	WallObPos = WallPos;
+}
+
 void Scene::CursorClipping()
 {
 	POINT p1, p2;
@@ -369,27 +393,3 @@ void Scene::CursorClipping()
 	::ClipCursor(&rc);
 }
 
-int(*Scene::CreateMap())[kHeight]
-{
-	for (int x = 0; x < kWidth; ++x)
-	{
-		for (int y = 0; y < kHeight; ++y)
-		{
-			tileMap[x][y] = 1;
-		}
-	}
-	int x, y;
-	/*for (const shared_ptr<GameObject>& gameObject : _gameObjects)
-	{
-		if (gameObject->GetName() == L"Player")
-		{
-			x = gameObject->GetTransform()->GetLocalPosition().x; // 계산식 추가
-			y = gameObject->GetTransform()->GetLocalPosition().z; // 계산식 추가
-			tileMapArray[x][y] = 3;
-		}
-		else if (gameObject->GetName() == L"Wall")
-			tileMapArray[1][1] = 1;
-	}*/
-
-	return tileMap;
-}

@@ -281,7 +281,6 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			material->SetTexture(0, texture);
 			meshRenderer->SetMaterial(material);
 		}
-
 		obj->AddComponent(meshRenderer);
 		scene->AddGameObject(obj);
 	}
@@ -388,12 +387,11 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 	{
 		shared_ptr<MeshData> ZombieMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\SpZombie.fbx");
 
-		for (int i = 0; i < 1; i++)
+		for (int i = 0; i < 12; i++)
 		{
 
 			vector<shared_ptr<GameObject>> gameObjects = ZombieMesh->Instantiate();
-
-
+			
 			for (auto& gameObject : gameObjects)
 			{
 				gameObject->SetName(L"Enemy");
@@ -412,7 +410,28 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				scene->AddGameObject(gameObject);
 			}
 		}
-	}
+	 }
+
+	 {
+		 shared_ptr<MeshData> Wallmesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Building.fbx");
+
+		 vector<shared_ptr<GameObject>> gameObjects = Wallmesh->Instantiate();
+
+		 for (auto& gameObject : gameObjects)
+		 {
+			 gameObject->SetName(L"Wall");
+			 gameObject->SetCheckFrustum(false);
+			 gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 0.f));
+			 gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+			 gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
+			 scene->AddGameObject(gameObject);
+			// gameObject->AddComponent(make_shared<Player>());
+		 }
+	 }
+
+	
+
+	
 #pragma endregion
 
 	return scene;

@@ -3,6 +3,9 @@
 #include "TileMap.h"
 #include "GameObject.h"
 #include "Scene.h"
+#include "Enemy.h"
+
+
 
 
 TileMap::TileMap()
@@ -16,8 +19,8 @@ TileMap::~TileMap()
 
 void TileMap::CreateTile(Vector2& outStart, Vector2& outEnd)
 {
-	Scene s;
-	int (*tileMapArray)[kHeight] = s.CreateMap();
+	Enemy e;
+	int (*tileMapArray)[kHeight] = e.CreateMap();
 
 	for (int y = 0; y < kHeight; ++y)
 	{
