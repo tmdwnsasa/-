@@ -14,6 +14,7 @@
 #include "TestCameraScript.h"
 #include "Enemy.h"
 #include "Font.h"
+#include "Shop.h"
 
 GameObject::GameObject() : Object(OBJECT_TYPE::GAMEOBJECT)
 {
@@ -185,6 +186,12 @@ shared_ptr<Font> GameObject::GetFont()
 {
 	shared_ptr<Component> component = GetFixedComponent(COMPONENT_TYPE::FONT);
 	return static_pointer_cast<Font>(component);
+}
+
+shared_ptr<Shop> GameObject::GetShop()
+{
+	shared_ptr<Component> component = GetFixedComponent(COMPONENT_TYPE::SHOP);
+	return static_pointer_cast<Shop>(component);
 }
 
 void GameObject::AddComponent(shared_ptr<Component> component)

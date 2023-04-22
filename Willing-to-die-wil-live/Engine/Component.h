@@ -18,6 +18,7 @@ enum class COMPONENT_TYPE : uint8
 	ENEMY,
 	TESTCAMERASCRIPT,
 	FONT,
+	SHOP,
 	// ...
 	MONO_BEHAVIOUR,
 	END,

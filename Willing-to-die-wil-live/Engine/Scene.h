@@ -35,8 +35,6 @@ public:
 
 	void CursorClipping();
 
-
-	shared_ptr<GameObject> CollisionCheck(GameObject& other, GameObject other2);
 private:
 	void PushLightData();
 
