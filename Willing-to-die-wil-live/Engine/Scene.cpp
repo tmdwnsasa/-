@@ -59,10 +59,16 @@ void Scene::Update()
 		{
 			for (const shared_ptr<GameObject>& bullet : (gameObject->GetPlayer()->getBullet()))
 			{
+				if (bullet->GetBullet()->GetState() == BULLET_STATE::DEAD)
+				{
+					_trashBin.push_back(bullet);
+				}
+
 				if (bullet->GetBullet()->GetState() == BULLET_STATE::LIVE)
 				{
 					_gameObjects.push_back(bullet);
 					bullet->GetBullet()->SetState(BULLET_STATE::SHOOT);
+
 				}
 			}
 		}
@@ -120,8 +126,7 @@ void Scene::LateUpdate()
 					if (Object->GetBoxCollider()->Intersects(gameObject->GetBoxCollider()->GetColliderBox()) == true)
 					{
 						//적 공격받는 함수
-						float x = gameObject->GetTransform()->GetLocalPosition().x;
-						float y = gameObject->GetTransform()->GetLocalPosition().y;
+						_trashBin.push_back(gameObject);
 					}
 				}
 			}
@@ -149,6 +154,11 @@ void Scene::LateUpdate()
 
 void Scene::FinalUpdate()
 {
+	for (const shared_ptr<GameObject>& trash : _trashBin)
+	{
+		RemoveGameObject(trash);
+	}
+	_trashBin.clear();
 	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
 	{
 		gameObject->FinalUpdate();

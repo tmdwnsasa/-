@@ -208,9 +208,11 @@ void Bullet::Update()
 
 	pos += GetTransform()->GetLook() * _speed * DELTA_TIME;
 
+	_currLifeTime -= DELTA_TIME;
+
 	if (_currLifeTime <= 0.f)
 	{
-		//currState = BULLET_STATE::DEAD;
+		_currState = BULLET_STATE::DEAD;
 	}
 
 	GetTransform()->SetLocalPosition(pos);
