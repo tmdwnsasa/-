@@ -2,7 +2,7 @@
 #include "BaseCollider.h"
 
 BaseCollider::BaseCollider(ColliderType colliderType)
-	: Component(COMPONENT_TYPE::COLLIDER), _colliderType(colliderType)
+	: Component(COMPONENT_TYPE::BASECOLLIDER), _colliderType(colliderType)
 {
 
 }

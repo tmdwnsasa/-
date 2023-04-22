@@ -3,7 +3,7 @@
 #include "GameObject.h"
 #include "Transform.h"
 
-SphereCollider::SphereCollider() : BaseCollider(ColliderType::Sphere)
+SphereCollider::SphereCollider() : Component(COMPONENT_TYPE::SPHERECOLLIDER)
 {
 
 }

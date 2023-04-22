@@ -62,8 +62,8 @@ shared_ptr<Mesh> Resources::LoadRectangleMesh()
 shared_ptr<Mesh> Resources::LoadFontMesh(vector<Vertex> vec)
 {
 	shared_ptr<Mesh> findMesh = Get<Mesh>(L"Font");
-	if (findMesh)
-		return findMesh;
+	//if (findMesh)
+		//return findMesh;
 
 	vector<uint32> idx(vec.size()/4*6);
 

@@ -11,11 +11,17 @@ enum class KEY_TYPE
 	A = 'A',
 	S = 'S',
 	D = 'D',
+	R = 'R',
 
 	Q = 'Q',
 	E = 'E',
 	Z = 'Z',
 	C = 'C',
+
+
+	J = 'J',
+	K = 'K',
+	L = 'L',
 
 	KEY_1 = '1',
 	KEY_2 = '2',

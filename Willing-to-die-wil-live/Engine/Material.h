@@ -68,4 +68,3 @@ private:
 	MaterialParams		_params;
 	array<shared_ptr<Texture>, MATERIAL_ARG_COUNT> _textures;
 };
-

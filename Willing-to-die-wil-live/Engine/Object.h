@@ -31,6 +31,7 @@ public:
 	const wstring& GetName() { return _name; }
 
 	uint32 GetID() { return _id; }
+	void SetID(uint32 id) { _id = id; }
 
 	// TODO : Instantiate
 

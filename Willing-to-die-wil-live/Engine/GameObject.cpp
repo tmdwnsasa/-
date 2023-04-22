@@ -7,7 +7,8 @@
 #include "MonoBehaviour.h"
 #include "ParticleSystem.h"
 #include "Terrain.h"
-#include "BaseCollider.h"
+#include "BoxCollider.h"
+#include "SphereCollider.h"
 #include "Animator.h"
 #include "Player.h"
 #include "TestCameraScript.h"
@@ -132,10 +133,22 @@ shared_ptr<Terrain> GameObject::GetTerrain()
 	return static_pointer_cast<Terrain>(component);
 }
 
-shared_ptr<BaseCollider> GameObject::GetCollider()
+shared_ptr<BaseCollider> GameObject::GetBaseCollider()
 {
-	shared_ptr<Component> component = GetFixedComponent(COMPONENT_TYPE::COLLIDER);
+	shared_ptr<Component> component = GetFixedComponent(COMPONENT_TYPE::BASECOLLIDER);
 	return static_pointer_cast<BaseCollider>(component);
+}
+
+shared_ptr<BoxCollider> GameObject::GetBoxCollider()
+{
+	shared_ptr<Component> component = GetFixedComponent(COMPONENT_TYPE::BOXCOLLIDER);
+	return static_pointer_cast<BoxCollider>(component);
+}
+
+shared_ptr<SphereCollider> GameObject::GetSphereCollider()
+{
+	shared_ptr<Component> component = GetFixedComponent(COMPONENT_TYPE::SPHERECOLLIDER);
+	return static_pointer_cast<SphereCollider>(component);
 }
 
 shared_ptr<Animator> GameObject::GetAnimator()
@@ -148,6 +161,12 @@ shared_ptr<Player> GameObject::GetPlayer()
 {
 	shared_ptr<Component> component = GetFixedComponent(COMPONENT_TYPE::PLAYER);
 	return static_pointer_cast<Player>(component);
+}
+
+shared_ptr<Bullet> GameObject::GetBullet()
+{
+	shared_ptr<Component> component = GetFixedComponent(COMPONENT_TYPE::BULLET);
+	return static_pointer_cast<Bullet>(component);
 }
 
 shared_ptr<Enemy> GameObject::GetEnemy()

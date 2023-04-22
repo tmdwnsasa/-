@@ -31,7 +31,7 @@ public:
 
 	shared_ptr<class Camera> GetMainCamera();
 
-	void GetPlayerPosToCam(wstring objectname);
+	void SetCameraPosToPlayer();
 
 	void Render();
 
@@ -46,6 +46,8 @@ public:
 
 	void CursorClipping();
 	int (*CreateMap())[Height];
+
+	shared_ptr<GameObject> CollisionCheck(GameObject& other, GameObject other2);
 private:
 	void PushLightData();
 

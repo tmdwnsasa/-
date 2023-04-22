@@ -456,3 +456,10 @@ FodyWeavers.xsd
 # Additional files built by Visual Studio
 
 # End of https://www.toptal.com/developers/gitignore/api/windows,visualstudio,c++
+Willing-to-die-wil-live/Resources/FBX/Parasite.fbx
+Willing-to-die-wil-live/Resources/FBX/SpZombie.fbx
+Willing-to-die-wil-live/Resources/FBX/SpZombie.fbm/skeletonZombie_body_diffuse.png
+Willing-to-die-wil-live/Resources/FBX/SpZombie.fbm/skeletonZombie_diffuse.png
+Willing-to-die-wil-live/Resources/FBX/SpZombie.fbm/skeletonZombie_glow.png
+Willing-to-die-wil-live/Resources/FBX/SpZombie.fbm/skeletonZombie_normal.png
+Willing-to-die-wil-live/Resources/FBX/SpZombie.fbm/skeletonZombie_specular.png
