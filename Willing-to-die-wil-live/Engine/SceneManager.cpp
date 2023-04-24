@@ -10,7 +10,7 @@
 #include "Camera.h"
 #include "Light.h"
 
-#include "TestCameraScript.h"
+#include "CameraScript.h"
 #include "Resources.h"
 #include "ParticleSystem.h"
 #include "Terrain.h"
@@ -22,6 +22,7 @@
 #include "Player.h"
 #include "Font.h"
 #include "Enemy.h"
+#include "Shop.h"
 
 #include <iostream>
 
@@ -156,7 +157,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		camera->SetName(L"Main_Camera");
 		camera->AddComponent(make_shared<Transform>());
 		camera->AddComponent(make_shared<Camera>()); // Near=1, Far=1000, FOV=45µµ
-		camera->AddComponent(make_shared<TestCameraScript>());
+		camera->AddComponent(make_shared<CameraScript>());
 		camera->GetCamera()->SetFar(10000.f);
 		camera->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 0.f));
 		uint8 layerIndex = GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI");
@@ -204,35 +205,35 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 #pragma endregion
 
 #pragma region Object
-//for (int i = 0; i < 15; i++)
+//for (int i = 0; i < 17; i++)
 //		for (int j = 0; j < 17; j++)
-		//{
-		//	shared_ptr<GameObject> obj = make_shared<GameObject>();
-		//	obj->SetName(L"OBJ");
-		//	obj->AddComponent(make_shared<Transform>());
-		//	obj->GetTransform()->SetLocalScale(Vec3(100.f, 100.f, 100.f));
-		//	obj->GetTransform()->SetLocalPosition(Vec3(100.f, 100.f, 500.f));
-		//	obj->SetCheckFrustum(false);
-		//	shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-		//	{
-		//		shared_ptr<Mesh> sphereMesh = GET_SINGLE(Resources)->LoadSphereMesh();
-		//		meshRenderer->SetMesh(sphereMesh);
-		//	}
-		//	{
-		//		shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"GameObject");
-		//		material->SetInt(0, 1); 
-		//		meshRenderer->SetMaterial(material);
-		//	}
-		//	shared_ptr<SphereCollider> spherecollider = make_shared<SphereCollider>();
-		//	obj->SetStatic(false);
-
-		//	spherecollider->SetRadius(0.5f);
-		//	spherecollider->SetCenter(Vec3(0.f, 0.f, 0.f));
-
-		//	obj->AddComponent(spherecollider);
-		//	obj->AddComponent(meshRenderer);
-		//	scene->AddGameObject(obj);
-		//}
+//		{
+//			shared_ptr<GameObject> obj = make_shared<GameObject>();
+//			obj->SetName(L"OBJ");
+//			obj->AddComponent(make_shared<Transform>());
+//			obj->GetTransform()->SetLocalScale(Vec3(100.f, 100.f, 100.f));
+//			obj->GetTransform()->SetLocalPosition(Vec3(100.f, 100.f, 500.f));
+//			obj->SetCheckFrustum(false);
+//			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+//			{
+//				shared_ptr<Mesh> sphereMesh = GET_SINGLE(Resources)->LoadSphereMesh();
+//				meshRenderer->SetMesh(sphereMesh);
+//			}
+//			{
+//				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"GameObject");
+//				material->SetInt(0, 1); 
+//				meshRenderer->SetMaterial(material);
+//			}
+//			shared_ptr<SphereCollider> spherecollider = make_shared<SphereCollider>();
+//			obj->SetStatic(false);
+//
+//			spherecollider->SetRadius(0.5f);
+//			spherecollider->SetCenter(Vec3(0.f, 0.f, 0.f));
+//
+//			obj->AddComponent(spherecollider);
+//			obj->AddComponent(meshRenderer);
+//			scene->AddGameObject(obj);
+//		}
 #pragma endregion
 
 #pragma region Terrain
@@ -292,8 +293,8 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		obj->SetName(L"HealthText");
 		obj->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
 		obj->AddComponent(make_shared<Transform>());
-		obj->GetTransform()->SetLocalScale(Vec3(10.f, 10.f, 10.f));
-		obj->GetTransform()->SetLocalPosition(Vec3(-300.f, -200.f, 500.f));
+		obj->GetTransform()->SetLocalScale(Vec3(10.f, 10.f, 1.f));
+		obj->GetTransform()->SetLocalPosition(Vec3(-300.f, -200.f, 900.f));
 		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 
 		shared_ptr<Font> font = make_shared<Font>();
@@ -331,6 +332,37 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		shared_ptr<Font> font = make_shared<Font>();
 		font->BuildFont();
 		shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadFontMesh(font->GetTextVB("100"));
+		meshRenderer->SetMesh(mesh);
+
+		{
+			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Font");
+
+			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"original", L"..\\Resources\\Font\\text.png");;
+
+			shared_ptr<Material> material = make_shared<Material>();
+			material->SetShader(shader);
+			material->SetTexture(0, texture);
+			meshRenderer->SetMaterial(material);
+			obj->AddComponent(meshRenderer);
+			obj->AddComponent(font);
+			scene->AddGameObject(obj);
+		}
+	}
+#pragma endregion
+
+#pragma region Text_Money
+	{
+		shared_ptr<GameObject> obj = make_shared<GameObject>();
+		obj->SetName(L"MoneyText");
+		obj->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
+		obj->AddComponent(make_shared<Transform>());
+		obj->GetTransform()->SetLocalScale(Vec3(10.f, 10.f, 10.f));
+		obj->GetTransform()->SetLocalPosition(Vec3(-350.f, 250.f, 500.f));
+		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+
+		shared_ptr<Font> font = make_shared<Font>();
+		font->BuildFont();
+		shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadFontMesh(font->GetTextVB("100000"));
 		meshRenderer->SetMesh(mesh);
 
 		{
@@ -387,7 +419,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 	{
 		shared_ptr<MeshData> ZombieMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\SpZombie.fbx");
 
-		for (int i = 0; i < 12; i++)
+		for (int i = 0; i < 1; i++)
 		{
 
 			vector<shared_ptr<GameObject>> gameObjects = ZombieMesh->Instantiate();
@@ -412,27 +444,32 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		}
 	 }
 
-	 {
-		 shared_ptr<MeshData> Wallmesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Building.fbx");
+	{
+		shared_ptr<MeshData> Wallmesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Building.fbx");
 
-		 vector<shared_ptr<GameObject>> gameObjects = Wallmesh->Instantiate();
+		vector<shared_ptr<GameObject>> gameObjects = Wallmesh->Instantiate();
 
-		 for (auto& gameObject : gameObjects)
-		 {
-			 gameObject->SetName(L"Wall");
-			 gameObject->SetCheckFrustum(false);
-			 gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 0.f));
-			 gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
-			 gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
-			 scene->AddGameObject(gameObject);
-			// gameObject->AddComponent(make_shared<Player>());
-		 }
-	 }
-
-	
-
-	
+		for (auto& gameObject : gameObjects)
+		{
+			gameObject->SetName(L"Wall");
+			gameObject->SetCheckFrustum(false);
+			gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 0.f));
+			gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
+			scene->AddGameObject(gameObject);
+		}
+	}
 #pragma endregion
 
+#pragma region Shop
+	{
+		shared_ptr<GameObject> ShopUI = make_shared<GameObject>();
+		ShopUI->SetName(L"Shop");
+		ShopUI->AddComponent(make_shared<Transform>());
+		ShopUI->AddComponent(make_shared<Shop>());
+		ShopUI->GetTransform()->SetLocalPosition(Vec3(0, 1000, 500));
+		scene->AddGameObject(ShopUI);
+	}
+#pragma endregion
 	return scene;
 }

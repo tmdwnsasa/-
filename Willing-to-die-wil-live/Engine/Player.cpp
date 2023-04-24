@@ -18,7 +18,7 @@
 Player::Player() : Component(COMPONENT_TYPE::PLAYER)
 {
 	_oldMousePos = { GEngine->GetWindow().width / 2, GEngine->GetWindow().height / 2 };
-	ChangeWeapon(PLAYER_WEAPON::PISTOL);
+	ChangeWeapon(PLAYER_WEAPON::SHOTGUN);
 }
 
 Player::~Player()
@@ -55,27 +55,35 @@ void Player::Update()
 		_hp += 10;
 
 
-	if (INPUT->GetButtonDown(KEY_TYPE::KEY_1))
+	//if (INPUT->GetButtonDown(KEY_TYPE::KEY_1))
+	//{
+	//	int32 count = GetAnimator()->GetAnimCount();
+	//	int32 currentIndex = GetAnimator()->GetCurrentClipIndex();
+
+	//	int32 index = (currentIndex + 1) % count;
+	//	GetAnimator()->Play(index);
+	//}
+
+	//if (INPUT->GetButtonDown(KEY_TYPE::KEY_2))
+	//{
+	//	int32 count = GetAnimator()->GetAnimCount();
+	//	int32 currentIndex = GetAnimator()->GetCurrentClipIndex();
+
+	//	int32 index = (currentIndex - 1 + count) % count;
+	//	GetAnimator()->Play(index);
+	//}
+
+	if (_rotateLock == false && _shopOpened == false)
+		PlayerRotate();
+
+	if (INPUT->GetButtonDown(KEY_TYPE::ESC))
 	{
-		int32 count = GetAnimator()->GetAnimCount();
-		int32 currentIndex = GetAnimator()->GetCurrentClipIndex();
-
-		int32 index = (currentIndex + 1) % count;
-		GetAnimator()->Play(index);
-	}
-
-	if (INPUT->GetButtonDown(KEY_TYPE::KEY_2))
-	{
-		int32 count = GetAnimator()->GetAnimCount();
-		int32 currentIndex = GetAnimator()->GetCurrentClipIndex();
-
-		int32 index = (currentIndex - 1 + count) % count;
-		GetAnimator()->Play(index);
+		_rotateLock = true;
 	}
 
 	if (INPUT->GetButtonDown(KEY_TYPE::LBUTTON))
 	{
-		if (_currAmmo > 0)
+		if (_currAmmo > 0 && _rotateLock == false && _shopOpened == false)
 		{
 			_reloading = false;
 			for (int i = 0; i < _pellet; i++)
@@ -118,6 +126,12 @@ void Player::Update()
 			_reloading = true;
 			_reloadTime = _reloadMaxTime;
 		}
+
+		if (_rotateLock == true)
+		{
+			_rotateLock = false;
+			SetCursorPos(INPUT->GetOldMousePos().x, INPUT->GetOldMousePos().y);
+		}
 	}
 
 	if (_reloading == true)
@@ -130,7 +144,6 @@ void Player::Update()
 			_reloading = false;
 		}
 	}
-	PlayerRotate();
 	GetTransform()->SetLocalPosition(pos);
 }
 
@@ -185,6 +198,27 @@ void Player::ChangeWeapon(PLAYER_WEAPON weapon)
 		_rateOfFire = 0.5f;
 		_reloadMaxTime = 2.5f;
 		_reloadPerAmmo = _maxAmmo;
+	}
+}
+
+bool Player::MoneyChange(int amount)
+{
+	if (amount < 0)
+	{
+		if (_money + amount >= 0)
+		{
+			_money += amount;
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	else
+	{
+		_money += amount;
+		return true;
 	}
 }
 

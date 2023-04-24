@@ -5,7 +5,9 @@
 void Input::Init(HWND hwnd)
 {
 	_hwnd = hwnd;
-	_states.resize(KEY_TYPE_COUNT, KEY_STATE::NONE);
+	_states.resize(KEY_TYPE_COUNT, KEY_STATE::NONE); 
+	_oldMousePos = { GEngine->GetWindow().width / 2, GEngine->GetWindow().height / 2 };
+
 }
 
 void Input::Update()

@@ -44,11 +44,11 @@ void Enemy::Update()
 
 	//GetTransform()->SetLocalPosition(pos);
 
-	SetEnemyPosition(pos);
+	//SetEnemyPosition(pos);
 
-	SetPlayerPos();
+	//SetPlayerPos();
 
-	AstarCall();
+	//AstarCall();
 
 	Vec3 EPos = GetEnemyPosition();
 	EPos.y;

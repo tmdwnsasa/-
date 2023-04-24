@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "TestCameraScript.h"
+#include "CameraScript.h"
 #include "Engine.h"
 #include "Transform.h"
 #include "Camera.h"
@@ -8,37 +8,26 @@
 #include "Timer.h"
 #include "SceneManager.h"
 
-TestCameraScript::TestCameraScript()
+CameraScript::CameraScript() : Component(COMPONENT_TYPE::CAMERASCRIPT)
 {
-	_oldMousePos = { GEngine->GetWindow().width/2, GEngine->GetWindow().height/2};
 	//::ScreenToClient(GEngine->GetWindow().hwnd, &_oldMousePos);
+	_oldMousePos = { GEngine->GetWindow().width / 2, GEngine->GetWindow().height / 2 };
 }
 
-TestCameraScript::~TestCameraScript()
+CameraScript::~CameraScript()
 {
 }
 
-void TestCameraScript::Update()
+void CameraScript::Update()
 {
-	if (_isOn == true)
+	if (_mouseLock == false )
 		CameraRotation();
 }
 
-void TestCameraScript::LateUpdate()
+void CameraScript::LateUpdate()
 {
 	Vec3 pos = GetTransform()->GetLocalPosition();
 
-	if (INPUT->GetButton(KEY_TYPE::W))
-		pos += GetTransform()->GetLook() * _speed * DELTA_TIME;
-
-	if (INPUT->GetButton(KEY_TYPE::S))
-		pos -= GetTransform()->GetLook() * _speed * DELTA_TIME;
-
-	if (INPUT->GetButton(KEY_TYPE::A))
-		pos -= GetTransform()->GetRight() * _speed * DELTA_TIME;
-
-	if (INPUT->GetButton(KEY_TYPE::D))
-		pos += GetTransform()->GetRight() * _speed * DELTA_TIME;
 
 	if (INPUT->GetButton(KEY_TYPE::Q))
 	{
@@ -70,12 +59,12 @@ void TestCameraScript::LateUpdate()
 
 	if (INPUT->GetButtonDown(KEY_TYPE::LBUTTON))
 	{
-		if (_isOn == false)
+		if (_mouseLock == true && _shopOpened == false)
 		{
 			POINT tempForSetCursor = _oldMousePos;
 			ClientToScreen(GEngine->GetWindow().hwnd, &tempForSetCursor);
 			SetCursorPos(tempForSetCursor.x, tempForSetCursor.y);
-			_isOn = true;
+			_mouseLock = false;
 		}
 	}
 
@@ -85,16 +74,27 @@ void TestCameraScript::LateUpdate()
 		GET_SINGLE(SceneManager)->Pick(pos.x, pos.y);
 	}
 
-	if (INPUT->GetButtonDown(KEY_TYPE::TAB))
+	if (INPUT->GetButtonDown(KEY_TYPE::ESC))
 	{
-		_isOn = false;
+		_mouseLock = true;
+	}
+
+	if (INPUT->GetButtonDown(KEY_TYPE::O))
+	{
+		POINT tempForSetCursor = _oldMousePos;
+		ClientToScreen(GEngine->GetWindow().hwnd, &tempForSetCursor);
+		SetCursorPos(tempForSetCursor.x, tempForSetCursor.y);
+		if (_mouseLock == true)
+			_mouseLock = false;
+		else
+			_mouseLock = true;
 	}
 
 
 	GetTransform()->SetLocalPosition(pos);
 }
 
-void TestCameraScript::CameraRotation()
+void CameraScript::CameraRotation()
 {
 	Vec3 rotation = GetTransform()->GetLocalRotation();
 	POINT tempForSetCursor = _oldMousePos;

@@ -2,7 +2,15 @@
 
 class GameObject;
 
-
+enum class SCENE_STATE : uint8
+{
+	BATTLE,
+	SHOPPING,
+	ESCAPE,
+	
+	
+	END
+};
 
 class Scene
 {
@@ -45,13 +53,18 @@ public:
 	const vector<shared_ptr<GameObject>>& GetGameObjects() { return _gameObjects; }
 	Vec3			PlayerObPos;
 	Vec3			WallObPos;
+
 private:
 	vector<shared_ptr<GameObject>>		_gameObjects;
-	vector<shared_ptr<GameObject>>		_trashBin;
 	vector<shared_ptr<class Camera>>	_cameras;
 	vector<shared_ptr<class Light>>		_lights;
+	vector<shared_ptr<GameObject>>		_trashBin;
+
+	bool			_shopOpened;
 
 	bool			_clipcursor = false;
 	RECT			rc;
+
+	bool			_mouseLock = false;
 };
 
