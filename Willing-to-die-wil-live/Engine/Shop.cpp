@@ -40,6 +40,37 @@ Shop::Shop() : Component(COMPONENT_TYPE::SHOP)
 		_shopObject.push_back(obj);
 	}
 #pragma endregion
+
+#pragma region Purchase Button
+	{
+		shared_ptr<GameObject> obj = make_shared<GameObject>();
+		obj->SetName(L"Button");
+		obj->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
+		obj->AddComponent(make_shared<Transform>());
+		obj->GetTransform()->SetLocalScale(Vec3(200.f, 200.f, 1.f));
+		obj->GetTransform()->SetLocalPosition(Vec3(0, -100, 1.f));
+		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+		{
+			shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
+			meshRenderer->SetMesh(mesh);
+		}
+		{
+			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+
+			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"ShopButton", L"..\\Resources\\Texture\\ShopItemBackground.png");;
+
+			shared_ptr<Material> material = make_shared<Material>();
+			material->SetShader(shader);
+			material->SetTexture(0, texture);
+			meshRenderer->SetMaterial(material);
+		}
+		shared_ptr<Button> button = make_shared<Button>();
+		button->SetType(BUTTON_TYPE::PURCHASE);
+		obj->AddComponent(button);
+		obj->AddComponent(meshRenderer);
+		_shopObject.push_back(obj);
+	}
+#pragma endregion
 	for (int i = 0; i < _shopMerchandise; i++)
 	{
 		MakeMerchandise(i,(PLAYER_WEAPON)i);
@@ -72,8 +103,11 @@ void Shop::Update()
 				{
 					if (object->GetButton()->CheckPress(_mousePos) == true)
 					{
-						_selected = object;
-						ShowSelectedMerchandise();
+						if(object->GetButton()->GetType() == BUTTON_TYPE::SHOP)
+							_selected = object;
+						if (object->GetButton()->GetType() == BUTTON_TYPE::PURCHASE)
+							_purchase = true;
+						//ShowSelectedMerchandise();
 					}
 				}
 			}
@@ -129,7 +163,7 @@ void Shop::MakeMerchandise(int count, PLAYER_WEAPON weapon)
 
 			shared_ptr<Material> material = make_shared<Material>();
 			buttonMeshRenderer->SetMesh(mesh);
-			material->SetShader(shader);
+			material->SetShader(shader);	
 			material->SetTexture(0, texture);
 			buttonMeshRenderer->SetMaterial(material);
 		}

@@ -6,7 +6,9 @@ enum class BUTTON_TYPE
 {
 	NONE,
 	SHOP,
+	PURCHASE,
 	MENU,
+
 
 	END
 };

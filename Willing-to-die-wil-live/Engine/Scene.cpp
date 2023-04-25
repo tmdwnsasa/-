@@ -18,6 +18,7 @@
 #include "BoxCollider.h"
 #include "Font.h"
 #include "Shop.h"
+#include "Button.h"
 #include <iostream>
 
 //cout 출력용 코드
@@ -60,6 +61,19 @@ void Scene::Update()
 	{
 		if (gameObject->GetName() == L"Shop")
 		{
+			if (_shopOpened == true)
+			{
+				if (gameObject->GetShop()->GetPurchase() == true)
+				{
+					for (auto& object : _gameObjects)
+					{
+						if (object->GetName() == L"Player")
+							object->GetPlayer()->ChangeWeapon(gameObject->GetShop()->GetSelected()->GetButton()->GetMerchandise());
+
+					}
+					gameObject->GetShop()->SetPurchase(false);
+				}
+			}
 			if (gameObject->GetShop()->GetShopState() == _shopOpened)
 			{
 				break;
@@ -73,7 +87,6 @@ void Scene::Update()
 					{
 						_gameObjects.push_back(gameObject);
 					}
-
 				}
 				else
 				{
@@ -84,6 +97,7 @@ void Scene::Update()
 
 				}
 			}
+
 		}
 		if (gameObject->GetName() == L"Player")
 		{
@@ -428,6 +442,7 @@ void Scene::CursorClipping()
 {
 	POINT p1, p2;
 	::GetClientRect(GEngine->GetWindow().hwnd, &rc);
+
 	p1.x = rc.left;
 	p1.y = rc.top;
 	p2.x = rc.right;
