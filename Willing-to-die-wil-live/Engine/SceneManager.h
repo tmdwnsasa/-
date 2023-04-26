@@ -22,6 +22,11 @@ public:
 
 	shared_ptr<class GameObject> Pick(int32 screenX, int32 screenY);
 
+	const double py = std::acos(-1);
+	const float baseX = 1000;
+	const float baseZ = 1500;
+	const float scale = 300;
+
 public:
 	shared_ptr<Scene> GetActiveScene() { return _activeScene; }
 

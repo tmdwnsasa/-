@@ -33,6 +33,7 @@ void Terrain::Init(int32 sizeX, int32 sizeZ)
 	shared_ptr<Texture> heightMap = GET_SINGLE(Resources)->Load<Texture>(L"HeightMap", L"..\\Resources\\Texture\\Terrain\\height2.jpg");
 	Vec2 v = Vec2(heightMap->GetWidth(), heightMap->GetHeight());
 	_material->SetVec2(0, Vec2(heightMap->GetWidth(), heightMap->GetHeight()));
+	//_material->SetVec2(0, Vec2(0,0));
 	_material->SetVec2(1, Vec2(1000.f, 5000.f));
 	_material->SetTexture(2, heightMap);
 

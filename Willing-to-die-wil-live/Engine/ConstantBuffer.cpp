@@ -82,7 +82,7 @@ void ConstantBuffer::Clear()
 void ConstantBuffer::PushGraphicsData(void* buffer, uint32 size)
 {
 	assert(_currentIndex < _elementCount);
-	assert(_elementSize == ((size + 255) & ~255));
+	assert(_elementSize == ((size + 511) & ~511));
 
 	::memcpy(&_mappedBuffer[_currentIndex * _elementSize], buffer, size);
 

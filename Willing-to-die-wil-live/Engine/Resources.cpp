@@ -411,7 +411,7 @@ void Resources::CreateDefaultShader()
 		{
 			SHADER_TYPE::FORWARD,
 			RASTERIZER_TYPE::CULL_NONE,
-			DEPTH_STENCIL_TYPE::NO_DEPTH_TEST_NO_WRITE
+			DEPTH_STENCIL_TYPE::LESS_EQUAL,
 		};
 
 		ShaderArg arg =

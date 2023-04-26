@@ -19,6 +19,8 @@
 #include "Font.h"
 #include <iostream>
 
+#pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console")
+
 void Scene::Awake()
 {
 	//CursorClipping();
@@ -109,6 +111,7 @@ void Scene::Update()
 		gameObject->Update();
 	}
 }
+
 
 void Scene::LateUpdate()
 {
