@@ -86,6 +86,7 @@ public:
 	void SetEnemyPosition(Vec3 pos) { EnemyPos = pos; }
 	Vec3 GetEnemyPosition() { return EnemyPos; }
 	void AstarCall();
+	void AstarMove(int x, int y, int z, int w);
 	bool isDestination(int row, int col, Pair dst);
 	bool isRanger(int row, int col);
 	bool isUnBlock(int row, int col);
@@ -103,5 +104,5 @@ public:
 	Vec3 EnemyPos;
 
 private:
-	float		_speed = 100.0f;
+	float		_speed = 10.0f;
 };

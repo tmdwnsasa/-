@@ -19,7 +19,7 @@
 #include "Font.h"
 #include <iostream>
 
-#pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console")
+//#pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console")
 
 void Scene::Awake()
 {

@@ -28,7 +28,6 @@ void Enemy::Update()
 {
 	Vec3 pos = GetTransform()->GetLocalPosition();
 
-
 	//pos += GetTransform()->GetLook() * _speed * 10 * DELTA_TIME;
 	//pos += GetTransform()->GetRight() * _speed * DELTA_TIME;
 
@@ -44,16 +43,11 @@ void Enemy::Update()
 
 	//GetTransform()->SetLocalPosition(pos);
 
-	//SetEnemyPosition(pos);
+	SetEnemyPosition(pos);
 
-	//SetPlayerPos();
+	SetPlayerPos();
 
-	//AstarCall();
-
-	Vec3 EPos = GetEnemyPosition();
-	EPos.y;
-	EPos.x;
-
+	AstarCall();
 }
 
 
@@ -71,14 +65,34 @@ void Enemy::AstarCall()
 	auto nodeList = pathFinder.DoFindPath(startPos, endPos);
 	tileMap.Display(nodeList);
 
-	//int k = nodeList.front()->pos.x;
+	int k = nodeList.front()->pos.x;
+	int l = nodeList.front()->pos.y;
 	
-	//list<TileNode*>::iterator iter = nodeList.begin();
+	list<TileNode*>::iterator iter = nodeList.begin();
 
-	//advance(iter, 1);
-	//int p = (*iter)->pos.x;
-	//p = (*iter)->pos.y;
+	advance(iter, 1);
+	int p = (*iter)->pos.x;
+	int q = (*iter)->pos.y;
+
+	AstarMove(k, l, p, q);
 }
+
+void Enemy::AstarMove(int x, int y, int z, int w)
+{
+	Vec3 pos = GetTransform()->GetLocalPosition();
+
+	x = x - z;
+	y = y - w;
+	if (x == 1)
+	{
+		pos += GetTransform()->GetLook() * _speed * 10;
+	}
+
+	GetTransform()->SetLocalPosition(pos);
+
+}
+
+
 
 void Enemy::SetPlayerPos()
 {
@@ -88,14 +102,16 @@ void Enemy::SetPlayerPos()
 	int x = PlayerPos.x;
 	int y = PlayerPos.y;
 
-	x = x + 101;
-	y = y + 102;
+	x = 1;
+	y = 2;
 	tileMap[y][x] = 3;
 
 	Vec3 EPos = GetEnemyPosition();
 
-	x = EPos.x + 3;
-	y = EPos.y + 3;
+	//x = EPos.x + 3;
+	//y = EPos.y + 3;
+	x = 3;
+	y = 3;
 	tileMap[y][x] = 2;
 }
 
