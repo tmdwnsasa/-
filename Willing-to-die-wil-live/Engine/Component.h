@@ -20,6 +20,7 @@ enum class COMPONENT_TYPE : uint8
 	FONT,
 	SHOP,
 	BUTTON,
+	GUN,
 	// ...
 	MONO_BEHAVIOUR,
 	END,

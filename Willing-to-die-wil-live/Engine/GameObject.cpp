@@ -16,6 +16,7 @@
 #include "Font.h"
 #include "Shop.h"
 #include "Button.h"
+#include "Gun.h"
 
 GameObject::GameObject() : Object(OBJECT_TYPE::GAMEOBJECT)
 {
@@ -199,6 +200,12 @@ shared_ptr<Button> GameObject::GetButton()
 {
 	shared_ptr<Component> component = GetFixedComponent(COMPONENT_TYPE::BUTTON);
 	return static_pointer_cast<Button>(component);
+}
+
+shared_ptr<Gun> GameObject::GetGun()
+{
+	shared_ptr<Component> component = GetFixedComponent(COMPONENT_TYPE::GUN);
+	return static_pointer_cast<Gun>(component);
 }
 
 void GameObject::AddComponent(shared_ptr<Component> component)

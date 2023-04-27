@@ -82,6 +82,7 @@ private:
 	float			_rateOfFire = 0.5f;
 	float			_reloadMaxTime = 3.f;
 	float			_reloadTime = 3.f;
+	int				_price = 500;
 
 	// Bullet
 	vector<shared_ptr<GameObject>>	bullets;

@@ -80,8 +80,6 @@ vector<shared_ptr<GameObject>> MeshData::Instantiate()
 
 		v.push_back(gameObject);
 	}
-
-
 	return v;
 }
 

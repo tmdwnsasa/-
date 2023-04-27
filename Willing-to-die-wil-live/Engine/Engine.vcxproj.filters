@@ -192,6 +192,9 @@
     <ClInclude Include="CameraScript.h">
       <Filter>Object\Component</Filter>
     </ClInclude>
+    <ClInclude Include="Gun.h">
+      <Filter>Object\Component</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TableDescriptorHeap.cpp">
@@ -345,6 +348,9 @@
       <Filter>Object\Component\UI</Filter>
     </ClCompile>
     <ClCompile Include="CameraScript.cpp">
+      <Filter>Object\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Gun.cpp">
       <Filter>Object\Component</Filter>
     </ClCompile>
   </ItemGroup>

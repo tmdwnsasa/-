@@ -25,8 +25,7 @@ Shop::Shop() : Component(COMPONENT_TYPE::SHOP)
 		{
 			shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
 			meshRenderer->SetMesh(mesh);
-		}
-		{
+
 			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
 
 			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"ShopBackGround", L"..\\Resources\\Texture\\ShopBackground.png");;
@@ -47,14 +46,13 @@ Shop::Shop() : Component(COMPONENT_TYPE::SHOP)
 		obj->SetName(L"Button");
 		obj->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
 		obj->AddComponent(make_shared<Transform>());
-		obj->GetTransform()->SetLocalScale(Vec3(200.f, 200.f, 1.f));
-		obj->GetTransform()->SetLocalPosition(Vec3(0, -100, 1.f));
+		obj->GetTransform()->SetLocalScale(Vec3(200.f, 100.f, 1.f));
+		obj->GetTransform()->SetLocalPosition(Vec3(0, -200, 1.f));
 		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 		{
 			shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
 			meshRenderer->SetMesh(mesh);
-		}
-		{
+
 			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
 
 			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"ShopButton", L"..\\Resources\\Texture\\ShopItemBackground.png");;
@@ -122,8 +120,8 @@ void Shop::MakeMerchandise(int count, PLAYER_WEAPON weapon)
 		ButtonBG->SetName(L"Button");
 		ButtonBG->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
 		ButtonBG->AddComponent(make_shared<Transform>());
-		ButtonBG->GetTransform()->SetLocalScale(Vec3(200.f, 50.f, 10.f));
-		ButtonBG->GetTransform()->SetLocalPosition(Vec3(200.f, 150.f - 60.f * count, 500.f));
+		ButtonBG->GetTransform()->SetLocalScale(Vec3(300.f, 50.f, 10.f));
+		ButtonBG->GetTransform()->SetLocalPosition(Vec3(150.f, 150.f - 60.f * count, 500.f));
 		shared_ptr<MeshRenderer> itemMeshRenderer = make_shared<MeshRenderer>();
 		{
 			shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
@@ -132,7 +130,7 @@ void Shop::MakeMerchandise(int count, PLAYER_WEAPON weapon)
 		{
 			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
 
-			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"ShopButton", L"..\\Resources\\Texture\\ShopItemBackground.png");;
+			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"ShopButton", L"..\\Resources\\Texture\\ShopItemBackground.png");
 
 			shared_ptr<Material> material = make_shared<Material>();
 			material->SetShader(shader);
@@ -151,7 +149,7 @@ void Shop::MakeMerchandise(int count, PLAYER_WEAPON weapon)
 		shared_ptr<GameObject> ItemBG = make_shared<GameObject>();
 		ItemBG->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
 		ItemBG->AddComponent(make_shared<Transform>());
-		ItemBG->GetTransform()->SetLocalScale(Vec3(40.f, 40.f, 10.f));
+		ItemBG->GetTransform()->SetLocalScale(Vec3(200.f, 40.f, 10.f));
 		ItemBG->GetTransform()->SetLocalPosition(Vec3(125.f, 150.f - 60.f * count, 500.f));
 		shared_ptr<MeshRenderer> buttonMeshRenderer = make_shared<MeshRenderer>();
 		{
@@ -159,11 +157,16 @@ void Shop::MakeMerchandise(int count, PLAYER_WEAPON weapon)
 
 			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
 
-			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"ShopItem", L"..\\Resources\\Texture\\ShopButtonBackground.png");;
+			wstring a = L"..\\Resources\\Texture\\ShopButtonBackground";
+			wstring b = to_wstring(count);
+			wstring c = L".png";
+			wstring d = L"ShopItem";
+
+			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(d + b, a + b + c);;
 
 			shared_ptr<Material> material = make_shared<Material>();
 			buttonMeshRenderer->SetMesh(mesh);
-			material->SetShader(shader);	
+			material->SetShader(shader);
 			material->SetTexture(0, texture);
 			buttonMeshRenderer->SetMaterial(material);
 		}
@@ -180,7 +183,7 @@ void Shop::ShowSelectedMerchandise()
 		selectedItem->SetName(L"SelectedItem");
 		selectedItem->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
 		selectedItem->AddComponent(make_shared<Transform>());
-		selectedItem->GetTransform()->SetLocalScale(Vec3(100.f, 100.f, 10.f));
+		selectedItem->GetTransform()->SetLocalScale(Vec3(140.f, 28.f, 10.f));
 		selectedItem->GetTransform()->SetLocalPosition(Vec3(0.f, 150.f, 500.f));
 		shared_ptr<MeshRenderer> meshRenderer = _selected->GetMeshRenderer();
 		{
@@ -191,12 +194,12 @@ void Shop::ShowSelectedMerchandise()
 			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"ShopButtonBackGround", L"..\\Resources\\Texture\\ShopButtonBackground.png");;
 
 			shared_ptr<Material> material = make_shared<Material>();
+
 			meshRenderer->SetMesh(mesh);
 			material->SetShader(shader);
 			material->SetTexture(0, texture);
 			meshRenderer->SetMaterial(material);
 		}
 		selectedItem->AddComponent(meshRenderer);
-		_shopObject.push_back(selectedItem);
 	}
 }

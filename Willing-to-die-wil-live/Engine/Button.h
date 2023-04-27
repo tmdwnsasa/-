@@ -15,6 +15,7 @@ enum class BUTTON_TYPE
 
 class Button : public Component
 {
+
 public:
 	Button();
 	virtual ~Button();
@@ -25,6 +26,7 @@ public:
 	void SetMerchandise(PLAYER_WEAPON merchandise) { _merchandise = merchandise; };
 
 	bool CheckPress(POINT mousePos);
+
 private:
 	BUTTON_TYPE _buttonType;
 	PLAYER_WEAPON _merchandise;

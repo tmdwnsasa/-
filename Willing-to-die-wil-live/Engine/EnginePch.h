@@ -12,6 +12,7 @@
 #include <array>
 #include <list>
 #include <map>
+#include <random>
 using namespace std;
 
 #include <filesystem>
@@ -194,8 +195,13 @@ struct FontType
 	int size;
 };
 
+static random_device rd;
+static default_random_engine dre{ rd()};
+static uniform_int_distribution<int> uid{ 0, 100 };
+
 extern unique_ptr<class Engine> GEngine;
 
 // Utils
 wstring s2ws(const string& s);
 string ws2s(const wstring& s);
+int	RandomInt();

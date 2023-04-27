@@ -23,8 +23,12 @@
 #include "Font.h"
 #include "Enemy.h"
 #include "Shop.h"
+#include "Gun.h"
 
 #include <iostream>
+
+//cout 출력용 코드
+#pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console")
 
 void SceneManager::Update()
 {
@@ -205,39 +209,39 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 #pragma endregion
 
 #pragma region Object
-//for (int i = 0; i < 17; i++)
-//		for (int j = 0; j < 17; j++)
-//		{
-//			shared_ptr<GameObject> obj = make_shared<GameObject>();
-//			obj->SetName(L"OBJ");
-//			obj->AddComponent(make_shared<Transform>());
-//			obj->GetTransform()->SetLocalScale(Vec3(100.f, 100.f, 100.f));
-//			obj->GetTransform()->SetLocalPosition(Vec3(100.f, 100.f, 500.f));
-//			obj->SetCheckFrustum(false);
-//			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-//			{
-//				shared_ptr<Mesh> sphereMesh = GET_SINGLE(Resources)->LoadSphereMesh();
-//				meshRenderer->SetMesh(sphereMesh);
-//			}
-//			{
-//				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"GameObject");
-//				material->SetInt(0, 1); 
-//				meshRenderer->SetMaterial(material);
-//			}
-//			shared_ptr<SphereCollider> spherecollider = make_shared<SphereCollider>();
-//			obj->SetStatic(false);
-//
-//			spherecollider->SetRadius(0.5f);
-//			spherecollider->SetCenter(Vec3(0.f, 0.f, 0.f));
-//
-//			obj->AddComponent(spherecollider);
-//			obj->AddComponent(meshRenderer);
-//			scene->AddGameObject(obj);
-//		}
+	//for (int i = 0; i < 17; i++)
+	//		for (int j = 0; j < 17; j++)
+	//		{
+	//			shared_ptr<GameObject> obj = make_shared<GameObject>();
+	//			obj->SetName(L"OBJ");
+	//			obj->AddComponent(make_shared<Transform>());
+	//			obj->GetTransform()->SetLocalScale(Vec3(100.f, 100.f, 100.f));
+	//			obj->GetTransform()->SetLocalPosition(Vec3(100.f, 100.f, 500.f));
+	//			obj->SetCheckFrustum(false);
+	//			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+	//			{
+	//				shared_ptr<Mesh> sphereMesh = GET_SINGLE(Resources)->LoadSphereMesh();
+	//				meshRenderer->SetMesh(sphereMesh);
+	//			}
+	//			{
+	//				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"GameObject");
+	//				material->SetInt(0, 1); 
+	//				meshRenderer->SetMaterial(material);
+	//			}
+	//			shared_ptr<SphereCollider> spherecollider = make_shared<SphereCollider>();
+	//			obj->SetStatic(false);
+	//
+	//			spherecollider->SetRadius(0.5f);
+	//			spherecollider->SetCenter(Vec3(0.f, 0.f, 0.f));
+	//
+	//			obj->AddComponent(spherecollider);
+	//			obj->AddComponent(meshRenderer);
+	//			scene->AddGameObject(obj);
+	//		}
 #pragma endregion
 
 #pragma region Terrain
-	{ 
+	{
 		shared_ptr<GameObject> obj = make_shared<GameObject>();
 		obj->AddComponent(make_shared<Transform>());
 		obj->AddComponent(make_shared<Terrain>());
@@ -411,8 +415,8 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			gameObject->GetTransform()->SetLocalPosition(Vec3(-100.f, -100.f, -100.f));
 			gameObject->GetTransform()->SetLocalScale(Vec3(0.1f, 0.1f, 0.1f));
 			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
-			scene->AddGameObject(gameObject);
 			gameObject->AddComponent(make_shared<Player>());
+			scene->AddGameObject(gameObject);
 		}
 	}
 
@@ -423,40 +427,45 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		{
 
 			vector<shared_ptr<GameObject>> gameObjects = ZombieMesh->Instantiate();
-			
+
 			for (auto& gameObject : gameObjects)
 			{
-				gameObject->SetName(L"Enemy");
-				gameObject->SetCheckFrustum(false);
-				gameObject->GetTransform()->SetLocalPosition(Vec3(100.f * i, -100.f, 0.f));
-				gameObject->GetTransform()->SetLocalScale(Vec3(0.01f, 0.01f, 0.01f));
-				gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
-
 
 				shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
 				boxCollider->SetCenter(Vec3(0.f, 0.f, 0.f));
 				boxCollider->SetExtents(Vec3(10.f, 40.f, 10.f));
-				gameObject->AddComponent(boxCollider);
 
+				gameObject->SetName(L"Enemy");
+				gameObject->SetCheckFrustum(false);
+				gameObject->GetTransform()->SetLocalPosition(Vec3(100.f * i, 3000.f, 0.f));
+				gameObject->GetTransform()->SetLocalScale(Vec3(0.01f, 0.01f, 0.01f));
+				gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
+				
+				gameObject->AddComponent(boxCollider);
 				gameObject->AddComponent(make_shared<Enemy>());
+				
 				scene->AddGameObject(gameObject);
 			}
 		}
-	 }
+	}
 
+#pragma endregion
+
+#pragma region Gun
 	{
-		shared_ptr<MeshData> Wallmesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Building.fbx");
+		shared_ptr<MeshData> GunMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\AWP_Dragon_Lore.fbx");
 
-		vector<shared_ptr<GameObject>> gameObjects = Wallmesh->Instantiate();
+		vector<shared_ptr<GameObject>> gun = GunMesh->Instantiate();
 
-		for (auto& gameObject : gameObjects)
+		for (auto& gameObject : gun)
 		{
-			gameObject->SetName(L"Wall");
-			gameObject->SetCheckFrustum(false);
-			gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 0.f));
+			gameObject->SetName(L"Gun3");
+			//gameObject->SetCheckFrustum(false);
+			gameObject->GetTransform()->SetLocalPosition(Vec3(100.0f, 100.0f, 100.0f));
 			gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
 			scene->AddGameObject(gameObject);
+
 		}
 	}
 #pragma endregion

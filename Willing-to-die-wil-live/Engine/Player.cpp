@@ -18,7 +18,6 @@
 Player::Player() : Component(COMPONENT_TYPE::PLAYER)
 {
 	_oldMousePos = { GEngine->GetWindow().width / 2, GEngine->GetWindow().height / 2 };
-	ChangeWeapon(PLAYER_WEAPON::SHOTGUN);
 }
 
 Player::~Player()
@@ -44,8 +43,10 @@ void Player::Update()
 
 	if (INPUT->GetButtonDown(KEY_TYPE::R))
 	{
+		if(_reloading == false)
+			_reloadTime = _reloadMaxTime;
+
 		_reloading = true;
-		_reloadTime = _reloadMaxTime;
 	}
 
 	if (INPUT->GetButtonDown(KEY_TYPE::J))
@@ -99,6 +100,9 @@ void Player::Update()
 				bullet->GetTransform()->SetLocalPosition(cameraPosForBullet);
 				bullet->GetTransform()->SetLocalScale(Vec3(10.f, 10.f, 10.f));
 				bullet->GetTransform()->LookAt(cameraLookForBullet);
+				Vec3 rot = bullet->GetTransform()->GetLocalRotation();
+				float a = (((float)(RandomInt() - 50.f)) / 100000.f);
+				bullet->GetTransform()->SetLocalRotation(Vec3(rot.x + ((float)(RandomInt() - 50) / 1000), rot.y + ((float)(RandomInt() - 50) / 1000), rot.z + ((float)(RandomInt() - 50) / 1000)));
 				bullet->SetStatic(false);
 
 				shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
@@ -139,9 +143,17 @@ void Player::Update()
 		_reloadTime -= DELTA_TIME;
 		if (_reloadTime <= 0.f)
 		{
-			_currAmmo = _maxAmmo;
+			_currAmmo += _reloadPerAmmo;
+			if (_currAmmo >= _maxAmmo + 1)
+			{
+				_currAmmo = _maxAmmo + 1;
+			}
 			_reloadTime = _reloadMaxTime;
-			_reloading = false;
+			if (_currAmmo >= _maxAmmo)
+			{
+				_reloading = false;
+
+			}
 		}
 	}
 	GetTransform()->SetLocalPosition(pos);
@@ -168,6 +180,7 @@ void Player::ChangeWeapon(PLAYER_WEAPON weapon)
 		_rateOfFire = 0.5f;
 		_reloadMaxTime = 0.5f;
 		_reloadPerAmmo = _maxAmmo;
+		_price = 500;
 	}
 
 	if (_currWeapon == PLAYER_WEAPON::SMG)
@@ -178,6 +191,7 @@ void Player::ChangeWeapon(PLAYER_WEAPON weapon)
 		_rateOfFire = 0.5f;
 		_reloadMaxTime = 2.5f;
 		_reloadPerAmmo = _maxAmmo;
+		_price = 1000;
 	}
 
 	if (_currWeapon == PLAYER_WEAPON::SHOTGUN)
@@ -186,8 +200,9 @@ void Player::ChangeWeapon(PLAYER_WEAPON weapon)
 		_pellet = 8;
 		_maxAmmo = 6;
 		_rateOfFire = 0.5f;
-		_reloadMaxTime = 2.5f;
+		_reloadMaxTime = 0.5f;
 		_reloadPerAmmo = 2;
+		_price = 2000;
 	}
 
 	if (_currWeapon == PLAYER_WEAPON::RIFLE)
@@ -198,7 +213,9 @@ void Player::ChangeWeapon(PLAYER_WEAPON weapon)
 		_rateOfFire = 0.5f;
 		_reloadMaxTime = 2.5f;
 		_reloadPerAmmo = _maxAmmo;
+		_price = 2000;
 	}
+	_money -= _price;
 }
 
 bool Player::MoneyChange(int amount)
@@ -228,7 +245,6 @@ bool Player::MoneyChange(int amount)
 
 Bullet::Bullet() : Component(COMPONENT_TYPE::BULLET)
 {
-
 }
 
 Bullet::~Bullet()
@@ -236,6 +252,7 @@ Bullet::~Bullet()
 
 }
 
+	
 void Bullet::Update()
 {
 	Vec3 pos = GetTransform()->GetLocalPosition();
@@ -248,6 +265,5 @@ void Bullet::Update()
 	{
 		_currState = BULLET_STATE::DEAD;
 	}
-
 	GetTransform()->SetLocalPosition(pos);
 }

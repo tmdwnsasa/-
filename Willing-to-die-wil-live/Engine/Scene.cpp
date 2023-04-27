@@ -55,7 +55,21 @@ void Scene::Update()
 	//		z = gameObject->GetTransform()->GetLocalPosition().z;
 	//	}
 	//}
+	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
+	{
 
+		if (gameObject->GetName() == L"Gun3")
+		{
+			cout << gameObject->GetTransform()->GetLocalPosition().x << ", " << gameObject->GetTransform()->GetLocalPosition().y << "," << gameObject->GetTransform()->GetLocalPosition().z << endl;
+			for (const shared_ptr<GameObject>& object : _gameObjects)
+			{
+				if (object->GetName() == L"Player")
+				{
+					gameObject->GetTransform()->SetLocalPosition(object->GetTransform()->GetLocalPosition());
+				}
+			}
+		}
+	}
 	//상점열기
 	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
 	{
@@ -94,15 +108,15 @@ void Scene::Update()
 					{
 						_trashBin.push_back(gameObject);
 					}
-
 				}
 			}
-
 		}
+
 		if (gameObject->GetName() == L"Player")
 		{
 			gameObject->GetPlayer()->SetShopOpened(_shopOpened);
 		}
+
 		if (gameObject->GetName() == L"Main_Camera")
 		{
 			gameObject->GetCameraScript()->SetShopOpened(_shopOpened);
@@ -126,7 +140,6 @@ void Scene::Update()
 				{
 					_gameObjects.push_back(bullet);
 					bullet->GetBullet()->SetState(BULLET_STATE::SHOOT);
-
 				}
 			}
 		}
@@ -441,6 +454,7 @@ void Scene::SetWallPosToEnemy()
 void Scene::CursorClipping()
 {
 	POINT p1, p2;
+
 	::GetClientRect(GEngine->GetWindow().hwnd, &rc);
 
 	p1.x = rc.left;

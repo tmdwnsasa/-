@@ -20,6 +20,7 @@ class Font;
 class Bullet;
 class Shop;
 class Button;
+class Gun;
 
 class GameObject : public Object, public enable_shared_from_this<GameObject>
 {
@@ -52,6 +53,7 @@ public:
 	shared_ptr<Font> GetFont();
 	shared_ptr<Shop> GetShop();
 	shared_ptr<Button> GetButton();
+	shared_ptr<Gun> GetGun();
 
 	void AddComponent(shared_ptr<Component> component);
 
