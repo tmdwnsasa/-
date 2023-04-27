@@ -22,7 +22,7 @@
 #include <iostream>
 
 //cout 출력용 코드
-#pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console")
+//#pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console")
 
 void Scene::Awake()
 {

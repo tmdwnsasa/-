@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "SceneManager.h"
 #include "Scene.h"
-
 #include "Engine.h"
 #include "Material.h"
 #include "GameObject.h"
@@ -28,7 +27,7 @@
 #include <iostream>
 
 //cout 출력용 코드
-#pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console")
+//#pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console")
 
 void SceneManager::Update()
 {
@@ -478,6 +477,18 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 #pragma region Gun
 	{
 		shared_ptr<MeshData> GunMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\AWP_Dragon_Lore.fbx");
+		vector<shared_ptr<GameObject>> gun = GunMesh->Instantiate();
+
+		for (auto& gameObject : gun)
+		{
+			gameObject->SetName(L"Gun3");
+			//gameObject->SetCheckFrustum(false);
+			gameObject->GetTransform()->SetLocalPosition(Vec3(100.0f, 100.0f, 100.0f));
+			gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
+			scene->AddGameObject(gameObject);
+
+		}
 
 	}
 #pragma endregion
@@ -499,9 +510,9 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMesh(mesh);
 			}
 			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
 
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"ShopBackGround", L"..\\Resources\\Texture\\veigar.jpg");;
+				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
 				shared_ptr<Material> material = make_shared<Material>();
 				material->SetShader(shader);
 				material->SetTexture(0, texture);
@@ -528,9 +539,9 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMesh(mesh);
 			}
 			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
 
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"ShopBackGround", L"..\\Resources\\Texture\\veigar.jpg");;
+				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
 
 				shared_ptr<Material> material = make_shared<Material>();
 				material->SetShader(shader);
@@ -555,9 +566,9 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMesh(mesh);
 			}
 			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
 
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"ShopBackGround", L"..\\Resources\\Texture\\veigar.jpg");;
+				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
 
 				shared_ptr<Material> material = make_shared<Material>();
 				material->SetShader(shader);
@@ -583,9 +594,9 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMesh(mesh);
 			}
 			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
 
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"ShopBackGround", L"..\\Resources\\Texture\\veigar.jpg");;
+				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
 
 				shared_ptr<Material> material = make_shared<Material>();
 				material->SetShader(shader);
@@ -610,9 +621,9 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMesh(mesh);
 			}
 			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
 
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"ShopBackGround", L"..\\Resources\\Texture\\veigar.jpg");;
+				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
 
 				shared_ptr<Material> material = make_shared<Material>();
 				material->SetShader(shader);
@@ -639,9 +650,9 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMesh(mesh);
 			}
 			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
 
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"ShopBackGround", L"..\\Resources\\Texture\\veigar.jpg");;
+				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
 
 				shared_ptr<Material> material = make_shared<Material>();
 				material->SetShader(shader);
@@ -667,9 +678,9 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMesh(mesh);
 			}
 			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
 
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"ShopBackGround", L"..\\Resources\\Texture\\veigar.jpg");;
+				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
 
 				shared_ptr<Material> material = make_shared<Material>();
 				material->SetShader(shader);
@@ -697,9 +708,9 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMesh(mesh);
 			}
 			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
 
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"ShopBackGround", L"..\\Resources\\Texture\\veigar.jpg");;
+				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
 
 				shared_ptr<Material> material = make_shared<Material>();
 				material->SetShader(shader);
@@ -723,9 +734,9 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMesh(mesh);
 			}
 			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
 
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"ShopBackGround", L"..\\Resources\\Texture\\veigar.jpg");;
+				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
 
 				shared_ptr<Material> material = make_shared<Material>();
 				material->SetShader(shader);
@@ -752,9 +763,9 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMesh(mesh);
 			}
 			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
 
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"ShopBackGround", L"..\\Resources\\Texture\\veigar.jpg");;
+				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
 
 				shared_ptr<Material> material = make_shared<Material>();
 				material->SetShader(shader);
@@ -779,9 +790,9 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMesh(mesh);
 			}
 			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
 
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"ShopBackGround", L"..\\Resources\\Texture\\veigar.jpg");;
+				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
 
 				shared_ptr<Material> material = make_shared<Material>();
 				material->SetShader(shader);
@@ -807,9 +818,9 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMesh(mesh);
 			}
 			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
 
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"ShopBackGround", L"..\\Resources\\Texture\\veigar.jpg");;
+				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
 
 				shared_ptr<Material> material = make_shared<Material>();
 				material->SetShader(shader);
@@ -833,9 +844,9 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMesh(mesh);
 			}
 			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
 
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"ShopBackGround", L"..\\Resources\\Texture\\veigar.jpg");;
+				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
 
 				shared_ptr<Material> material = make_shared<Material>();
 				material->SetShader(shader);
@@ -862,9 +873,9 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMesh(mesh);
 			}
 			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
 
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"ShopBackGround", L"..\\Resources\\Texture\\veigar.jpg");;
+				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
 
 				shared_ptr<Material> material = make_shared<Material>();
 				material->SetShader(shader);
@@ -889,9 +900,9 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMesh(mesh);
 			}
 			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
 
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"ShopBackGround", L"..\\Resources\\Texture\\veigar.jpg");;
+				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
 
 				shared_ptr<Material> material = make_shared<Material>();
 				material->SetShader(shader);
@@ -918,9 +929,9 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMesh(mesh);
 			}
 			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
 
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"ShopBackGround", L"..\\Resources\\Texture\\veigar.jpg");;
+				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
 
 				shared_ptr<Material> material = make_shared<Material>();
 				material->SetShader(shader);
@@ -945,9 +956,9 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMesh(mesh);
 			}
 			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
 
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"ShopBackGround", L"..\\Resources\\Texture\\veigar.jpg");;
+				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
 
 				shared_ptr<Material> material = make_shared<Material>();
 				material->SetShader(shader);
@@ -974,9 +985,9 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMesh(mesh);
 			}
 			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
 
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"ShopBackGround", L"..\\Resources\\Texture\\veigar.jpg");;
+				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
 
 				shared_ptr<Material> material = make_shared<Material>();
 				material->SetShader(shader);
@@ -1000,9 +1011,9 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMesh(mesh);
 			}
 			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
 
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"ShopBackGround", L"..\\Resources\\Texture\\veigar.jpg");;
+				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
 
 				shared_ptr<Material> material = make_shared<Material>();
 				material->SetShader(shader);
@@ -1030,9 +1041,9 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMesh(mesh);
 			}
 			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
 
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"ShopBackGround", L"..\\Resources\\Texture\\veigar.jpg");;
+				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
 
 				shared_ptr<Material> material = make_shared<Material>();
 				material->SetShader(shader);
@@ -1057,9 +1068,9 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMesh(mesh);
 			}
 			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
 
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"ShopBackGround", L"..\\Resources\\Texture\\veigar.jpg");;
+				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
 
 				shared_ptr<Material> material = make_shared<Material>();
 				material->SetShader(shader);
@@ -1084,9 +1095,9 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMesh(mesh);
 			}
 			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
 
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"ShopBackGround", L"..\\Resources\\Texture\\veigar.jpg");;
+				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
 
 				shared_ptr<Material> material = make_shared<Material>();
 				material->SetShader(shader);
@@ -1113,9 +1124,9 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMesh(mesh);
 			}
 			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
 
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"ShopBackGround", L"..\\Resources\\Texture\\veigar.jpg");;
+				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
 
 				shared_ptr<Material> material = make_shared<Material>();
 				material->SetShader(shader);
@@ -1140,9 +1151,9 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMesh(mesh);
 			}
 			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
 
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"ShopBackGround", L"..\\Resources\\Texture\\veigar.jpg");;
+				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
 
 				shared_ptr<Material> material = make_shared<Material>();
 				material->SetShader(shader);
@@ -1167,9 +1178,9 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMesh(mesh);
 			}
 			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
 
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"ShopBackGround", L"..\\Resources\\Texture\\veigar.jpg");;
+				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
 
 				shared_ptr<Material> material = make_shared<Material>();
 				material->SetShader(shader);
@@ -1196,9 +1207,9 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMesh(mesh);
 			}
 			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
 
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"ShopBackGround", L"..\\Resources\\Texture\\veigar.jpg");;
+				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
 
 				shared_ptr<Material> material = make_shared<Material>();
 				material->SetShader(shader);
@@ -1222,9 +1233,9 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMesh(mesh);
 			}
 			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
 
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"ShopBackGround", L"..\\Resources\\Texture\\veigar.jpg");;
+				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
 
 				shared_ptr<Material> material = make_shared<Material>();
 				material->SetShader(shader);
@@ -1248,9 +1259,9 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMesh(mesh);
 			}
 			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
 
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"ShopBackGround", L"..\\Resources\\Texture\\veigar.jpg");;
+				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
 
 				shared_ptr<Material> material = make_shared<Material>();
 				material->SetShader(shader);
@@ -1278,9 +1289,9 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMesh(mesh);
 			}
 			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
 
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"ShopBackGround", L"..\\Resources\\Texture\\veigar.jpg");;
+				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
 
 				shared_ptr<Material> material = make_shared<Material>();
 				material->SetShader(shader);
@@ -1307,9 +1318,9 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMesh(mesh);
 			}
 			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
 
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"ShopBackGround", L"..\\Resources\\Texture\\veigar.jpg");;
+				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
 
 				shared_ptr<Material> material = make_shared<Material>();
 				material->SetShader(shader);
@@ -1333,9 +1344,9 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMesh(mesh);
 			}
 			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
 
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"ShopBackGround", L"..\\Resources\\Texture\\veigar.jpg");;
+				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
 
 				shared_ptr<Material> material = make_shared<Material>();
 				material->SetShader(shader);
@@ -1362,9 +1373,9 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMesh(mesh);
 			}
 			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
 
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"ShopBackGround", L"..\\Resources\\Texture\\veigar.jpg");;
+				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
 
 				shared_ptr<Material> material = make_shared<Material>();
 				material->SetShader(shader);
@@ -1391,9 +1402,9 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMesh(mesh);
 			}
 			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
 
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"ShopBackGround", L"..\\Resources\\Texture\\veigar.jpg");;
+				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
 
 				shared_ptr<Material> material = make_shared<Material>();
 				material->SetShader(shader);
@@ -1417,9 +1428,9 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMesh(mesh);
 			}
 			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
 
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"ShopBackGround", L"..\\Resources\\Texture\\veigar.jpg");;
+				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
 
 				shared_ptr<Material> material = make_shared<Material>();
 				material->SetShader(shader);
@@ -1443,9 +1454,9 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMesh(mesh);
 			}
 			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
 
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"ShopBackGround", L"..\\Resources\\Texture\\veigar.jpg");;
+				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
 
 				shared_ptr<Material> material = make_shared<Material>();
 				material->SetShader(shader);
@@ -1469,9 +1480,9 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMesh(mesh);
 			}
 			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
 
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"ShopBackGround", L"..\\Resources\\Texture\\veigar.jpg");;
+				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
 
 				shared_ptr<Material> material = make_shared<Material>();
 				material->SetShader(shader);
@@ -1498,9 +1509,9 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMesh(mesh);
 			}
 			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
 
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"ShopBackGround", L"..\\Resources\\Texture\\veigar.jpg");;
+				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
 
 				shared_ptr<Material> material = make_shared<Material>();
 				material->SetShader(shader);
@@ -1527,9 +1538,9 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMesh(mesh);
 			}
 			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
 
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"ShopBackGround", L"..\\Resources\\Texture\\veigar.jpg");;
+				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
 
 				shared_ptr<Material> material = make_shared<Material>();
 				material->SetShader(shader);
@@ -1553,9 +1564,9 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMesh(mesh);
 			}
 			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
 
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"ShopBackGround", L"..\\Resources\\Texture\\veigar.jpg");;
+				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
 
 				shared_ptr<Material> material = make_shared<Material>();
 				material->SetShader(shader);
@@ -1579,9 +1590,9 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMesh(mesh);
 			}
 			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
 
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"ShopBackGround", L"..\\Resources\\Texture\\veigar.jpg");;
+				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
 
 				shared_ptr<Material> material = make_shared<Material>();
 				material->SetShader(shader);
@@ -1605,9 +1616,9 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMesh(mesh);
 			}
 			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
 
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"ShopBackGround", L"..\\Resources\\Texture\\veigar.jpg");;
+				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
 
 				shared_ptr<Material> material = make_shared<Material>();
 				material->SetShader(shader);
@@ -1634,9 +1645,9 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMesh(mesh);
 			}
 			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
 
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"ShopBackGround", L"..\\Resources\\Texture\\veigar.jpg");;
+				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
 
 				shared_ptr<Material> material = make_shared<Material>();
 				material->SetShader(shader);
@@ -1663,9 +1674,9 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMesh(mesh);
 			}
 			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
 
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"ShopBackGround", L"..\\Resources\\Texture\\veigar.jpg");;
+				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
 
 				shared_ptr<Material> material = make_shared<Material>();
 				material->SetShader(shader);
@@ -1692,9 +1703,9 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMesh(mesh);
 			}
 			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
 
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"ShopBackGround", L"..\\Resources\\Texture\\veigar.jpg");;
+				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
 
 				shared_ptr<Material> material = make_shared<Material>();
 				material->SetShader(shader);
@@ -1718,9 +1729,9 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMesh(mesh);
 			}
 			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
 
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"ShopBackGround", L"..\\Resources\\Texture\\veigar.jpg");;
+				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
 
 				shared_ptr<Material> material = make_shared<Material>();
 				material->SetShader(shader);
@@ -1745,9 +1756,9 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMesh(mesh);
 			}
 			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
 
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"ShopBackGround", L"..\\Resources\\Texture\\veigar.jpg");;
+				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
 
 				shared_ptr<Material> material = make_shared<Material>();
 				material->SetShader(shader);
@@ -1774,9 +1785,9 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMesh(mesh);
 			}
 			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
 
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"ShopBackGround", L"..\\Resources\\Texture\\veigar.jpg");;
+				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
 
 				shared_ptr<Material> material = make_shared<Material>();
 				material->SetShader(shader);
@@ -1803,9 +1814,9 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMesh(mesh);
 			}
 			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
 
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"ShopBackGround", L"..\\Resources\\Texture\\veigar.jpg");;
+				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
 
 				shared_ptr<Material> material = make_shared<Material>();
 				material->SetShader(shader);
@@ -1814,18 +1825,6 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			}
 			obj->AddComponent(meshRenderer);
 			scene->AddGameObject(obj);
-		}
-		vector<shared_ptr<GameObject>> gun = GunMesh->Instantiate();
-
-		for (auto& gameObject : gun)
-		{
-			gameObject->SetName(L"Gun3");
-			//gameObject->SetCheckFrustum(false);
-			gameObject->GetTransform()->SetLocalPosition(Vec3(100.0f, 100.0f, 100.0f));
-			gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
-			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
-			scene->AddGameObject(gameObject);
-
 		}
 	}
 #pragma endregion

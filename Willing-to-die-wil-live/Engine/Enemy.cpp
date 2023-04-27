@@ -65,16 +65,16 @@ void Enemy::AstarCall()
 	auto nodeList = pathFinder.DoFindPath(startPos, endPos);
 	tileMap.Display(nodeList);
 
-	int k = nodeList.front()->pos.x;
-	int l = nodeList.front()->pos.y;
+	//int k = nodeList.front()->pos.x;
+	//int l = nodeList.front()->pos.y;
 	
-	list<TileNode*>::iterator iter = nodeList.begin();
+	//list<TileNode*>::iterator iter = nodeList.begin();
 
-	advance(iter, 1);
-	int p = (*iter)->pos.x;
-	int q = (*iter)->pos.y;
+	//advance(iter, 1);
+	//int p = (*iter)->pos.x;
+	//int q = (*iter)->pos.y;
 
-	AstarMove(k, l, p, q);
+	//AstarMove(k, l, p, q);
 }
 
 void Enemy::AstarMove(int x, int y, int z, int w)
