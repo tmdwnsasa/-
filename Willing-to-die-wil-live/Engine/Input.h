@@ -11,7 +11,9 @@ enum class KEY_TYPE
 	A = 'A',
 	S = 'S',
 	D = 'D',
+
 	R = 'R',
+	O = 'O',
 
 	Q = 'Q',
 	E = 'E',
@@ -31,7 +33,7 @@ enum class KEY_TYPE
 	LBUTTON = VK_LBUTTON,
 	RBUTTON = VK_RBUTTON,
 
-	TAB = VK_TAB,
+	ESC = VK_ESCAPE,
 };
 
 enum class KEY_STATE
@@ -65,6 +67,7 @@ public:
 	bool GetButtonUp(KEY_TYPE key) { return GetState(key) == KEY_STATE::UP; }
 
 	const POINT& GetMousePos() { return _mousePos; }
+	const POINT& GetOldMousePos() { return _oldMousePos; }
 
 private:
 	inline KEY_STATE GetState(KEY_TYPE key) { return _states[static_cast<uint8>(key)]; }
@@ -73,7 +76,7 @@ private:
 	HWND						_hwnd;
 	vector<KEY_STATE>			_states;
 	POINT						_mousePos = {};
-	POINT						_oldmousePos;
+	POINT						_oldMousePos;
 	float						cxdelta = 0.0f, cydelta = 0.0f;
 };
 

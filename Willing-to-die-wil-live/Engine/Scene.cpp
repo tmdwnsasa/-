@@ -8,7 +8,7 @@
 #include "Engine.h"
 #include "Resources.h"
 #include "Transform.h"
-#include "TestCameraScript.h"
+#include "CameraScript.h"
 #include "MeshRenderer.h"
 #include "Material.h"
 #include "Astar.h"
@@ -17,9 +17,12 @@
 #include "Input.h"
 #include "BoxCollider.h"
 #include "Font.h"
+#include "Shop.h"
+#include "Button.h"
 #include <iostream>
 
-//#pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console")
+//cout 출력용 코드
+#pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console")
 
 void Scene::Awake()
 {
@@ -41,15 +44,82 @@ void Scene::Start()
 
 void Scene::Update()
 {
-	// 플레이어 위치 저장
+	//// 플레이어 위치 저장
+	//for (const shared_ptr<GameObject>& gameObject : _gameObjects)
+	//{
+	//	if (gameObject->GetName() == L"Player")
+	//	{
+	//		float x, y, z;
+	//		x = gameObject->GetTransform()->GetLocalPosition().x;
+	//		y = gameObject->GetTransform()->GetLocalPosition().y;
+	//		z = gameObject->GetTransform()->GetLocalPosition().z;
+	//	}
+	//}
 	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
 	{
+
+		if (gameObject->GetName() == L"Gun3")
+		{
+			cout << gameObject->GetTransform()->GetLocalPosition().x << ", " << gameObject->GetTransform()->GetLocalPosition().y << "," << gameObject->GetTransform()->GetLocalPosition().z << endl;
+			for (const shared_ptr<GameObject>& object : _gameObjects)
+			{
+				if (object->GetName() == L"Player")
+				{
+					gameObject->GetTransform()->SetLocalPosition(object->GetTransform()->GetLocalPosition());
+				}
+			}
+		}
+	}
+	//상점열기
+	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
+	{
+		if (gameObject->GetName() == L"Shop")
+		{
+			if (_shopOpened == true)
+			{
+				if (gameObject->GetShop()->GetPurchase() == true)
+				{
+					for (auto& object : _gameObjects)
+					{
+						if (object->GetName() == L"Player")
+							object->GetPlayer()->ChangeWeapon(gameObject->GetShop()->GetSelected()->GetButton()->GetMerchandise());
+
+					}
+					gameObject->GetShop()->SetPurchase(false);
+				}
+			}
+			if (gameObject->GetShop()->GetShopState() == _shopOpened)
+			{
+				break;
+			}
+			else
+			{
+				_shopOpened = gameObject->GetShop()->GetShopState();
+				if (_shopOpened == true)
+				{
+					for (auto& gameObject : gameObject->GetShop()->GetShopObjects())
+					{
+						_gameObjects.push_back(gameObject);
+					}
+				}
+				else
+				{
+					for (auto& gameObject : gameObject->GetShop()->GetShopObjects())
+					{
+						_trashBin.push_back(gameObject);
+					}
+				}
+			}
+		}
+
 		if (gameObject->GetName() == L"Player")
 		{
-			float x, y, z;
-			x = gameObject->GetTransform()->GetLocalPosition().x;
-			y = gameObject->GetTransform()->GetLocalPosition().y;
-			z = gameObject->GetTransform()->GetLocalPosition().z;
+			gameObject->GetPlayer()->SetShopOpened(_shopOpened);
+		}
+
+		if (gameObject->GetName() == L"Main_Camera")
+		{
+			gameObject->GetCameraScript()->SetShopOpened(_shopOpened);
 		}
 	}
 
@@ -70,7 +140,6 @@ void Scene::Update()
 				{
 					_gameObjects.push_back(bullet);
 					bullet->GetBullet()->SetState(BULLET_STATE::SHOOT);
-
 				}
 			}
 		}
@@ -112,12 +181,10 @@ void Scene::Update()
 	}
 }
 
-
 void Scene::LateUpdate()
 {
 	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
 	{
-		gameObject->LateUpdate();
 		if (gameObject->GetName() == L"Main_Camera")
 			SetCameraPosToPlayer();
 
@@ -137,7 +204,7 @@ void Scene::LateUpdate()
 			}
 		}
 
-		//체력 출력
+		//체력, 총알, 돈 출력
 		if (gameObject->GetName() == L"Player")
 		{
 			for (const shared_ptr<GameObject>& Object : _gameObjects)
@@ -152,8 +219,14 @@ void Scene::LateUpdate()
 					shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 					Object->GetMeshRenderer()->SetMesh(GET_SINGLE(Resources)->LoadFontMesh(Object->GetFont()->GetTextVB(to_string(gameObject->GetPlayer()->GetCurrAmmo()))));
 				}
+				if (Object->GetName() == L"MoneyText")
+				{
+					shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+					Object->GetMeshRenderer()->SetMesh(GET_SINGLE(Resources)->LoadFontMesh(Object->GetFont()->GetTextVB(to_string(gameObject->GetPlayer()->GetMoney()))));
+				}
 			}
 		}
+		gameObject->LateUpdate();
 	}
 }
 
@@ -336,7 +409,9 @@ void Scene::SetCameraPosToPlayer()	//플레이어와 카메라에게 서로의 위치를 준다.
 
 	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
 		if (gameObject->GetName() == L"Player")
+		{
 			PlayerPos = gameObject->GetTransform()->GetLocalPosition();
+		}
 
 	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
 		if (gameObject->GetName() == L"Main_Camera")
@@ -379,7 +454,9 @@ void Scene::SetWallPosToEnemy()
 void Scene::CursorClipping()
 {
 	POINT p1, p2;
+
 	::GetClientRect(GEngine->GetWindow().hwnd, &rc);
+
 	p1.x = rc.left;
 	p1.y = rc.top;
 	p2.x = rc.right;
@@ -395,4 +472,3 @@ void Scene::CursorClipping()
 
 	::ClipCursor(&rc);
 }
-

@@ -10,7 +10,7 @@
 #include "Camera.h"
 #include "Light.h"
 
-#include "TestCameraScript.h"
+#include "CameraScript.h"
 #include "Resources.h"
 #include "ParticleSystem.h"
 #include "Terrain.h"
@@ -22,9 +22,13 @@
 #include "Player.h"
 #include "Font.h"
 #include "Enemy.h"
+#include "Shop.h"
+#include "Gun.h"
 
 #include <iostream>
-#include <math.h>
+
+//cout 출력용 코드
+#pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console")
 
 void SceneManager::Update()
 {
@@ -157,7 +161,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		camera->SetName(L"Main_Camera");
 		camera->AddComponent(make_shared<Transform>());
 		camera->AddComponent(make_shared<Camera>()); // Near=1, Far=1000, FOV=45도
-		camera->AddComponent(make_shared<TestCameraScript>());
+		camera->AddComponent(make_shared<CameraScript>());
 		camera->GetCamera()->SetFar(10000.f);
 		camera->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 0.f));
 		uint8 layerIndex = GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI");
@@ -253,36 +257,6 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 	}
 #pragma endregion
 
-	//#pragma region Map
-	//	{
-	//		shared_ptr<GameObject> Map = make_shared<GameObject>();
-	//
-	//		Map->SetName(L"Map");
-	//		Map->AddComponent(make_shared<Transform>());
-	//		Map->SetCheckFrustum(false);
-	//		//shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
-	//
-	//		Map->GetTransform()->SetLocalPosition(Vec3(100.0f, -100.0f, 0.0f));
-	//		Map->GetTransform()->SetLocalScale(Vec3(100.f, 100.f, 100.f));
-	//
-	//		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-	//		{
-	//			shared_ptr<Mesh> RectMesh = GET_SINGLE(Resources)->LoadCubeMesh();
-	//			meshRenderer->SetMesh(RectMesh);
-	//		}
-	//		{
-	//			shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"GameObject");
-	//		//	material->SetInt(0, 1);
-	//			meshRenderer->SetMaterial(material);
-	//		}
-	//
-	//		Map->AddComponent(meshRenderer);
-	//		scene->AddGameObject(Map);
-	//		
-	//	}
-	//
-	//#pragma endregion
-
 #pragma region UI_Test
 	for (int32 i = 0; i < 6; i++)
 	{
@@ -323,8 +297,8 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		obj->SetName(L"HealthText");
 		obj->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
 		obj->AddComponent(make_shared<Transform>());
-		obj->GetTransform()->SetLocalScale(Vec3(10.f, 10.f, 10.f));
-		obj->GetTransform()->SetLocalPosition(Vec3(-300.f, -200.f, 500.f));
+		obj->GetTransform()->SetLocalScale(Vec3(10.f, 10.f, 1.f));
+		obj->GetTransform()->SetLocalPosition(Vec3(-300.f, -200.f, 900.f));
 		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 
 		shared_ptr<Font> font = make_shared<Font>();
@@ -380,6 +354,37 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 	}
 #pragma endregion
 
+#pragma region Text_Money
+	{
+		shared_ptr<GameObject> obj = make_shared<GameObject>();
+		obj->SetName(L"MoneyText");
+		obj->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
+		obj->AddComponent(make_shared<Transform>());
+		obj->GetTransform()->SetLocalScale(Vec3(10.f, 10.f, 10.f));
+		obj->GetTransform()->SetLocalPosition(Vec3(-350.f, 250.f, 500.f));
+		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+
+		shared_ptr<Font> font = make_shared<Font>();
+		font->BuildFont();
+		shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadFontMesh(font->GetTextVB("100000"));
+		meshRenderer->SetMesh(mesh);
+
+		{
+			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Font");
+
+			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"original", L"..\\Resources\\Font\\text.png");;
+
+			shared_ptr<Material> material = make_shared<Material>();
+			material->SetShader(shader);
+			material->SetTexture(0, texture);
+			meshRenderer->SetMaterial(material);
+			obj->AddComponent(meshRenderer);
+			obj->AddComponent(font);
+			scene->AddGameObject(obj);
+		}
+	}
+#pragma endregion
+
 #pragma region Directional Light
 	{
 		shared_ptr<GameObject> light = make_shared<GameObject>();
@@ -410,8 +415,8 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			gameObject->GetTransform()->SetLocalPosition(Vec3(1000.f, 500.f, -100.f));
 			gameObject->GetTransform()->SetLocalScale(Vec3(0.1f, 0.1f, 0.1f));
 			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
-			scene->AddGameObject(gameObject);
 			gameObject->AddComponent(make_shared<Player>());
+			scene->AddGameObject(gameObject);
 		}
 	}
 #pragma endregion
@@ -427,27 +432,25 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 
 			for (auto& gameObject : gameObjects)
 			{
-				shared_ptr<Enemy> EnemyObj = make_shared<Enemy>();
+
+				shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
+				boxCollider->SetCenter(Vec3(0.f, 0.f, 0.f));
+				boxCollider->SetExtents(Vec3(10.f, 40.f, 10.f));
+
 				gameObject->SetName(L"Enemy");
 				gameObject->SetCheckFrustum(false);
 				gameObject->GetTransform()->SetLocalPosition(Vec3(1500.f, 300.f, 0.f));
 				gameObject->GetTransform()->SetLocalScale(Vec3(0.01f, 0.01f, 0.01f));
 				gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
-				gameObject->AddComponent(EnemyObj);
 
-
-				shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
-				boxCollider->SetCenter(Vec3(0.f, 0.f, 0.f));
-				boxCollider->SetExtents(Vec3(10.f, 40.f, 10.f));
 				gameObject->AddComponent(boxCollider);
-
 				gameObject->AddComponent(make_shared<Enemy>());
+
 				scene->AddGameObject(gameObject);
 			}
 		}
 
 		vector<shared_ptr<GameObject>> gameObjects = ZombieMesh->Instantiate();
-
 		for (auto& gameObject : gameObjects)
 		{
 			shared_ptr<Enemy> EnemyObj = make_shared<Enemy>();
@@ -468,6 +471,15 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			scene->AddGameObject(gameObject);
 		}
 	}
+	
+
+#pragma endregion
+
+#pragma region Gun
+	{
+		shared_ptr<MeshData> GunMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\AWP_Dragon_Lore.fbx");
+
+	}
 #pragma endregion
 
 #pragma region MapDesign
@@ -478,7 +490,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			shared_ptr<GameObject> obj = make_shared<GameObject>();
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetName(L"Wall");
-			obj->GetTransform()->SetLocalScale(Vec3(scale*8, scale, 10.f));
+			obj->GetTransform()->SetLocalScale(Vec3(scale * 8, scale, 10.f));
 			obj->GetTransform()->SetLocalPosition(Vec3(baseX, 100.f, baseZ));
 			obj->SetCheckFrustum(false);
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
@@ -507,8 +519,8 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetName(L"Wall");
 			obj->SetCheckFrustum(false);
-			obj->GetTransform()->SetLocalScale(Vec3(scale*2, scale, 1.f));
-			obj->GetTransform()->SetLocalPosition(Vec3((baseX - scale *4) + (scale*8 * i), 100.f, baseZ -scale));
+			obj->GetTransform()->SetLocalScale(Vec3(scale * 2, scale, 1.f));
+			obj->GetTransform()->SetLocalPosition(Vec3((baseX - scale * 4) + (scale * 8 * i), 100.f, baseZ - scale));
 			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 			{
@@ -535,7 +547,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetName(L"Wall");
 			obj->GetTransform()->SetLocalScale(Vec3(scale * 5, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(((baseX -scale * 6.5 )  + (scale*13 * i)), 100.f, 900.f));
+			obj->GetTransform()->SetLocalPosition(Vec3(((baseX - scale * 6.5) + (scale * 13 * i)), 100.f, 900.f));
 			obj->SetCheckFrustum(false);
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 			{
@@ -561,8 +573,8 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetName(L"Wall");
 			obj->SetCheckFrustum(false);
-			obj->GetTransform()->SetLocalScale(Vec3(scale*2, scale, 1.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale *9, 100.f, baseZ - scale *3));
+			obj->GetTransform()->SetLocalScale(Vec3(scale * 2, scale, 1.f));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 9, 100.f, baseZ - scale * 3));
 			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 
@@ -590,7 +602,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetName(L"Wall");
 			obj->GetTransform()->SetLocalScale(Vec3(scale * 5, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 11.5, 100.f, baseZ - scale*4));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 11.5, 100.f, baseZ - scale * 4));
 			obj->SetCheckFrustum(false);
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 			{
@@ -618,7 +630,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			obj->SetName(L"Wall");
 			obj->SetCheckFrustum(false);
 			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 1.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 14, 100.f, (baseZ - scale * 4.5) - scale*3 * i));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 14, 100.f, (baseZ - scale * 4.5) - scale * 3 * i));
 			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 
@@ -668,15 +680,15 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			scene->AddGameObject(obj);
 		}
 		//////////////////////////////////////////////////////////////////////
-		for(int i=0; i<2; i++)
+		for (int i = 0; i < 2; i++)
 		{
 			//19.3 18.3, 18.9 19.9
 			shared_ptr<GameObject> obj = make_shared<GameObject>();
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetName(L"Wall");
 			obj->SetCheckFrustum(false);
-			obj->GetTransform()->SetLocalScale(Vec3(scale*2, scale, 1.f));
-			obj->GetTransform()->SetLocalPosition(Vec3((baseX + scale * 13) - (scale*6*i), 100.f, baseZ - scale*6));
+			obj->GetTransform()->SetLocalScale(Vec3(scale * 2, scale, 1.f));
+			obj->GetTransform()->SetLocalPosition(Vec3((baseX + scale * 13) - (scale * 6 * i), 100.f, baseZ - scale * 6));
 			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 
@@ -702,7 +714,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			shared_ptr<GameObject> obj = make_shared<GameObject>();
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetName(L"Wall");
-			obj->GetTransform()->SetLocalScale(Vec3(scale*3, scale, 10.f));
+			obj->GetTransform()->SetLocalScale(Vec3(scale * 3, scale, 10.f));
 			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 12.5, 100.f, baseZ - scale * 8));
 			obj->SetCheckFrustum(false);
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
@@ -730,8 +742,8 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetName(L"Wall");
 			obj->SetCheckFrustum(false);
-			obj->GetTransform()->SetLocalScale(Vec3(scale*10, scale, 1.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale *11, 100.f, baseZ - scale*13));
+			obj->GetTransform()->SetLocalScale(Vec3(scale * 10, scale, 1.f));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 11, 100.f, baseZ - scale * 13));
 			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 
@@ -758,8 +770,8 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			shared_ptr<GameObject> obj = make_shared<GameObject>();
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetName(L"Wall");
-			obj->GetTransform()->SetLocalScale(Vec3(scale*2, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX+ scale*12, 100.f,baseZ- scale*18));
+			obj->GetTransform()->SetLocalScale(Vec3(scale * 2, scale, 10.f));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 12, 100.f, baseZ - scale * 18));
 			obj->SetCheckFrustum(false);
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 			{
@@ -785,8 +797,8 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetName(L"Wall");
 			obj->SetCheckFrustum(false);
-			obj->GetTransform()->SetLocalScale(Vec3(scale*5, scale, 1.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale*13, 100.f,baseZ - scale *20.5));
+			obj->GetTransform()->SetLocalScale(Vec3(scale * 5, scale, 1.f));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 13, 100.f, baseZ - scale * 20.5));
 			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 
@@ -812,8 +824,8 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			shared_ptr<GameObject> obj = make_shared<GameObject>();
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetName(L"Wall");
-			obj->GetTransform()->SetLocalScale(Vec3(scale*6, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale*10, 100.f,baseZ - scale *23));
+			obj->GetTransform()->SetLocalScale(Vec3(scale * 6, scale, 10.f));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 10, 100.f, baseZ - scale * 23));
 			obj->SetCheckFrustum(false);
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 			{
@@ -834,14 +846,14 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			scene->AddGameObject(obj);
 		}
 		//////////////////////////////////////////////////////////////////////
-		for(int i=0; i<2; i++)
+		for (int i = 0; i < 2; i++)
 		{
 			shared_ptr<GameObject> obj = make_shared<GameObject>();
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetName(L"Wall");
 			obj->SetCheckFrustum(false);
-			obj->GetTransform()->SetLocalScale(Vec3(scale*2, scale, 1.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX+ scale*7, 100.f, (baseZ- scale*22)+ scale*3 * i));
+			obj->GetTransform()->SetLocalScale(Vec3(scale * 2, scale, 1.f));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 7, 100.f, (baseZ - scale * 22) + scale * 3 * i));
 			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 
@@ -868,8 +880,8 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			shared_ptr<GameObject> obj = make_shared<GameObject>();
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetName(L"Wall");
-			obj->GetTransform()->SetLocalScale(Vec3(scale*3, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale*8.5, 100.f,baseZ-scale*18));
+			obj->GetTransform()->SetLocalScale(Vec3(scale * 3, scale, 10.f));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 8.5, 100.f, baseZ - scale * 18));
 			obj->SetCheckFrustum(false);
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 			{
@@ -896,8 +908,8 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetName(L"Wall");
 			obj->SetCheckFrustum(false);
-			obj->GetTransform()->SetLocalScale(Vec3(scale*4, scale, 1.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale*10, 100.f,baseZ- scale*16));
+			obj->GetTransform()->SetLocalScale(Vec3(scale * 4, scale, 1.f));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 10, 100.f, baseZ - scale * 16));
 			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 
@@ -919,13 +931,13 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			scene->AddGameObject(obj);
 		}
 		//////////////////////////////////////////////////////////////////////
-		for(int i=0; i<2; i++)
+		for (int i = 0; i < 2; i++)
 		{
 			shared_ptr<GameObject> obj = make_shared<GameObject>();
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetName(L"Wall");
-			obj->GetTransform()->SetLocalScale(Vec3(scale*7, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale*6.5, 100.f, (baseZ - scale*14)+ scale * i));
+			obj->GetTransform()->SetLocalScale(Vec3(scale * 7, scale, 10.f));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 6.5, 100.f, (baseZ - scale * 14) + scale * i));
 			obj->SetCheckFrustum(false);
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 			{
@@ -952,8 +964,8 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetName(L"Wall");
 			obj->SetCheckFrustum(false);
-			obj->GetTransform()->SetLocalScale(Vec3(scale*5, scale, 1.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX+ scale*10, 100.f,baseZ- scale*10.5));
+			obj->GetTransform()->SetLocalScale(Vec3(scale * 5, scale, 1.f));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 10, 100.f, baseZ - scale * 10.5));
 			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 
@@ -1009,7 +1021,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			obj->SetName(L"Wall");
 			obj->SetCheckFrustum(false);
 			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 1.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 6, 100.f, (baseZ -scale * 4.5) - ((baseZ - scale * 2) * i)));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 6, 100.f, (baseZ - scale * 4.5) - ((baseZ - scale * 2) * i)));
 			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 
@@ -1167,14 +1179,14 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			obj->AddComponent(meshRenderer);
 			scene->AddGameObject(obj);
 		}
-		for(int i=0; i<2; i++)
+		for (int i = 0; i < 2; i++)
 		{
 			//////////////////////////////////////////////////////////////////////
 			shared_ptr<GameObject> obj = make_shared<GameObject>();
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetName(L"Wall");
 			obj->SetCheckFrustum(false);
-			obj->GetTransform()->SetLocalScale(Vec3(scale*3, scale, 1.f));
+			obj->GetTransform()->SetLocalScale(Vec3(scale * 3, scale, 1.f));
 			obj->GetTransform()->SetLocalPosition(Vec3(baseX - scale * i, 100.f, baseZ - scale * 4.5));
 			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
@@ -1249,7 +1261,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			scene->AddGameObject(obj);
 		}
 
-		
+
 		{
 			//////////////////////////////////////////////////////////////////////
 			shared_ptr<GameObject> obj = make_shared<GameObject>();
@@ -1257,7 +1269,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			obj->SetName(L"Wall");
 			obj->SetCheckFrustum(false);
 			obj->GetTransform()->SetLocalScale(Vec3(scale * 7, scale, 1.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale *3, 100.f, baseZ - scale * 9.5));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 3, 100.f, baseZ - scale * 9.5));
 			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 
@@ -1527,7 +1539,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			obj->AddComponent(meshRenderer);
 			scene->AddGameObject(obj);
 		}
-		
+
 		{
 			shared_ptr<GameObject> obj = make_shared<GameObject>();
 			obj->AddComponent(make_shared<Transform>());
@@ -1697,7 +1709,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			shared_ptr<GameObject> obj = make_shared<GameObject>();
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetName(L"Wall");
-			obj->GetTransform()->SetLocalScale(Vec3(scale*3, scale, 10.f));
+			obj->GetTransform()->SetLocalScale(Vec3(scale * 3, scale, 10.f));
 			obj->GetTransform()->SetLocalPosition(Vec3(baseX - scale * 6.5, 100.f, baseZ - scale * 9));
 			obj->SetCheckFrustum(false);
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
@@ -1803,9 +1815,30 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			obj->AddComponent(meshRenderer);
 			scene->AddGameObject(obj);
 		}
+		vector<shared_ptr<GameObject>> gun = GunMesh->Instantiate();
+
+		for (auto& gameObject : gun)
+		{
+			gameObject->SetName(L"Gun3");
+			//gameObject->SetCheckFrustum(false);
+			gameObject->GetTransform()->SetLocalPosition(Vec3(100.0f, 100.0f, 100.0f));
+			gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
+			scene->AddGameObject(gameObject);
+
+		}
+	}
 #pragma endregion
 
-
-		return scene;
+#pragma region Shop
+	{
+		shared_ptr<GameObject> ShopUI = make_shared<GameObject>();
+		ShopUI->SetName(L"Shop");
+		ShopUI->AddComponent(make_shared<Transform>());
+		ShopUI->AddComponent(make_shared<Shop>());
+		ShopUI->GetTransform()->SetLocalPosition(Vec3(0, 1000, 500));
+		scene->AddGameObject(ShopUI);
 	}
+#pragma endregion
+	return scene;
 }

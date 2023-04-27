@@ -411,6 +411,8 @@ void Resources::CreateDefaultShader()
 		{
 			SHADER_TYPE::FORWARD,
 			RASTERIZER_TYPE::CULL_NONE,
+			DEPTH_STENCIL_TYPE::NO_DEPTH_TEST_NO_WRITE,
+			BLEND_TYPE::ALPHA_BLEND
 			DEPTH_STENCIL_TYPE::LESS_EQUAL,
 		};
 
@@ -714,6 +716,16 @@ void Resources::CreateDefaultMaterial()
 		material->SetTexture(0, texture);
 		material->SetTexture(1, texture2);
 		Add<Material>(L"GameObject", material);
+	}
+
+	// Bullet
+	{
+		shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Deferred");
+		shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Bullet", L"..\\Resources\\Texture\\Bullet.png");
+		shared_ptr<Material> material = make_shared<Material>();
+		material->SetShader(shader);
+		material->SetTexture(0, texture);
+		Add<Material>(L"Bullet", material);
 	}
 
 	// Font

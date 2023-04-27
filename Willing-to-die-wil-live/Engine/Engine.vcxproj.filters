@@ -31,6 +31,9 @@
     <Filter Include="Astar">
       <UniqueIdentifier>{f4f31752-f74c-43ae-8c60-223437b305e1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Object\Component\UI">
+      <UniqueIdentifier>{2336c536-4ba3-45c1-a3d0-86efa9168418}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SwapChain.h">
@@ -90,19 +93,10 @@
     <ClInclude Include="Transform.h">
       <Filter>Object\Component</Filter>
     </ClInclude>
-    <ClInclude Include="Camera.h">
-      <Filter>Object\Component</Filter>
-    </ClInclude>
     <ClInclude Include="Component.h">
       <Filter>Object\Component</Filter>
     </ClInclude>
     <ClInclude Include="Frustum.h">
-      <Filter>Object\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="Light.h">
-      <Filter>Object\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="MeshRenderer.h">
       <Filter>Object\Component</Filter>
     </ClInclude>
     <ClInclude Include="Monobehaviour.h">
@@ -115,9 +109,6 @@
       <Filter>Object\Component</Filter>
     </ClInclude>
     <ClInclude Include="TestDragon.h">
-      <Filter>Object\Test</Filter>
-    </ClInclude>
-    <ClInclude Include="TestCameraScript.h">
       <Filter>Object\Test</Filter>
     </ClInclude>
     <ClInclude Include="Texture.h">
@@ -156,9 +147,6 @@
     <ClInclude Include="SimpleMath.h">
       <Filter>Utils</Filter>
     </ClInclude>
-    <ClInclude Include="Animator.h">
-      <Filter>Object\Component</Filter>
-    </ClInclude>
     <ClInclude Include="Player.h">
       <Filter>Object\Component</Filter>
     </ClInclude>
@@ -177,13 +165,34 @@
     <ClInclude Include="TileNode.h">
       <Filter>Astar</Filter>
     </ClInclude>
-    <ClInclude Include="Font.h">
-      <Filter>Object\Component</Filter>
-    </ClInclude>
     <ClInclude Include="BoxCollider.h">
       <Filter>Object\Component\Collider</Filter>
     </ClInclude>
+    <ClInclude Include="Animator.h">
+      <Filter>Object\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Object\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Light.h">
+      <Filter>Object\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshRenderer.h">
+      <Filter>Object\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Button.h">
+      <Filter>Object\Component\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Font.h">
+      <Filter>Object\Component\UI</Filter>
+    </ClInclude>
     <ClInclude Include="Shop.h">
+      <Filter>Object\Component\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraScript.h">
+      <Filter>Object\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Gun.h">
       <Filter>Object\Component</Filter>
     </ClInclude>
   </ItemGroup>
@@ -245,19 +254,10 @@
     <ClCompile Include="Transform.cpp">
       <Filter>Object\Component</Filter>
     </ClCompile>
-    <ClCompile Include="Camera.cpp">
-      <Filter>Object\Component</Filter>
-    </ClCompile>
     <ClCompile Include="Component.cpp">
       <Filter>Object\Component</Filter>
     </ClCompile>
     <ClCompile Include="Frustum.cpp">
-      <Filter>Object\Component</Filter>
-    </ClCompile>
-    <ClCompile Include="Light.cpp">
-      <Filter>Object\Component</Filter>
-    </ClCompile>
-    <ClCompile Include="MeshRenderer.cpp">
       <Filter>Object\Component</Filter>
     </ClCompile>
     <ClCompile Include="MonoBehaviour.cpp">
@@ -270,9 +270,6 @@
       <Filter>Object\Component</Filter>
     </ClCompile>
     <ClCompile Include="TestDragon.cpp">
-      <Filter>Object\Test</Filter>
-    </ClCompile>
-    <ClCompile Include="TestCameraScript.cpp">
       <Filter>Object\Test</Filter>
     </ClCompile>
     <ClCompile Include="Texture.cpp">
@@ -308,13 +305,7 @@
     <ClCompile Include="SimpleMath.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
-    <ClCompile Include="Animator.cpp">
-      <Filter>Object\Component</Filter>
-    </ClCompile>
     <ClCompile Include="Player.cpp">
-      <Filter>Object\Component</Filter>
-    </ClCompile>
-    <ClCompile Include="Font.cpp">
       <Filter>Object\Component</Filter>
     </ClCompile>
     <ClCompile Include="Enemy.cpp">
@@ -335,7 +326,31 @@
     <ClCompile Include="BoxCollider.cpp">
       <Filter>Object\Component\Collider</Filter>
     </ClCompile>
+    <ClCompile Include="Animator.cpp">
+      <Filter>Object\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Object\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Light.cpp">
+      <Filter>Object\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshRenderer.cpp">
+      <Filter>Object\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Button.cpp">
+      <Filter>Object\Component\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Font.cpp">
+      <Filter>Object\Component\UI</Filter>
+    </ClCompile>
     <ClCompile Include="Shop.cpp">
+      <Filter>Object\Component\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraScript.cpp">
+      <Filter>Object\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Gun.cpp">
       <Filter>Object\Component</Filter>
     </ClCompile>
   </ItemGroup>

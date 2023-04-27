@@ -47,11 +47,22 @@ public:
 	int GetHP() { return _hp; };
 	int GetCurrAmmo() { return _currAmmo; };
 	int GetMaxAmmo() { return _maxAmmo; };
+	int GetMoney() { return _money; };
 	void SetHP(int hp) { _hp = hp; };
 	void SetCurrAmmo(int currAmmo) { _currAmmo = currAmmo; };
 	void SetMaxAmmo(int maxAmmo) {  _maxAmmo = maxAmmo; };
 
+	void SetRotateLock(bool lock) { _rotateLock = lock; };
+	void SetShopOpened(bool open) { _shopOpened = open; };
+
+	bool MoneyChange(int amount);
+
 private:
+	// Shop
+	bool			_rotateLock = false;
+	bool			_shopOpened = false;
+	
+	// Status
 	float			_speed = 10000.0f;
 	POINT			_mousePos = {};
 	POINT			_oldMousePos = {};
@@ -59,6 +70,7 @@ private:
 	int				_hp = 100;
 	int				_Magazine = 0;
 	bool			_reloading = 0;
+	int				_money = 100000;
 
 	// Weapon
 	PLAYER_WEAPON	_currWeapon = PLAYER_WEAPON::PISTOL;
@@ -70,6 +82,7 @@ private:
 	float			_rateOfFire = 0.5f;
 	float			_reloadMaxTime = 3.f;
 	float			_reloadTime = 3.f;
+	int				_price = 500;
 
 	// Bullet
 	vector<shared_ptr<GameObject>>	bullets;

@@ -11,10 +11,12 @@
 #include "SphereCollider.h"
 #include "Animator.h"
 #include "Player.h"
-#include "TestCameraScript.h"
+#include "CameraScript.h"
 #include "Enemy.h"
 #include "Font.h"
 #include "Shop.h"
+#include "Button.h"
+#include "Gun.h"
 
 GameObject::GameObject() : Object(OBJECT_TYPE::GAMEOBJECT)
 {
@@ -176,10 +178,10 @@ shared_ptr<Enemy> GameObject::GetEnemy()
 	return static_pointer_cast<Enemy>(component);
 }
 
-shared_ptr<TestCameraScript> GameObject::GetTestCameraScript()
+shared_ptr<CameraScript> GameObject::GetCameraScript()
 {
-	shared_ptr<Component> component = GetFixedComponent(COMPONENT_TYPE::TESTCAMERASCRIPT);
-	return static_pointer_cast<TestCameraScript>(component);
+	shared_ptr<Component> component = GetFixedComponent(COMPONENT_TYPE::CAMERASCRIPT);
+	return static_pointer_cast<CameraScript>(component);
 }
 
 shared_ptr<Font> GameObject::GetFont()
@@ -192,6 +194,18 @@ shared_ptr<Shop> GameObject::GetShop()
 {
 	shared_ptr<Component> component = GetFixedComponent(COMPONENT_TYPE::SHOP);
 	return static_pointer_cast<Shop>(component);
+}
+
+shared_ptr<Button> GameObject::GetButton()
+{
+	shared_ptr<Component> component = GetFixedComponent(COMPONENT_TYPE::BUTTON);
+	return static_pointer_cast<Button>(component);
+}
+
+shared_ptr<Gun> GameObject::GetGun()
+{
+	shared_ptr<Component> component = GetFixedComponent(COMPONENT_TYPE::GUN);
+	return static_pointer_cast<Gun>(component);
 }
 
 void GameObject::AddComponent(shared_ptr<Component> component)
