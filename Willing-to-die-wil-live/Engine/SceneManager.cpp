@@ -8,6 +8,7 @@
 #include "Transform.h"
 #include "Camera.h"
 #include "Light.h"
+#include "Input.h"
 
 #include "CameraScript.h"
 #include "Resources.h"
@@ -125,6 +126,7 @@ shared_ptr<GameObject> SceneManager::Pick(int32 screenX, int32 screenY)
 
 	return picked;
 }
+
 shared_ptr<Scene> SceneManager::LoadTestScene()
 {
 #pragma region LayerMask
@@ -422,9 +424,9 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 
 #pragma region Enemy
 	{
-		shared_ptr<MeshData> ZombieMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\craw.fbx");
+		shared_ptr<MeshData> ZombieMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\tes.fbx");
 
-		for (int i = 0; i < 1; i++)
+		for (int i = 0; i < 2; i++)
 		{
 
 			vector<shared_ptr<GameObject>> gameObjects = ZombieMesh->Instantiate();
@@ -438,13 +440,12 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 
 				gameObject->SetName(L"Enemy");
 				gameObject->SetCheckFrustum(false);
-				gameObject->GetTransform()->SetLocalPosition(Vec3(1500.f, 300.f, 0.f));
-				gameObject->GetTransform()->SetLocalScale(Vec3(0.01f, 0.01f, 0.01f));
+				gameObject->GetTransform()->SetLocalPosition(Vec3(1500.f, 300.f * i, 0.f));
+				gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 				gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
-
 				gameObject->AddComponent(boxCollider);
-				gameObject->AddComponent(make_shared<Enemy>());
-
+				gameObject->AddComponent(make_shared<TestDragon>());
+				gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 1);
 				scene->AddGameObject(gameObject);
 			}
 		}
@@ -456,7 +457,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			gameObject->SetName(L"Enemy");
 			gameObject->SetCheckFrustum(false);
 			gameObject->GetTransform()->SetLocalPosition(Vec3(2000.f, 300.f, 0.f));
-			gameObject->GetTransform()->SetLocalScale(Vec3(0.01f, 0.01f, 0.01f));
+			gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.01f, 1.01f));
 			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
 			gameObject->AddComponent(EnemyObj);
 
@@ -465,9 +466,39 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			boxCollider->SetCenter(Vec3(0.f, 0.f, 0.f));
 			boxCollider->SetExtents(Vec3(10.f, 40.f, 10.f));
 			gameObject->AddComponent(boxCollider);
-
+			gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 1);
 			gameObject->AddComponent(make_shared<Enemy>());
 			scene->AddGameObject(gameObject);
+		}
+
+
+		
+		shared_ptr<MeshData> SpZombieMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Spzombie.fbx");
+
+		for (int i = 0; i < 1; i++)
+		{
+
+			vector<shared_ptr<GameObject>> gameObjects = SpZombieMesh->Instantiate();
+
+			for (auto& gameObject : gameObjects)
+			{
+
+				shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
+				boxCollider->SetCenter(Vec3(0.f, 0.f, 0.f));
+				boxCollider->SetExtents(Vec3(10.f, 40.f, 10.f));
+
+				gameObject->SetName(L"SpEnemy");
+				gameObject->SetCheckFrustum(false);
+				gameObject->GetTransform()->SetLocalPosition(Vec3(1500.f, 300.f, 0.f));
+				gameObject->GetTransform()->SetLocalScale(Vec3(0.01f, 0.01f, 0.01f));
+				gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
+
+				gameObject->AddComponent(boxCollider);
+				gameObject->AddComponent(make_shared<Enemy>());
+
+				//scene->AddGameObject(gameObject);
+
+			}
 		}
 	}
 	
@@ -482,27 +513,39 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		for (auto& gameObject : gun)
 		{
 			gameObject->SetName(L"Gun3");
-			//gameObject->SetCheckFrustum(false);
-			gameObject->GetTransform()->SetLocalPosition(Vec3(100.0f, 100.0f, 100.0f));
-			gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+			gameObject->SetCheckFrustum(false);
+			gameObject->GetTransform()->SetLocalPosition(Vec3(0.0f, 0.0f, 0.0f));
+			gameObject->GetTransform()->SetLocalScale(Vec3(1000.f, 1000.f, 1000.f));
 			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
 			scene->AddGameObject(gameObject);
-
 		}
 
 	}
 #pragma endregion
 
+#pragma region Shop
+	{
+		shared_ptr<GameObject> ShopUI = make_shared<GameObject>();
+		ShopUI->SetName(L"Shop");
+		ShopUI->AddComponent(make_shared<Transform>());
+		ShopUI->AddComponent(make_shared<Shop>());
+		ShopUI->GetTransform()->SetLocalPosition(Vec3(0, 1000, 500));
+		scene->AddGameObject(ShopUI);
+	}
+#pragma endregion
+
 #pragma region MapDesign
+
 	{
 		// 벽 기본스케일 300,300,10
 		//////////////////////////////////////////////////////////////////////24.12 ~ 24.19
+		for (int i = 0; i < 8; i++)
 		{
 			shared_ptr<GameObject> obj = make_shared<GameObject>();
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetName(L"Wall");
-			obj->GetTransform()->SetLocalScale(Vec3(scale * 8, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX, 100.f, baseZ));
+			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 10.f));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * (3.5 - i), 100.f, baseZ));
 			obj->SetCheckFrustum(false);
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 			{
@@ -510,13 +553,9 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMesh(mesh);
 			}
 			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
-
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
-				shared_ptr<Material> material = make_shared<Material>();
-				material->SetShader(shader);
-				material->SetTexture(0, texture);
-				meshRenderer->SetMaterial(material);
+				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
+				material->SetInt(0, 1);
+				meshRenderer->SetMaterial(material->Clone());
 			}
 
 			obj->AddComponent(meshRenderer);
@@ -530,8 +569,8 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetName(L"Wall");
 			obj->SetCheckFrustum(false);
-			obj->GetTransform()->SetLocalScale(Vec3(scale * 2, scale, 1.f));
-			obj->GetTransform()->SetLocalPosition(Vec3((baseX - scale * 4) + (scale * 8 * i), 100.f, baseZ - scale));
+			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 1.f));
+			obj->GetTransform()->SetLocalPosition(Vec3((baseX - scale * 4), 100.f, baseZ - scale * (0.5 + i)));
 			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 			{
@@ -539,26 +578,66 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMesh(mesh);
 			}
 			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
+				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
+				material->SetInt(0, 1);
+				meshRenderer->SetMaterial(material);
+			}
+			obj->AddComponent(meshRenderer);
+			scene->AddGameObject(obj);
+		}
 
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
-
-				shared_ptr<Material> material = make_shared<Material>();
-				material->SetShader(shader);
-				material->SetTexture(0, texture);
+		for (int i = 0; i < 2; i++)
+		{
+			shared_ptr<GameObject> obj = make_shared<GameObject>();
+			obj->AddComponent(make_shared<Transform>());
+			obj->SetName(L"Wall");
+			obj->SetCheckFrustum(false);
+			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 1.f));
+			obj->GetTransform()->SetLocalPosition(Vec3((baseX + scale * 4), 100.f, baseZ - scale * (0.5 + i)));
+			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
+			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+			{
+				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
+				meshRenderer->SetMesh(mesh);
+			}
+			{
+				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
+				material->SetInt(0, 1);
 				meshRenderer->SetMaterial(material);
 			}
 			obj->AddComponent(meshRenderer);
 			scene->AddGameObject(obj);
 		}
 		//////////////////////////////////////////////////////////////////////23.7,23.11 / 23.20 , 23.24
-		for (int i = 0; i < 2; i++)
+		for (int i = 0; i < 5; i++)
 		{
 			shared_ptr<GameObject> obj = make_shared<GameObject>();
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetName(L"Wall");
-			obj->GetTransform()->SetLocalScale(Vec3(scale * 5, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(((baseX - scale * 6.5) + (scale * 13 * i)), 100.f, 900.f));
+			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 10.f));
+			obj->GetTransform()->SetLocalPosition(Vec3(((baseX - scale * (4.5 + i))), 100.f, 900.f));
+			obj->SetCheckFrustum(false);
+			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+			{
+				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
+				meshRenderer->SetMesh(mesh);
+			}
+			{
+				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
+				material->SetInt(0, 1);
+				meshRenderer->SetMaterial(material);
+			}
+			obj->AddComponent(meshRenderer);
+			scene->AddGameObject(obj);
+		}
+
+		for (int i = 0; i < 5; i++)
+		{
+			shared_ptr<GameObject> obj = make_shared<GameObject>();
+			obj->AddComponent(make_shared<Transform>());
+			obj->SetName(L"Wall");
+			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 10.f));
+			obj->GetTransform()->SetLocalPosition(Vec3(((baseX + scale * (4.5 + i))), 100.f, 900.f));
 			obj->SetCheckFrustum(false);
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 			{
@@ -568,8 +647,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			{
 				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
 
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
-
+				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");
 				shared_ptr<Material> material = make_shared<Material>();
 				material->SetShader(shader);
 				material->SetTexture(0, texture);
@@ -578,14 +656,15 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			obj->AddComponent(meshRenderer);
 			scene->AddGameObject(obj);
 		}
+		for (int i = 0; i < 2; i++)
 		{
 			//////////////////////////////////////////////////////////////////////23.7 22.6
 			shared_ptr<GameObject> obj = make_shared<GameObject>();
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetName(L"Wall");
 			obj->SetCheckFrustum(false);
-			obj->GetTransform()->SetLocalScale(Vec3(scale * 2, scale, 1.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 9, 100.f, baseZ - scale * 3));
+			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 1.f));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 9, 100.f, baseZ - scale * (2.5 + i)));
 			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 
@@ -594,13 +673,8 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMesh(mesh);
 			}
 			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
-
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
-
-				shared_ptr<Material> material = make_shared<Material>();
-				material->SetShader(shader);
-				material->SetTexture(0, texture);
+				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
+				material->SetInt(0, 1);
 				meshRenderer->SetMaterial(material);
 			}
 			obj->AddComponent(meshRenderer);
@@ -608,12 +682,13 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		}
 
 		//////////////////////////////////////////////////////////////////////21.2 ~ 21.6
+		for (int i = 0; i < 5; i++)
 		{
 			shared_ptr<GameObject> obj = make_shared<GameObject>();
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetName(L"Wall");
-			obj->GetTransform()->SetLocalScale(Vec3(scale * 5, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 11.5, 100.f, baseZ - scale * 4));
+			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 10.f));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * (9.5 + i), 100.f, baseZ - scale * 4));
 			obj->SetCheckFrustum(false);
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 			{
@@ -621,13 +696,8 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMesh(mesh);
 			}
 			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
-
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
-
-				shared_ptr<Material> material = make_shared<Material>();
-				material->SetShader(shader);
-				material->SetTexture(0, texture);
+				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
+				material->SetInt(0, 1);
 				meshRenderer->SetMaterial(material);
 			}
 			obj->AddComponent(meshRenderer);
@@ -650,13 +720,8 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMesh(mesh);
 			}
 			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
-
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
-
-				shared_ptr<Material> material = make_shared<Material>();
-				material->SetShader(shader);
-				material->SetTexture(0, texture);
+				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
+				material->SetInt(0, 1);
 				meshRenderer->SetMaterial(material);
 			}
 			obj->AddComponent(meshRenderer);
@@ -678,13 +743,8 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMesh(mesh);
 			}
 			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
-
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
-
-				shared_ptr<Material> material = make_shared<Material>();
-				material->SetShader(shader);
-				material->SetTexture(0, texture);
+				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
+				material->SetInt(0, 1);
 				meshRenderer->SetMaterial(material);
 			}
 			obj->AddComponent(meshRenderer);
@@ -698,8 +758,8 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetName(L"Wall");
 			obj->SetCheckFrustum(false);
-			obj->GetTransform()->SetLocalScale(Vec3(scale * 2, scale, 1.f));
-			obj->GetTransform()->SetLocalPosition(Vec3((baseX + scale * 13) - (scale * 6 * i), 100.f, baseZ - scale * 6));
+			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 1.f));
+			obj->GetTransform()->SetLocalPosition(Vec3((baseX + scale * 13), 100.f, baseZ - scale * (5.5 + i)));
 			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 
@@ -708,25 +768,46 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMesh(mesh);
 			}
 			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
+				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
+				material->SetInt(0, 1);
+				meshRenderer->SetMaterial(material);
+			}
+			obj->AddComponent(meshRenderer);
+			scene->AddGameObject(obj);
+		}
 
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
+		for (int i = 0; i < 2; i++)
+		{
+			//19.3 18.3, 18.9 19.9
+			shared_ptr<GameObject> obj = make_shared<GameObject>();
+			obj->AddComponent(make_shared<Transform>());
+			obj->SetName(L"Wall");
+			obj->SetCheckFrustum(false);
+			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 1.f));
+			obj->GetTransform()->SetLocalPosition(Vec3((baseX + scale * 7), 100.f, baseZ - scale * (5.5 + i)));
+			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
+			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 
-				shared_ptr<Material> material = make_shared<Material>();
-				material->SetShader(shader);
-				material->SetTexture(0, texture);
+			{
+				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
+				meshRenderer->SetMesh(mesh);
+			}
+			{
+				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
+				material->SetInt(0, 1);
 				meshRenderer->SetMaterial(material);
 			}
 			obj->AddComponent(meshRenderer);
 			scene->AddGameObject(obj);
 		}
 		//////////////////////////////////////////////////////////////////////
+		for (int i = 0; i < 3; i++)
 		{
 			shared_ptr<GameObject> obj = make_shared<GameObject>();
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetName(L"Wall");
-			obj->GetTransform()->SetLocalScale(Vec3(scale * 3, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 12.5, 100.f, baseZ - scale * 8));
+			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 10.f));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * (11.5 + i), 100.f, baseZ - scale * 8));
 			obj->SetCheckFrustum(false);
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 			{
@@ -734,27 +815,23 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMesh(mesh);
 			}
 			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
-
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
-
-				shared_ptr<Material> material = make_shared<Material>();
-				material->SetShader(shader);
-				material->SetTexture(0, texture);
+				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
+				material->SetInt(0, 1);
 				meshRenderer->SetMaterial(material);
 			}
 			obj->AddComponent(meshRenderer);
 			scene->AddGameObject(obj);
 		}
 		//////////////////////////////////////////////////////////////////////
+		for (int i = 0; i < 10; i++)
 		{
 			//20.2 18.2
 			shared_ptr<GameObject> obj = make_shared<GameObject>();
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetName(L"Wall");
 			obj->SetCheckFrustum(false);
-			obj->GetTransform()->SetLocalScale(Vec3(scale * 10, scale, 1.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 11, 100.f, baseZ - scale * 13));
+			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 1.f));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 11, 100.f, baseZ - scale * (8.5 + i)));
 			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 
@@ -763,13 +840,8 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMesh(mesh);
 			}
 			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
-
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
-
-				shared_ptr<Material> material = make_shared<Material>();
-				material->SetShader(shader);
-				material->SetTexture(0, texture);
+				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
+				material->SetInt(0, 1);
 				meshRenderer->SetMaterial(material);
 			}
 			obj->AddComponent(meshRenderer);
@@ -777,12 +849,13 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		}
 
 		//////////////////////////////////////////////////////////////////////
+		for (int i = 0; i < 2; i++)
 		{
 			shared_ptr<GameObject> obj = make_shared<GameObject>();
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetName(L"Wall");
-			obj->GetTransform()->SetLocalScale(Vec3(scale * 2, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 12, 100.f, baseZ - scale * 18));
+			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 10.f));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * (11.5 + i), 100.f, baseZ - scale * 18));
 			obj->SetCheckFrustum(false);
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 			{
@@ -790,26 +863,23 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMesh(mesh);
 			}
 			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
-
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
-
-				shared_ptr<Material> material = make_shared<Material>();
-				material->SetShader(shader);
-				material->SetTexture(0, texture);
+				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
+				material->SetInt(0, 1);
 				meshRenderer->SetMaterial(material);
 			}
 			obj->AddComponent(meshRenderer);
 			scene->AddGameObject(obj);
 		}
+		//????????????????????????
 		//////////////////////////////////////////////////////////////////////
+		for (int i = 0; i < 5; i++)
 		{
 			shared_ptr<GameObject> obj = make_shared<GameObject>();
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetName(L"Wall");
 			obj->SetCheckFrustum(false);
-			obj->GetTransform()->SetLocalScale(Vec3(scale * 5, scale, 1.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 13, 100.f, baseZ - scale * 20.5));
+			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 1.f));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 13, 100.f, baseZ - scale * (18.5 + i)));
 			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 
@@ -818,25 +888,21 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMesh(mesh);
 			}
 			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
-
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
-
-				shared_ptr<Material> material = make_shared<Material>();
-				material->SetShader(shader);
-				material->SetTexture(0, texture);
+				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
+				material->SetInt(0, 1);
 				meshRenderer->SetMaterial(material);
 			}
 			obj->AddComponent(meshRenderer);
 			scene->AddGameObject(obj);
 		}
 		//////////////////////////////////////////////////////////////////////
+		for (int i = 0; i < 6; i++)
 		{
 			shared_ptr<GameObject> obj = make_shared<GameObject>();
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetName(L"Wall");
-			obj->GetTransform()->SetLocalScale(Vec3(scale * 6, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 10, 100.f, baseZ - scale * 23));
+			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 10.f));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * (7.5 + i), 100.f, baseZ - scale * 23));
 			obj->SetCheckFrustum(false);
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 			{
@@ -844,13 +910,8 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMesh(mesh);
 			}
 			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
-
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
-
-				shared_ptr<Material> material = make_shared<Material>();
-				material->SetShader(shader);
-				material->SetTexture(0, texture);
+				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
+				material->SetInt(0, 1);
 				meshRenderer->SetMaterial(material);
 			}
 			obj->AddComponent(meshRenderer);
@@ -863,8 +924,8 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetName(L"Wall");
 			obj->SetCheckFrustum(false);
-			obj->GetTransform()->SetLocalScale(Vec3(scale * 2, scale, 1.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 7, 100.f, (baseZ - scale * 22) + scale * 3 * i));
+			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 1.f));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 7, 100.f, (baseZ - scale * (21.5 + i))));
 			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 
@@ -873,110 +934,22 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMesh(mesh);
 			}
 			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
-
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
-
-				shared_ptr<Material> material = make_shared<Material>();
-				material->SetShader(shader);
-				material->SetTexture(0, texture);
+				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
+				material->SetInt(0, 1);
 				meshRenderer->SetMaterial(material);
 			}
 			obj->AddComponent(meshRenderer);
 			scene->AddGameObject(obj);
 		}
 
-		//////////////////////////////////////////////////////////////////////
-		{
-			shared_ptr<GameObject> obj = make_shared<GameObject>();
-			obj->AddComponent(make_shared<Transform>());
-			obj->SetName(L"Wall");
-			obj->GetTransform()->SetLocalScale(Vec3(scale * 3, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 8.5, 100.f, baseZ - scale * 18));
-			obj->SetCheckFrustum(false);
-			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-			{
-				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-				meshRenderer->SetMesh(mesh);
-			}
-			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
-
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
-
-				shared_ptr<Material> material = make_shared<Material>();
-				material->SetShader(shader);
-				material->SetTexture(0, texture);
-				meshRenderer->SetMaterial(material);
-			}
-			obj->AddComponent(meshRenderer);
-			scene->AddGameObject(obj);
-		}
-
-		//////////////////////////////////////////////////////////////////////
-		{
-			shared_ptr<GameObject> obj = make_shared<GameObject>();
-			obj->AddComponent(make_shared<Transform>());
-			obj->SetName(L"Wall");
-			obj->SetCheckFrustum(false);
-			obj->GetTransform()->SetLocalScale(Vec3(scale * 4, scale, 1.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 10, 100.f, baseZ - scale * 16));
-			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
-			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-
-			{
-				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-				meshRenderer->SetMesh(mesh);
-			}
-			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
-
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
-
-				shared_ptr<Material> material = make_shared<Material>();
-				material->SetShader(shader);
-				material->SetTexture(0, texture);
-				meshRenderer->SetMaterial(material);
-			}
-			obj->AddComponent(meshRenderer);
-			scene->AddGameObject(obj);
-		}
-		//////////////////////////////////////////////////////////////////////
 		for (int i = 0; i < 2; i++)
 		{
 			shared_ptr<GameObject> obj = make_shared<GameObject>();
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetName(L"Wall");
-			obj->GetTransform()->SetLocalScale(Vec3(scale * 7, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 6.5, 100.f, (baseZ - scale * 14) + scale * i));
 			obj->SetCheckFrustum(false);
-			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-			{
-				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-				meshRenderer->SetMesh(mesh);
-			}
-			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
-
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
-
-				shared_ptr<Material> material = make_shared<Material>();
-				material->SetShader(shader);
-				material->SetTexture(0, texture);
-				meshRenderer->SetMaterial(material);
-			}
-			obj->AddComponent(meshRenderer);
-			scene->AddGameObject(obj);
-		}
-
-		//////////////////////////////////////////////////////////////////////
-		{
-			shared_ptr<GameObject> obj = make_shared<GameObject>();
-			obj->AddComponent(make_shared<Transform>());
-			obj->SetName(L"Wall");
-			obj->SetCheckFrustum(false);
-			obj->GetTransform()->SetLocalScale(Vec3(scale * 5, scale, 1.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 10, 100.f, baseZ - scale * 10.5));
+			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 1.f));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 7, 100.f, (baseZ - scale * (18.5 + i))));
 			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 
@@ -985,25 +958,138 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMesh(mesh);
 			}
 			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
+				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
+				material->SetInt(0, 1);
+				meshRenderer->SetMaterial(material);
+			}
+			obj->AddComponent(meshRenderer);
+			scene->AddGameObject(obj);
+		}
 
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
+		//////////////////////////////////////////////////////////////////////
+		for (int i = 0; i < 3; i++)
+		{
+			shared_ptr<GameObject> obj = make_shared<GameObject>();
+			obj->AddComponent(make_shared<Transform>());
+			obj->SetName(L"Wall");
+			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 10.f));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * (7.5 + i), 100.f, baseZ - scale * 18));
+			obj->SetCheckFrustum(false);
+			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+			{
+				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
+				meshRenderer->SetMesh(mesh);
+			}
+			{
+				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
+				material->SetInt(0, 1);
+				meshRenderer->SetMaterial(material);
+			}
+			obj->AddComponent(meshRenderer);
+			scene->AddGameObject(obj);
+		}
 
-				shared_ptr<Material> material = make_shared<Material>();
-				material->SetShader(shader);
-				material->SetTexture(0, texture);
+		//////////////////////////////////////////////////////////////////////
+		for (int i = 0; i < 4; i++)
+		{
+			shared_ptr<GameObject> obj = make_shared<GameObject>();
+			obj->AddComponent(make_shared<Transform>());
+			obj->SetName(L"Wall");
+			obj->SetCheckFrustum(false);
+			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 1.f));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 10, 100.f, baseZ - scale * (14.5 + i)));
+			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
+			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+
+			{
+				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
+				meshRenderer->SetMesh(mesh);
+			}
+			{
+				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
+				material->SetInt(0, 1);
+				meshRenderer->SetMaterial(material);
+			}
+			obj->AddComponent(meshRenderer);
+			scene->AddGameObject(obj);
+		}
+		//////////////////////////////////////////////////////////////////////
+		for (int i = 0; i < 7; i++)
+		{
+			shared_ptr<GameObject> obj = make_shared<GameObject>();
+			obj->AddComponent(make_shared<Transform>());
+			obj->SetName(L"Wall");
+			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 10.f));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * (3.5 + i), 100.f, (baseZ - scale * 14)));
+			obj->SetCheckFrustum(false);
+			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+			{
+				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
+				meshRenderer->SetMesh(mesh);
+			}
+			{
+				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
+				material->SetInt(0, 1);
+				meshRenderer->SetMaterial(material);
+			}
+			obj->AddComponent(meshRenderer);
+			scene->AddGameObject(obj);
+		}
+
+		for (int i = 0; i < 7; i++)
+		{
+			shared_ptr<GameObject> obj = make_shared<GameObject>();
+			obj->AddComponent(make_shared<Transform>());
+			obj->SetName(L"Wall");
+			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 10.f));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * (3.5 + i), 100.f, (baseZ - scale * 13)));
+			obj->SetCheckFrustum(false);
+			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+			{
+				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
+				meshRenderer->SetMesh(mesh);
+			}
+			{
+				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
+				material->SetInt(0, 1);
+				meshRenderer->SetMaterial(material);
+			}
+			obj->AddComponent(meshRenderer);
+			scene->AddGameObject(obj);
+		}
+
+		//////////////////////////////////////////////////////////////////////
+		for (int i = 0; i < 5; i++)
+		{
+			shared_ptr<GameObject> obj = make_shared<GameObject>();
+			obj->AddComponent(make_shared<Transform>());
+			obj->SetName(L"Wall");
+			obj->SetCheckFrustum(false);
+			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 1.f));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 10, 100.f, baseZ - scale * (8.5 + i)));
+			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
+			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+
+			{
+				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
+				meshRenderer->SetMesh(mesh);
+			}
+			{
+				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
+				material->SetInt(0, 1);
 				meshRenderer->SetMaterial(material);
 			}
 			obj->AddComponent(meshRenderer);
 			scene->AddGameObject(obj);
 		}
 		//////////////////////////////////////////////////////////////
+		for (int i = 0; i < 4; i++)
 		{
 			shared_ptr<GameObject> obj = make_shared<GameObject>();
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetName(L"Wall");
-			obj->GetTransform()->SetLocalScale(Vec3(scale * 4, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 8, 100.f, baseZ - scale * 8));
+			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 10.f));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * (6.5 + i), 100.f, baseZ - scale * 8));
 			obj->SetCheckFrustum(false);
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 			{
@@ -1011,13 +1097,8 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMesh(mesh);
 			}
 			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
-
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
-
-				shared_ptr<Material> material = make_shared<Material>();
-				material->SetShader(shader);
-				material->SetTexture(0, texture);
+				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
+				material->SetInt(0, 1);
 				meshRenderer->SetMaterial(material);
 			}
 			obj->AddComponent(meshRenderer);
@@ -1041,13 +1122,8 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMesh(mesh);
 			}
 			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
-
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
-
-				shared_ptr<Material> material = make_shared<Material>();
-				material->SetShader(shader);
-				material->SetTexture(0, texture);
+				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
+				material->SetInt(0, 1);
 				meshRenderer->SetMaterial(material);
 			}
 			obj->AddComponent(meshRenderer);
@@ -1068,13 +1144,8 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMesh(mesh);
 			}
 			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
-
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
-
-				shared_ptr<Material> material = make_shared<Material>();
-				material->SetShader(shader);
-				material->SetTexture(0, texture);
+				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
+				material->SetInt(0, 1);
 				meshRenderer->SetMaterial(material);
 			}
 			obj->AddComponent(meshRenderer);
@@ -1082,12 +1153,13 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		}
 
 		//////////////////////////////////////////////20.10,20.9
+		for (int i = 0; i < 2; i++)
 		{
 			shared_ptr<GameObject> obj = make_shared<GameObject>();
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetName(L"Wall");
-			obj->GetTransform()->SetLocalScale(Vec3(scale * 2, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 7, 100.f, baseZ - scale * 4));
+			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 10.f));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * (6.5 + i), 100.f, baseZ - scale * 4));
 			obj->SetCheckFrustum(false);
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 			{
@@ -1095,13 +1167,8 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMesh(mesh);
 			}
 			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
-
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
-
-				shared_ptr<Material> material = make_shared<Material>();
-				material->SetShader(shader);
-				material->SetTexture(0, texture);
+				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
+				material->SetInt(0, 1);
 				meshRenderer->SetMaterial(material);
 			}
 			obj->AddComponent(meshRenderer);
@@ -1124,13 +1191,8 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMesh(mesh);
 			}
 			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
-
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
-
-				shared_ptr<Material> material = make_shared<Material>();
-				material->SetShader(shader);
-				material->SetTexture(0, texture);
+				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
+				material->SetInt(0, 1);
 				meshRenderer->SetMaterial(material);
 			}
 			obj->AddComponent(meshRenderer);
@@ -1138,12 +1200,13 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		}
 
 		//////////////////////////////////////////////
+		for (int i = 0; i < 8; i++)
 		{
 			shared_ptr<GameObject> obj = make_shared<GameObject>();
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetName(L"Wall");
-			obj->GetTransform()->SetLocalScale(Vec3(scale * 8, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 4, 100.f, baseZ - scale * 3));
+			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 10.f));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * (0.5 + i), 100.f, baseZ - scale * 3));
 			obj->SetCheckFrustum(false);
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 			{
@@ -1151,13 +1214,8 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMesh(mesh);
 			}
 			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
-
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
-
-				shared_ptr<Material> material = make_shared<Material>();
-				material->SetShader(shader);
-				material->SetTexture(0, texture);
+				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
+				material->SetInt(0, 1);
 				meshRenderer->SetMaterial(material);
 			}
 			obj->AddComponent(meshRenderer);
@@ -1165,12 +1223,13 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		}
 
 		//////////////////////////////////////////////
+		for (int i = 0; i < 7; i++)
 		{
 			shared_ptr<GameObject> obj = make_shared<GameObject>();
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetName(L"Wall");
-			obj->GetTransform()->SetLocalScale(Vec3(scale * 7, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX - scale * 4.5, 100.f, baseZ - scale * 3));
+			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 10.f));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX - scale * (1.5 + i), 100.f, baseZ - scale * 3));
 			obj->SetCheckFrustum(false);
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 			{
@@ -1178,18 +1237,295 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMesh(mesh);
 			}
 			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
-
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
-
-				shared_ptr<Material> material = make_shared<Material>();
-				material->SetShader(shader);
-				material->SetTexture(0, texture);
+				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
+				material->SetInt(0, 1);
 				meshRenderer->SetMaterial(material);
 			}
 			obj->AddComponent(meshRenderer);
 			scene->AddGameObject(obj);
 		}
+		for (int i = 0; i < 3; i++)
+		{
+			//////////////////////////////////////////////////////////////////////
+			shared_ptr<GameObject> obj = make_shared<GameObject>();
+			obj->AddComponent(make_shared<Transform>());
+			obj->SetName(L"Wall");
+			obj->SetCheckFrustum(false);
+			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 1.f));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX, 100.f, baseZ - scale * (3.5 + i)));
+			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
+			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+
+			{
+				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
+				meshRenderer->SetMesh(mesh);
+			}
+			{
+				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
+				material->SetInt(0, 1);
+				meshRenderer->SetMaterial(material);
+			}
+			obj->AddComponent(meshRenderer);
+			scene->AddGameObject(obj);
+		}
+
+		for (int i = 0; i < 3; i++)
+		{
+			//////////////////////////////////////////////////////////////////////
+			shared_ptr<GameObject> obj = make_shared<GameObject>();
+			obj->AddComponent(make_shared<Transform>());
+			obj->SetName(L"Wall");
+			obj->SetCheckFrustum(false);
+			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 1.f));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX - scale, 100.f, baseZ - scale * (3.5 + i)));
+			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
+			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+
+			{
+				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
+				meshRenderer->SetMesh(mesh);
+			}
+			{
+				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
+				material->SetInt(0, 1);
+				meshRenderer->SetMaterial(material);
+			}
+			obj->AddComponent(meshRenderer);
+			scene->AddGameObject(obj);
+		}
+
+		for (int i = 0; i < 3; i++)
+		{
+			shared_ptr<GameObject> obj = make_shared<GameObject>();
+			obj->AddComponent(make_shared<Transform>());
+			obj->SetName(L"Wall");
+			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 10.f));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * (0.5 + i), 100.f, baseZ - scale * 6));
+			obj->SetCheckFrustum(false);
+			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+			{
+				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
+				meshRenderer->SetMesh(mesh);
+			}
+			{
+				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
+				material->SetInt(0, 1);
+				meshRenderer->SetMaterial(material);
+			}
+			obj->AddComponent(meshRenderer);
+			scene->AddGameObject(obj);
+		}
+
+		for (int i = 0; i < 3; i++)
+		{
+			shared_ptr<GameObject> obj = make_shared<GameObject>();
+			obj->AddComponent(make_shared<Transform>());
+			obj->SetName(L"Wall");
+			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 10.f));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX - scale * (1.5 + i), 100.f, baseZ - scale * 6));
+			obj->SetCheckFrustum(false);
+			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+			{
+				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
+				meshRenderer->SetMesh(mesh);
+			}
+			{
+				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
+				material->SetInt(0, 1);
+				meshRenderer->SetMaterial(material);
+			}
+			obj->AddComponent(meshRenderer);
+			scene->AddGameObject(obj);
+		}
+
+		for (int i = 0; i < 7; i++)
+		{
+			//////////////////////////////////////////////////////////////////////
+			shared_ptr<GameObject> obj = make_shared<GameObject>();
+			obj->AddComponent(make_shared<Transform>());
+			obj->SetName(L"Wall");
+			obj->SetCheckFrustum(false);
+			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 1.f));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 3, 100.f, baseZ - scale * (6.5 + i)));
+			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
+			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+
+			{
+				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
+				meshRenderer->SetMesh(mesh);
+			}
+			{
+				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
+				material->SetInt(0, 1);
+				meshRenderer->SetMaterial(material);
+			}
+			obj->AddComponent(meshRenderer);
+			scene->AddGameObject(obj);
+		}
+
+		for (int i = 0; i < 4; i++)
+		{
+			//////////////////////////////////////////////////////////////////////
+			shared_ptr<GameObject> obj = make_shared<GameObject>();
+			obj->AddComponent(make_shared<Transform>());
+			obj->SetName(L"Wall");
+			obj->SetCheckFrustum(false);
+			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 1.f));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX - scale * 4, 100.f, baseZ - scale * (6.5 + i)));
+			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
+			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+
+			{
+				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
+				meshRenderer->SetMesh(mesh);
+			}
+			{
+				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
+				material->SetInt(0, 1);
+				meshRenderer->SetMaterial(material);
+			}
+			obj->AddComponent(meshRenderer);
+			scene->AddGameObject(obj);
+		}
+
+		for (int i = 0; i < 6; i++)
+		{
+			shared_ptr<GameObject> obj = make_shared<GameObject>();
+			obj->AddComponent(make_shared<Transform>());
+			obj->SetName(L"Wall");
+			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 10.f));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX - scale * (-1.5 + i), 100.f, baseZ - scale * 10));
+			obj->SetCheckFrustum(false);
+			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+			{
+				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
+				meshRenderer->SetMesh(mesh);
+			}
+			{
+				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
+				material->SetInt(0, 1);
+				meshRenderer->SetMaterial(material);
+			}
+			obj->AddComponent(meshRenderer);
+			scene->AddGameObject(obj);
+		}
+
+		for (int i = 0; i < 10; i++)
+		{
+			//////////////////////////////////////////////////////////////////////
+			shared_ptr<GameObject> obj = make_shared<GameObject>();
+			obj->AddComponent(make_shared<Transform>());
+			obj->SetName(L"Wall");
+			obj->SetCheckFrustum(false);
+			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 1.f));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 2, 100.f, baseZ - scale * (10.5 + i)));
+			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
+			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+
+			{
+				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
+				meshRenderer->SetMesh(mesh);
+			}
+			{
+				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
+				material->SetInt(0, 1);
+				meshRenderer->SetMaterial(material);
+			}
+			obj->AddComponent(meshRenderer);
+			scene->AddGameObject(obj);
+		}
+
+		for (int i = 0; i < 6; i++)
+		{
+			//////////////////////////////////////////////////////////////////////
+			shared_ptr<GameObject> obj = make_shared<GameObject>();
+			obj->AddComponent(make_shared<Transform>());
+			obj->SetName(L"Wall");
+			obj->SetCheckFrustum(false);
+			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 1.f));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 3, 100.f, baseZ - scale * (14.5 + i)));
+			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
+			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+
+			{
+				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
+				meshRenderer->SetMesh(mesh);
+			}
+			{
+				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
+				material->SetInt(0, 1);
+				meshRenderer->SetMaterial(material);
+			}
+			obj->AddComponent(meshRenderer);
+			scene->AddGameObject(obj);
+		}
+
+		for (int i = 0; i < 7; i++)
+		{
+			shared_ptr<GameObject> obj = make_shared<GameObject>();
+			obj->AddComponent(make_shared<Transform>());
+			obj->SetName(L"Wall");
+			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 10.f));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * (0.5 + i), 100.f, baseZ - scale * 21));
+			obj->SetCheckFrustum(false);
+			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+			{
+				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
+				meshRenderer->SetMesh(mesh);
+			}
+			{
+				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
+				material->SetInt(0, 1);
+				meshRenderer->SetMaterial(material);
+			}
+			obj->AddComponent(meshRenderer);
+			scene->AddGameObject(obj);
+		}
+
+		for (int i = 0; i < 4; i++)
+		{
+			shared_ptr<GameObject> obj = make_shared<GameObject>();
+			obj->AddComponent(make_shared<Transform>());
+			obj->SetName(L"Wall");
+			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 10.f));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * (3.5 + i), 100.f, baseZ - scale * 20));
+			obj->SetCheckFrustum(false);
+			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+			{
+				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
+				meshRenderer->SetMesh(mesh);
+			}
+			{
+				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
+				material->SetInt(0, 1);
+				meshRenderer->SetMaterial(material);
+			}
+			obj->AddComponent(meshRenderer);
+			scene->AddGameObject(obj);
+		}
+
+		for (int i = 0; i < 2; i++)
+		{
+			shared_ptr<GameObject> obj = make_shared<GameObject>();
+			obj->AddComponent(make_shared<Transform>());
+			obj->SetName(L"Wall");
+			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 10.f));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * (0.5 + i), 100.f, baseZ - scale * 20));
+			obj->SetCheckFrustum(false);
+			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+			{
+				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
+				meshRenderer->SetMesh(mesh);
+			}
+			{
+				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
+				material->SetInt(0, 1);
+				meshRenderer->SetMaterial(material);
+			}
+			obj->AddComponent(meshRenderer);
+			scene->AddGameObject(obj);
+		}
+
 		for (int i = 0; i < 2; i++)
 		{
 			//////////////////////////////////////////////////////////////////////
@@ -1197,8 +1533,8 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetName(L"Wall");
 			obj->SetCheckFrustum(false);
-			obj->GetTransform()->SetLocalScale(Vec3(scale * 3, scale, 1.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX - scale * i, 100.f, baseZ - scale * 4.5));
+			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 1.f));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX, 100.f, baseZ - scale * (21.5 + i)));
 			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 
@@ -1207,65 +1543,8 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMesh(mesh);
 			}
 			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
-
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
-
-				shared_ptr<Material> material = make_shared<Material>();
-				material->SetShader(shader);
-				material->SetTexture(0, texture);
-				meshRenderer->SetMaterial(material);
-			}
-			obj->AddComponent(meshRenderer);
-			scene->AddGameObject(obj);
-		}
-
-		{
-			shared_ptr<GameObject> obj = make_shared<GameObject>();
-			obj->AddComponent(make_shared<Transform>());
-			obj->SetName(L"Wall");
-			obj->GetTransform()->SetLocalScale(Vec3(scale * 3, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 1.5, 100.f, baseZ - scale * 6));
-			obj->SetCheckFrustum(false);
-			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-			{
-				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-				meshRenderer->SetMesh(mesh);
-			}
-			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
-
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
-
-				shared_ptr<Material> material = make_shared<Material>();
-				material->SetShader(shader);
-				material->SetTexture(0, texture);
-				meshRenderer->SetMaterial(material);
-			}
-			obj->AddComponent(meshRenderer);
-			scene->AddGameObject(obj);
-		}
-
-		{
-			shared_ptr<GameObject> obj = make_shared<GameObject>();
-			obj->AddComponent(make_shared<Transform>());
-			obj->SetName(L"Wall");
-			obj->GetTransform()->SetLocalScale(Vec3(scale * 3, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX - scale * 2.5, 100.f, baseZ - scale * 6));
-			obj->SetCheckFrustum(false);
-			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-			{
-				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-				meshRenderer->SetMesh(mesh);
-			}
-			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
-
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
-
-				shared_ptr<Material> material = make_shared<Material>();
-				material->SetShader(shader);
-				material->SetTexture(0, texture);
+				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
+				material->SetInt(0, 1);
 				meshRenderer->SetMaterial(material);
 			}
 			obj->AddComponent(meshRenderer);
@@ -1273,14 +1552,15 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		}
 
 
+		for (int i = 0; i < 2; i++)
 		{
 			//////////////////////////////////////////////////////////////////////
 			shared_ptr<GameObject> obj = make_shared<GameObject>();
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetName(L"Wall");
 			obj->SetCheckFrustum(false);
-			obj->GetTransform()->SetLocalScale(Vec3(scale * 7, scale, 1.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 3, 100.f, baseZ - scale * 9.5));
+			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 1.f));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX, 100.f, baseZ - scale * (18.5 + i)));
 			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 
@@ -1289,54 +1569,21 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMesh(mesh);
 			}
 			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
-
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
-
-				shared_ptr<Material> material = make_shared<Material>();
-				material->SetShader(shader);
-				material->SetTexture(0, texture);
+				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
+				material->SetInt(0, 1);
 				meshRenderer->SetMaterial(material);
 			}
 			obj->AddComponent(meshRenderer);
 			scene->AddGameObject(obj);
 		}
 
-		{
-			//////////////////////////////////////////////////////////////////////
-			shared_ptr<GameObject> obj = make_shared<GameObject>();
-			obj->AddComponent(make_shared<Transform>());
-			obj->SetName(L"Wall");
-			obj->SetCheckFrustum(false);
-			obj->GetTransform()->SetLocalScale(Vec3(scale * 4, scale, 1.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX - scale * 4, 100.f, baseZ - scale * 8));
-			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
-			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-
-			{
-				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-				meshRenderer->SetMesh(mesh);
-			}
-			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
-
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
-
-				shared_ptr<Material> material = make_shared<Material>();
-				material->SetShader(shader);
-				material->SetTexture(0, texture);
-				meshRenderer->SetMaterial(material);
-			}
-			obj->AddComponent(meshRenderer);
-			scene->AddGameObject(obj);
-		}
-
+		for (int i = 0; i < 5; i++)
 		{
 			shared_ptr<GameObject> obj = make_shared<GameObject>();
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetName(L"Wall");
-			obj->GetTransform()->SetLocalScale(Vec3(scale * 6, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX - scale, 100.f, baseZ - scale * 10));
+			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 10.f));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX - scale * (0.5 + i), 100.f, baseZ - scale * 23));
 			obj->SetCheckFrustum(false);
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 			{
@@ -1344,83 +1591,21 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMesh(mesh);
 			}
 			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
-
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
-
-				shared_ptr<Material> material = make_shared<Material>();
-				material->SetShader(shader);
-				material->SetTexture(0, texture);
+				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
+				material->SetInt(0, 1);
 				meshRenderer->SetMaterial(material);
 			}
 			obj->AddComponent(meshRenderer);
 			scene->AddGameObject(obj);
 		}
 
-		{
-			//////////////////////////////////////////////////////////////////////
-			shared_ptr<GameObject> obj = make_shared<GameObject>();
-			obj->AddComponent(make_shared<Transform>());
-			obj->SetName(L"Wall");
-			obj->SetCheckFrustum(false);
-			obj->GetTransform()->SetLocalScale(Vec3(scale * 10, scale, 1.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 2, 100.f, baseZ - scale * 15));
-			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
-			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-
-			{
-				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-				meshRenderer->SetMesh(mesh);
-			}
-			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
-
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
-
-				shared_ptr<Material> material = make_shared<Material>();
-				material->SetShader(shader);
-				material->SetTexture(0, texture);
-				meshRenderer->SetMaterial(material);
-			}
-			obj->AddComponent(meshRenderer);
-			scene->AddGameObject(obj);
-		}
-
-		{
-			//////////////////////////////////////////////////////////////////////
-			shared_ptr<GameObject> obj = make_shared<GameObject>();
-			obj->AddComponent(make_shared<Transform>());
-			obj->SetName(L"Wall");
-			obj->SetCheckFrustum(false);
-			obj->GetTransform()->SetLocalScale(Vec3(scale * 6, scale, 1.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 3, 100.f, baseZ - scale * 17));
-			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
-			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-
-			{
-				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-				meshRenderer->SetMesh(mesh);
-			}
-			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
-
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
-
-				shared_ptr<Material> material = make_shared<Material>();
-				material->SetShader(shader);
-				material->SetTexture(0, texture);
-				meshRenderer->SetMaterial(material);
-			}
-			obj->AddComponent(meshRenderer);
-			scene->AddGameObject(obj);
-		}
-
+		for (int i = 0; i < 5; i++)
 		{
 			shared_ptr<GameObject> obj = make_shared<GameObject>();
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetName(L"Wall");
-			obj->GetTransform()->SetLocalScale(Vec3(scale * 7, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 3.5, 100.f, baseZ - scale * 21));
+			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 10.f));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX - scale * (0.5 + i), 100.f, baseZ - scale * 18));
 			obj->SetCheckFrustum(false);
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 			{
@@ -1428,175 +1613,8 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMesh(mesh);
 			}
 			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
-
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
-
-				shared_ptr<Material> material = make_shared<Material>();
-				material->SetShader(shader);
-				material->SetTexture(0, texture);
-				meshRenderer->SetMaterial(material);
-			}
-			obj->AddComponent(meshRenderer);
-			scene->AddGameObject(obj);
-		}
-
-		{
-			shared_ptr<GameObject> obj = make_shared<GameObject>();
-			obj->AddComponent(make_shared<Transform>());
-			obj->SetName(L"Wall");
-			obj->GetTransform()->SetLocalScale(Vec3(scale * 4, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 5, 100.f, baseZ - scale * 20));
-			obj->SetCheckFrustum(false);
-			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-			{
-				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-				meshRenderer->SetMesh(mesh);
-			}
-			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
-
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
-
-				shared_ptr<Material> material = make_shared<Material>();
-				material->SetShader(shader);
-				material->SetTexture(0, texture);
-				meshRenderer->SetMaterial(material);
-			}
-			obj->AddComponent(meshRenderer);
-			scene->AddGameObject(obj);
-		}
-
-		{
-			shared_ptr<GameObject> obj = make_shared<GameObject>();
-			obj->AddComponent(make_shared<Transform>());
-			obj->SetName(L"Wall");
-			obj->GetTransform()->SetLocalScale(Vec3(scale * 2, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale, 100.f, baseZ - scale * 20));
-			obj->SetCheckFrustum(false);
-			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-			{
-				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-				meshRenderer->SetMesh(mesh);
-			}
-			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
-
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
-
-				shared_ptr<Material> material = make_shared<Material>();
-				material->SetShader(shader);
-				material->SetTexture(0, texture);
-				meshRenderer->SetMaterial(material);
-			}
-			obj->AddComponent(meshRenderer);
-			scene->AddGameObject(obj);
-		}
-
-		{
-			//////////////////////////////////////////////////////////////////////
-			shared_ptr<GameObject> obj = make_shared<GameObject>();
-			obj->AddComponent(make_shared<Transform>());
-			obj->SetName(L"Wall");
-			obj->SetCheckFrustum(false);
-			obj->GetTransform()->SetLocalScale(Vec3(scale * 2, scale, 1.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX, 100.f, baseZ - scale * 22));
-			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
-			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-
-			{
-				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-				meshRenderer->SetMesh(mesh);
-			}
-			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
-
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
-
-				shared_ptr<Material> material = make_shared<Material>();
-				material->SetShader(shader);
-				material->SetTexture(0, texture);
-				meshRenderer->SetMaterial(material);
-			}
-			obj->AddComponent(meshRenderer);
-			scene->AddGameObject(obj);
-		}
-
-		{
-			//////////////////////////////////////////////////////////////////////
-			shared_ptr<GameObject> obj = make_shared<GameObject>();
-			obj->AddComponent(make_shared<Transform>());
-			obj->SetName(L"Wall");
-			obj->SetCheckFrustum(false);
-			obj->GetTransform()->SetLocalScale(Vec3(scale * 2, scale, 1.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX, 100.f, baseZ - scale * 19));
-			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
-			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-
-			{
-				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-				meshRenderer->SetMesh(mesh);
-			}
-			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
-
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
-
-				shared_ptr<Material> material = make_shared<Material>();
-				material->SetShader(shader);
-				material->SetTexture(0, texture);
-				meshRenderer->SetMaterial(material);
-			}
-			obj->AddComponent(meshRenderer);
-			scene->AddGameObject(obj);
-		}
-
-		{
-			shared_ptr<GameObject> obj = make_shared<GameObject>();
-			obj->AddComponent(make_shared<Transform>());
-			obj->SetName(L"Wall");
-			obj->GetTransform()->SetLocalScale(Vec3(scale * 5, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX - scale * 2.5, 100.f, baseZ - scale * 23));
-			obj->SetCheckFrustum(false);
-			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-			{
-				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-				meshRenderer->SetMesh(mesh);
-			}
-			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
-
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
-
-				shared_ptr<Material> material = make_shared<Material>();
-				material->SetShader(shader);
-				material->SetTexture(0, texture);
-				meshRenderer->SetMaterial(material);
-			}
-			obj->AddComponent(meshRenderer);
-			scene->AddGameObject(obj);
-		}
-
-		{
-			shared_ptr<GameObject> obj = make_shared<GameObject>();
-			obj->AddComponent(make_shared<Transform>());
-			obj->SetName(L"Wall");
-			obj->GetTransform()->SetLocalScale(Vec3(scale * 5, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX - scale * 2.5, 100.f, baseZ - scale * 18));
-			obj->SetCheckFrustum(false);
-			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-			{
-				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-				meshRenderer->SetMesh(mesh);
-			}
-			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
-
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
-
-				shared_ptr<Material> material = make_shared<Material>();
-				material->SetShader(shader);
-				material->SetTexture(0, texture);
+				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
+				material->SetInt(0, 1);
 				meshRenderer->SetMaterial(material);
 			}
 			obj->AddComponent(meshRenderer);
@@ -1616,27 +1634,23 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMesh(mesh);
 			}
 			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
-
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
-
-				shared_ptr<Material> material = make_shared<Material>();
-				material->SetShader(shader);
-				material->SetTexture(0, texture);
+				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
+				material->SetInt(0, 1);
 				meshRenderer->SetMaterial(material);
 			}
 			obj->AddComponent(meshRenderer);
 			scene->AddGameObject(obj);
 		}
 
+		for (int i = 0; i < 2; i++)
 		{
 			//////////////////////////////////////////////////////////////////////
 			shared_ptr<GameObject> obj = make_shared<GameObject>();
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetName(L"Wall");
 			obj->SetCheckFrustum(false);
-			obj->GetTransform()->SetLocalScale(Vec3(scale * 2, scale, 1.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX - scale * 5, 100.f, baseZ - scale * 22));
+			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 1.f));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX - scale * 5, 100.f, baseZ - scale * (21.5 + i)));
 			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 
@@ -1645,27 +1659,23 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMesh(mesh);
 			}
 			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
-
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
-
-				shared_ptr<Material> material = make_shared<Material>();
-				material->SetShader(shader);
-				material->SetTexture(0, texture);
+				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
+				material->SetInt(0, 1);
 				meshRenderer->SetMaterial(material);
 			}
 			obj->AddComponent(meshRenderer);
 			scene->AddGameObject(obj);
 		}
 
+		for (int i = 0; i < 9; i++)
 		{
 			//////////////////////////////////////////////////////////////////////
 			shared_ptr<GameObject> obj = make_shared<GameObject>();
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetName(L"Wall");
 			obj->SetCheckFrustum(false);
-			obj->GetTransform()->SetLocalScale(Vec3(scale * 9, scale, 1.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX - scale * 5, 100.f, baseZ - scale * 13.5));
+			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 1.f));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX - scale * 5, 100.f, baseZ - scale * (9.5 + i)));
 			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 
@@ -1674,27 +1684,23 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMesh(mesh);
 			}
 			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
-
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
-
-				shared_ptr<Material> material = make_shared<Material>();
-				material->SetShader(shader);
-				material->SetTexture(0, texture);
+				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
+				material->SetInt(0, 1);
 				meshRenderer->SetMaterial(material);
 			}
 			obj->AddComponent(meshRenderer);
 			scene->AddGameObject(obj);
 		}
 
+		for (int i = 0; i < 11; i++)
 		{
 			//////////////////////////////////////////////////////////////////////
 			shared_ptr<GameObject> obj = make_shared<GameObject>();
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetName(L"Wall");
 			obj->SetCheckFrustum(false);
-			obj->GetTransform()->SetLocalScale(Vec3(scale * 11, scale, 1.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX - scale * 6, 100.f, baseZ - scale * 15.5));
+			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 1.f));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX - scale * 6, 100.f, baseZ - scale * (10.5 + i)));
 			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 
@@ -1703,25 +1709,21 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMesh(mesh);
 			}
 			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
-
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
-
-				shared_ptr<Material> material = make_shared<Material>();
-				material->SetShader(shader);
-				material->SetTexture(0, texture);
+				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
+				material->SetInt(0, 1);
 				meshRenderer->SetMaterial(material);
 			}
 			obj->AddComponent(meshRenderer);
 			scene->AddGameObject(obj);
 		}
 
+		for (int i = 0; i < 3; i++)
 		{
 			shared_ptr<GameObject> obj = make_shared<GameObject>();
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetName(L"Wall");
-			obj->GetTransform()->SetLocalScale(Vec3(scale * 3, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX - scale * 6.5, 100.f, baseZ - scale * 9));
+			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 10.f));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX - scale * (5.5 + i), 100.f, baseZ - scale * 9));
 			obj->SetCheckFrustum(false);
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 			{
@@ -1729,26 +1731,21 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMesh(mesh);
 			}
 			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
-
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
-
-				shared_ptr<Material> material = make_shared<Material>();
-				material->SetShader(shader);
-				material->SetTexture(0, texture);
+				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
+				material->SetInt(0, 1);
 				meshRenderer->SetMaterial(material);
 			}
 			obj->AddComponent(meshRenderer);
 			scene->AddGameObject(obj);
 		}
 
-
+		for (int i = 0; i < 3; i++)
 		{
 			shared_ptr<GameObject> obj = make_shared<GameObject>();
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetName(L"Wall");
-			obj->GetTransform()->SetLocalScale(Vec3(scale * 3, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX - scale * 7.5, 100.f, baseZ - scale * 10));
+			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 10.f));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX - scale * (6.5 + i), 100.f, baseZ - scale * 10));
 			obj->SetCheckFrustum(false);
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 			{
@@ -1756,27 +1753,23 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMesh(mesh);
 			}
 			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
-
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
-
-				shared_ptr<Material> material = make_shared<Material>();
-				material->SetShader(shader);
-				material->SetTexture(0, texture);
+				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
+				material->SetInt(0, 1);
 				meshRenderer->SetMaterial(material);
 			}
 			obj->AddComponent(meshRenderer);
 			scene->AddGameObject(obj);
 		}
 
+		for (int i = 0; i < 6; i++)
 		{
 			//////////////////////////////////////////////////////////////////////
 			shared_ptr<GameObject> obj = make_shared<GameObject>();
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetName(L"Wall");
 			obj->SetCheckFrustum(false);
-			obj->GetTransform()->SetLocalScale(Vec3(scale * 6, scale, 1.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX - scale * 8, 100.f, baseZ - scale * 6));
+			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 10.f));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX - scale * 8, 100.f, baseZ - scale * (3.5 + i)));
 			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 
@@ -1785,27 +1778,23 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMesh(mesh);
 			}
 			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
-
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
-
-				shared_ptr<Material> material = make_shared<Material>();
-				material->SetShader(shader);
-				material->SetTexture(0, texture);
+				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
+				material->SetInt(0, 1);
 				meshRenderer->SetMaterial(material);
 			}
 			obj->AddComponent(meshRenderer);
 			scene->AddGameObject(obj);
 		}
 
+		for (int i = 0; i < 8; i++)
 		{
 			//////////////////////////////////////////////////////////////////////
 			shared_ptr<GameObject> obj = make_shared<GameObject>();
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetName(L"Wall");
 			obj->SetCheckFrustum(false);
-			obj->GetTransform()->SetLocalScale(Vec3(scale * 8, scale, 1.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX - scale * 9, 100.f, baseZ - scale * 6));
+			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 10.f));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX - scale * 9, 100.f, baseZ - scale * (2.5 + i)));
 			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 
@@ -1814,30 +1803,15 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMesh(mesh);
 			}
 			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
-
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");;
-
-				shared_ptr<Material> material = make_shared<Material>();
-				material->SetShader(shader);
-				material->SetTexture(0, texture);
+				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
+				material->SetInt(0, 1);
 				meshRenderer->SetMaterial(material);
 			}
 			obj->AddComponent(meshRenderer);
 			scene->AddGameObject(obj);
 		}
-	}
-#pragma endregion
-
-#pragma region Shop
-	{
-		shared_ptr<GameObject> ShopUI = make_shared<GameObject>();
-		ShopUI->SetName(L"Shop");
-		ShopUI->AddComponent(make_shared<Transform>());
-		ShopUI->AddComponent(make_shared<Shop>());
-		ShopUI->GetTransform()->SetLocalPosition(Vec3(0, 1000, 500));
-		scene->AddGameObject(ShopUI);
 	}
 #pragma endregion
 	return scene;
 }
+

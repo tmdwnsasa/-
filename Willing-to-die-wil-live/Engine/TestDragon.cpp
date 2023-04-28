@@ -22,4 +22,10 @@ void TestDragon::Update()
 		int32 index = (currentIndex - 1 + count) % count;
 		GetAnimator()->Play(index);
 	}
+
+	if (INPUT->GetButtonDown(KEY_TYPE::KEY_5))
+	{
+		GetAnimator()->Stop();
+	}
+
 }
