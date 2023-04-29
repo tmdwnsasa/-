@@ -38,7 +38,8 @@ public:
 	virtual void Update() override;
 	void PlayerRotate();
 	void ChangeWeapon(PLAYER_WEAPON weapon);
-	vector<shared_ptr<GameObject>> getBullet() { return bullets; };
+	vector<shared_ptr<GameObject>> GetBullet() { return bullets; };
+	vector<shared_ptr<GameObject>>	GetGun() { return gunObject; };
 
 public:
 	void SetBulletPos(Vec3 pos) { cameraPosForBullet = pos; };
@@ -86,10 +87,9 @@ private:
 
 	// Bullet
 	vector<shared_ptr<GameObject>>	bullets;
+	vector<shared_ptr<GameObject>>	gunObject;
 	Vec3							cameraPosForBullet;
 	Vec3							cameraLookForBullet;
-
-	float temp = 300.f;
 };
 
 class Bullet : public Component

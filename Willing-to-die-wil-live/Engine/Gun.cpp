@@ -1,4 +1,5 @@
 #include "pch.h"
+#include "Transform.h"
 #include "Gun.h"
 
 Gun::Gun() :Component(COMPONENT_TYPE::GUN)
@@ -13,5 +14,18 @@ Gun::~Gun()
 
 void Gun::Update()
 {
+	if (CameraTransform != NULL)
+	{
+		Vec3 Pos = CameraTransform->GetLocalPosition();
+		Vec3 Right = CameraTransform->GetRight();
+		Vec3 Look = CameraTransform->GetLook();
+		Vec3 Up = CameraTransform->GetUp();
 
+		Pos += Right * 80;
+		Pos += Up * -100;
+		Pos += Look * 300;
+		GetTransform()->SetLocalPosition(Pos);
+		GetTransform()->SetLocalScale(Vec3(10.f, 10.f, 10.f));
+		GetTransform()->LookAt(Vec3(Look));
+	}
 }

@@ -60,10 +60,10 @@ void Enemy::AstarCall()
 	Vector2 endPos;
 	tileMap.CreateTile(startPos, endPos);
 
-	tileMap.Display(std::list<TileNode*>());
-	printf("\n\n");
+	//tileMap.Display(std::list<TileNode*>());
+	//printf("\n\n");
 	auto nodeList = pathFinder.DoFindPath(startPos, endPos);
-	tileMap.Display(nodeList);
+	//tileMap.Display(nodeList);
 
 	//int k = nodeList.front()->pos.x;
 	//int l = nodeList.front()->pos.y;

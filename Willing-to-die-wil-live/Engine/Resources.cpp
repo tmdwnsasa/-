@@ -429,27 +429,26 @@ void Resources::CreateDefaultShader()
 		Add<Shader>(L"Texture", shader);
 	}
 
-	// Texture (Forward)
+	// MapTexture
 	{
 		ShaderInfo info =
 		{
-			SHADER_TYPE::FORWARD,
+			SHADER_TYPE::DEFERRED,
 			RASTERIZER_TYPE::CULL_NONE,
 			DEPTH_STENCIL_TYPE::LESS_EQUAL,
-			BLEND_TYPE::ALPHA_BLEND
 		};
 
 		ShaderArg arg =
 		{
-			"VS_Tex",
+			"VS_Main",
 			"",
 			"",
 			"",
-			"PS_Tex"
+			"PS_Main"
 		};
 
 		shared_ptr<Shader> shader = make_shared<Shader>();
-		shader->CreateGraphicsShader(L"..\\Resources\\Shader\\forward.fx", info, arg);
+		shader->CreateGraphicsShader(L"..\\Resources\\Shader\\deferred.fx", info, arg);
 		Add<Shader>(L"MapTexture", shader);
 	}
 
@@ -741,6 +740,16 @@ void Resources::CreateDefaultMaterial()
 		Add<Material>(L"GameObject", material);
 	}
 
+	// Wall
+	{
+		shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
+		shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall", L"..\\Resources\\Texture\\Wall.png");
+		shared_ptr<Material> material = make_shared<Material>();
+		material->SetShader(shader);
+		material->SetTexture(0, texture);
+		Add<Material>(L"Wall", material);
+	}
+
 	// Bullet
 	{
 		shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Deferred");
@@ -795,4 +804,6 @@ void Resources::CreateDefaultMaterial()
 
 		Add<Material>(L"ComputeAnimation", material);
 	}
+
+
 }
