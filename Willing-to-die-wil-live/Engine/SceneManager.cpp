@@ -198,7 +198,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		}
 		{
 			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Skybox");
-			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Sky01", L"..\\Resources\\Texture\\wood.jpg");
+			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Sky01", L"..\\Resources\\Texture\\Sky01.jpg");
 			shared_ptr<Material> material = make_shared<Material>();
 			material->SetShader(shader);
 			material->SetTexture(0, texture);
@@ -210,35 +210,34 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 #pragma endregion
 
 #pragma region Object
-	//for (int i = 0; i < 15; i++)
-	//		for (int j = 0; j < 17; j++)
-			//{
-			//	shared_ptr<GameObject> obj = make_shared<GameObject>();
-			//	obj->SetName(L"OBJ");
-			//	obj->AddComponent(make_shared<Transform>());
-			//	obj->GetTransform()->SetLocalScale(Vec3(100.f, 100.f, 100.f));
-			//	obj->GetTransform()->SetLocalPosition(Vec3(100.f, 100.f, 500.f));
-			//	obj->SetCheckFrustum(false);
-			//	shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-			//	{
-			//		shared_ptr<Mesh> sphereMesh = GET_SINGLE(Resources)->LoadSphereMesh();
-			//		meshRenderer->SetMesh(sphereMesh);
-			//	}
-			//	{
-			//		shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"GameObject");
-			//		material->SetInt(0, 1); 
-			//		meshRenderer->SetMaterial(material);
-			//	}
-			//	shared_ptr<SphereCollider> spherecollider = make_shared<SphereCollider>();
-			//	obj->SetStatic(false);
+		//{
+		//	shared_ptr<GameObject> obj = make_shared<GameObject>();
+		//	obj->SetName(L"OBJ");
+		//	obj->AddComponent(make_shared<Transform>());
+		//	obj->GetTransform()->SetLocalScale(Vec3(100.f, 100.f, 100.f));
+		//	obj->GetTransform()->SetLocalPosition(Vec3(100.f, 100.f, 500.f));
+		//	obj->SetCheckFrustum(false);
 
-			//	spherecollider->SetRadius(0.5f);
-			//	spherecollider->SetCenter(Vec3(0.f, 0.f, 0.f));
+		//	shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+		//	{
+		//		shared_ptr<Mesh> sphereMesh = GET_SINGLE(Resources)->LoadSphereMesh();
+		//		meshRenderer->SetMesh(sphereMesh);
 
-			//	obj->AddComponent(spherecollider);
-			//	obj->AddComponent(meshRenderer);
-			//	scene->AddGameObject(obj);
-			//}
+		//		shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"GameObject");
+		//		material->SetInt(0, 1);
+		//		meshRenderer->SetMaterial(material);
+		//	}
+
+		//	shared_ptr<SphereCollider> spherecollider = make_shared<SphereCollider>();
+		//	obj->SetStatic(false);
+
+		//	spherecollider->SetRadius(0.5f);
+		//	spherecollider->SetCenter(Vec3(0.f, 0.f, 0.f));
+
+		//	obj->AddComponent(spherecollider);
+		//	obj->AddComponent(meshRenderer);
+		//	scene->AddGameObject(obj);
+		//}
 #pragma endregion
 
 #pragma region Terrain
@@ -249,9 +248,9 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		obj->AddComponent(make_shared<MeshRenderer>());
 
 		obj->GetTransform()->SetLocalScale(Vec3(50.f, 250.f, 50.f));
-		obj->GetTransform()->SetLocalPosition(Vec3(-100.f, -400.f, 300.f));
+		obj->GetTransform()->SetLocalPosition(Vec3(-2000.f, -100.f, -6000.f));
 		obj->SetStatic(true);
-		obj->GetTerrain()->Init(64, 64);
+		obj->GetTerrain()->Init(256, 256);
 		obj->SetCheckFrustum(false);
 
 		scene->AddGameObject(obj);
@@ -479,34 +478,6 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 
 #pragma endregion
 
-#pragma region Gun
-	{
-		shared_ptr<MeshData> GunMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\AWP_Dragon_Lore.fbx");
-		vector<shared_ptr<GameObject>> gun = GunMesh->Instantiate();
-
-		for (auto& gameObject : gun)
-		{
-			gameObject->SetName(L"Gun3");
-			gameObject->SetCheckFrustum(false);
-			gameObject->GetTransform()->SetLocalPosition(Vec3(0.0f, 0.0f, 0.0f));
-			gameObject->GetTransform()->SetLocalScale(Vec3(1000.f, 1000.f, 1000.f));
-			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
-			scene->AddGameObject(gameObject);
-		}
-
-	}
-#pragma endregion
-
-#pragma region Shop
-	{
-		shared_ptr<GameObject> ShopUI = make_shared<GameObject>();
-		ShopUI->SetName(L"Shop");
-		ShopUI->AddComponent(make_shared<Transform>());
-		ShopUI->AddComponent(make_shared<Shop>());
-		ShopUI->GetTransform()->SetLocalPosition(Vec3(0, 1000, 500));
-		scene->AddGameObject(ShopUI);
-	}
-#pragma endregion
 
 #pragma region MapDesign
 
@@ -681,7 +652,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			obj->SetName(L"Wall");
 			obj->SetCheckFrustum(false);
 			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 1.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 14, 100.f, (baseZ - scale * 4.5) - scale * 3 * i));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 14, 0.f, (baseZ - scale * 4.5) - scale * 3 * i));
 			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 
@@ -1153,7 +1124,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			obj->SetName(L"Wall");
 			obj->SetCheckFrustum(false);
 			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 1.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 8, 100.f, baseZ - scale * 3.5));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 8, 0.f, baseZ - scale * 3.5));
 			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 
@@ -1598,7 +1569,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetName(L"Wall");
 			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX - scale * 5.5, 100.f, baseZ - scale * 21));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX - scale * 5.5, 0.f, baseZ - scale * 21));
 			obj->SetCheckFrustum(false);
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 			{
@@ -1782,6 +1753,17 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			obj->AddComponent(meshRenderer);
 			scene->AddGameObject(obj);
 		}
+	}
+#pragma endregion
+
+#pragma region Shop
+	{
+		shared_ptr<GameObject> ShopUI = make_shared<GameObject>();
+		ShopUI->SetName(L"Shop");
+		ShopUI->AddComponent(make_shared<Transform>());
+		ShopUI->AddComponent(make_shared<Shop>());
+		ShopUI->GetTransform()->SetLocalPosition(Vec3(0, 1000, 500));
+		scene->AddGameObject(ShopUI);
 	}
 #pragma endregion
 	return scene;

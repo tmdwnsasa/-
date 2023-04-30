@@ -103,7 +103,7 @@ void Shop::Update()
 					{
 						if(object->GetButton()->GetType() == BUTTON_TYPE::SHOP)
 							_selected = object;
-						if (object->GetButton()->GetType() == BUTTON_TYPE::PURCHASE)
+						if (object->GetButton()->GetType() == BUTTON_TYPE::PURCHASE && _selected != NULL)
 							_purchase = true;
 						//ShowSelectedMerchandise();
 					}

@@ -25,3 +25,8 @@ bool BoxCollider::Intersects(BoundingBox other)
 {
 	return _boundingBox.Intersects(other);
 }
+
+bool BoxCollider::Intersects(Vec4 rayOrigin, Vec4 rayDir, OUT float& distance)
+{
+	return _boundingBox.Intersects(rayOrigin, rayDir, OUT distance);
+}

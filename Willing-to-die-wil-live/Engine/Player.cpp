@@ -6,8 +6,10 @@
 #include "Transform.h"
 #include "Timer.h"
 #include "GameObject.h"
+#include "Gun.h"
 
 #include "Mesh.h"
+#include "MeshData.h"
 #include "MeshRenderer.h"
 #include "BoxCollider.h"
 #include "Resources.h"
@@ -27,6 +29,14 @@ Player::~Player()
 
 void Player::Update()
 {
+	for (auto iter = bullets.begin(); iter != bullets.end(); iter++)
+	{
+		if (iter->get()->GetBullet()->GetState() == BULLET_STATE::DEAD)
+		{
+			bullets.erase(iter);
+		}
+	}
+
 	Vec3 pos = GetTransform()->GetLocalPosition();
 
 	if (INPUT->GetButton(KEY_TYPE::W))
@@ -121,7 +131,6 @@ void Player::Update()
 				bullet->AddComponent(boxCollider);
 				bullet->AddComponent(meshRenderer);
 				bullets.push_back(bullet);
-				temp += 300.f;
 			}
 			_currAmmo--;
 		}
@@ -181,6 +190,26 @@ void Player::ChangeWeapon(PLAYER_WEAPON weapon)
 		_reloadMaxTime = 0.5f;
 		_reloadPerAmmo = _maxAmmo;
 		_price = 500;
+
+#pragma region Gun
+		{
+			shared_ptr<MeshData> GunMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\AWP_Dragon_Lore.fbx");
+			vector<shared_ptr<GameObject>> gun = GunMesh->Instantiate();
+
+			for (auto& gameObject : gun)
+			{
+				gameObject->SetName(L"Gun");
+				gameObject->SetCheckFrustum(false);
+				gameObject->GetTransform()->SetLocalPosition(cameraPosForBullet);
+				gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+				gameObject->GetTransform()->LookAt(cameraLookForBullet);
+				gameObject->AddComponent(make_shared<Gun>());
+				gunObject.push_back(gameObject);
+			}
+
+		}
+#pragma endregion
+
 	}
 
 	if (_currWeapon == PLAYER_WEAPON::SMG)
@@ -192,6 +221,24 @@ void Player::ChangeWeapon(PLAYER_WEAPON weapon)
 		_reloadMaxTime = 2.5f;
 		_reloadPerAmmo = _maxAmmo;
 		_price = 1000;
+#pragma region Gun
+		{
+			shared_ptr<MeshData> GunMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\AWP_Dragon_Lore.fbx");
+			vector<shared_ptr<GameObject>> gun = GunMesh->Instantiate();
+
+			for (auto& gameObject : gun)
+			{
+				gameObject->SetName(L"Gun");
+				gameObject->SetCheckFrustum(false);
+				gameObject->GetTransform()->SetLocalPosition(cameraPosForBullet);
+				gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+				gameObject->GetTransform()->LookAt(cameraLookForBullet);
+				gameObject->AddComponent(make_shared<Gun>());
+				gunObject.push_back(gameObject);
+			}
+
+		}
+#pragma endregion
 	}
 
 	if (_currWeapon == PLAYER_WEAPON::SHOTGUN)
@@ -203,6 +250,24 @@ void Player::ChangeWeapon(PLAYER_WEAPON weapon)
 		_reloadMaxTime = 0.5f;
 		_reloadPerAmmo = 2;
 		_price = 2000;
+#pragma region Gun
+		{
+			shared_ptr<MeshData> GunMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\AWP_Dragon_Lore.fbx");
+			vector<shared_ptr<GameObject>> gun = GunMesh->Instantiate();
+
+			for (auto& gameObject : gun)
+			{
+				gameObject->SetName(L"Gun");
+				gameObject->SetCheckFrustum(false);
+				gameObject->GetTransform()->SetLocalPosition(cameraPosForBullet);
+				gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+				gameObject->GetTransform()->LookAt(cameraLookForBullet);
+				gameObject->AddComponent(make_shared<Gun>());
+				gunObject.push_back(gameObject);
+			}
+
+		}
+#pragma endregion
 	}
 
 	if (_currWeapon == PLAYER_WEAPON::RIFLE)
@@ -214,6 +279,24 @@ void Player::ChangeWeapon(PLAYER_WEAPON weapon)
 		_reloadMaxTime = 2.5f;
 		_reloadPerAmmo = _maxAmmo;
 		_price = 2000;
+#pragma region Gun
+		{
+			shared_ptr<MeshData> GunMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\AWP_Dragon_Lore.fbx");
+			vector<shared_ptr<GameObject>> gun = GunMesh->Instantiate();
+
+			for (auto& gameObject : gun)
+			{
+				gameObject->SetName(L"Gun");
+				gameObject->SetCheckFrustum(false);
+				gameObject->GetTransform()->SetLocalPosition(cameraPosForBullet);
+				gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+				gameObject->GetTransform()->LookAt(cameraLookForBullet);
+				gameObject->AddComponent(make_shared<Gun>());
+				gunObject.push_back(gameObject);
+			}
+
+		}
+#pragma endregion
 	}
 	_money -= _price;
 }

@@ -7,6 +7,10 @@
 #include "Input.h"
 #include "Timer.h"
 #include "SceneManager.h"
+#include <iostream>
+//cout 출력용 코드
+#pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console")
+
 
 CameraScript::CameraScript() : Component(COMPONENT_TYPE::CAMERASCRIPT)
 {
@@ -97,6 +101,7 @@ void CameraScript::LateUpdate()
 void CameraScript::CameraRotation()
 {
 	Vec3 rotation = GetTransform()->GetLocalRotation();
+
 	POINT tempForSetCursor = _oldMousePos;
 	_mousePos = INPUT->GetMousePos();
 	cxdelta += (_mousePos.x - _oldMousePos.x) / 300.f;
@@ -105,5 +110,15 @@ void CameraScript::CameraRotation()
 	SetCursorPos(tempForSetCursor.x, tempForSetCursor.y);
 	rotation.x = cydelta;
 	rotation.y = cxdelta;
+	if (rotation.x > 1.55f)
+	{
+		rotation.x = 1.55f;
+		cydelta = 1.55f;
+	}
+	if (rotation.x < -1.55f)
+	{
+		rotation.x = -1.55f;
+		cydelta = -1.55f;
+	}
 	GetTransform()->SetLocalRotation(rotation);
 }

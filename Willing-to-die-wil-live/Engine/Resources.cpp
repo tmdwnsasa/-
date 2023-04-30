@@ -729,16 +729,6 @@ void Resources::CreateDefaultMaterial()
 		Add<Material>(L"ComputeParticle", material);
 	}
 
-	// Wall
-	{
-		shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
-		shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall", L"..\\Resources\\Map\\laby.png");
-		shared_ptr<Material> material = make_shared<Material>();
-		material->SetShader(shader);
-		material->SetTexture(0, texture);
-		Add<Material>(L"Wall", material);
-	}
-
 	// GameObject
 	{
 		shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Deferred");
@@ -751,6 +741,16 @@ void Resources::CreateDefaultMaterial()
 		Add<Material>(L"GameObject", material);
 	}
 
+
+	// Wall
+	{
+		shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
+		shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall", L"..\\Resources\\Texture\\Wall.jpg");
+		shared_ptr<Material> material = make_shared<Material>();
+		material->SetShader(shader);
+		material->SetTexture(0, texture);
+		Add<Material>(L"Wall", material);
+	}
 
 	// Bullet
 	{
@@ -806,4 +806,6 @@ void Resources::CreateDefaultMaterial()
 
 		Add<Material>(L"ComputeAnimation", material);
 	}
+
+
 }

@@ -19,6 +19,7 @@
 #include "Font.h"
 #include "Shop.h"
 #include "Button.h"
+#include "Gun.h"
 #include <iostream>
 
 //cout 출력용 코드
@@ -60,7 +61,7 @@ void Scene::Update()
 
 		if (gameObject->GetName() == L"Gun3")
 		{
-			cout << gameObject->GetTransform()->GetLocalPosition().x << ", " << gameObject->GetTransform()->GetLocalPosition().y << "," << gameObject->GetTransform()->GetLocalPosition().z << endl;
+			//cout << gameObject->GetTransform()->GetLocalPosition().x << ", " << gameObject->GetTransform()->GetLocalPosition().y << "," << gameObject->GetTransform()->GetLocalPosition().z << endl;
 			for (const shared_ptr<GameObject>& object : _gameObjects)
 			{
 				if (object->GetName() == L"Player")
@@ -82,8 +83,20 @@ void Scene::Update()
 					for (auto& object : _gameObjects)
 					{
 						if (object->GetName() == L"Player")
+						{
 							object->GetPlayer()->ChangeWeapon(gameObject->GetShop()->GetSelected()->GetButton()->GetMerchandise());
-
+							for (auto& makeTrash : _gameObjects)
+							{
+								if (makeTrash->GetName() == L"Gun")
+								{
+									_trashBin.push_back(makeTrash);
+								}
+							}
+							for (auto& gunobject : object->GetPlayer()->GetGun())
+							{
+								_gameObjects.push_back(gunobject);
+							}
+						}
 					}
 					gameObject->GetShop()->SetPurchase(false);
 				}
@@ -129,7 +142,7 @@ void Scene::Update()
 	{
 		if (gameObject->GetName() == L"Player")
 		{
-			for (const shared_ptr<GameObject>& bullet : (gameObject->GetPlayer()->getBullet()))
+			for (const shared_ptr<GameObject>& bullet : (gameObject->GetPlayer()->GetBullet()))
 			{
 				if (bullet->GetBullet()->GetState() == BULLET_STATE::DEAD)
 				{
@@ -405,30 +418,44 @@ void Scene::RemoveGameObject(shared_ptr<GameObject> gameObject)
 
 void Scene::SetCameraPosToPlayer()	//플레이어와 카메라에게 서로의 위치를 준다.
 {
-	Vec3 PlayerPos;
-	Vec3 CameraPos;
-	Vec3 CameraLook;
+	Vec3 playerPos;
+	Vec3 cameraPos;
+	Vec3 cameraLook;
+	shared_ptr<Transform> cameraTrasform;
 
 	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
+	{
 		if (gameObject->GetName() == L"Player")
 		{
-			PlayerPos = gameObject->GetTransform()->GetLocalPosition();
+			playerPos = gameObject->GetTransform()->GetLocalPosition();
 		}
 
+	}
+
+
 	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
-		if (gameObject->GetName() == L"Main_Camera")
+	{		if (gameObject->GetName() == L"Main_Camera")
 		{
-			gameObject->GetTransform()->SetLocalPosition(PlayerPos);
-			CameraPos = gameObject->GetTransform()->GetLocalPosition();
-			CameraLook = gameObject->GetTransform()->GetLook();
+			gameObject->GetTransform()->SetLocalPosition(playerPos);
+			cameraPos = gameObject->GetTransform()->GetLocalPosition();
+			cameraLook = gameObject->GetTransform()->GetLook();
+			cameraTrasform = gameObject->GetTransform();
 		}
+	}
+
 
 	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
+	{
 		if (gameObject->GetName() == L"Player")
 		{
-			gameObject->GetPlayer()->SetBulletPos(CameraPos);
-			gameObject->GetPlayer()->SetBulletLook(CameraLook);
+			gameObject->GetPlayer()->SetBulletPos(cameraPos);
+			gameObject->GetPlayer()->SetBulletLook(cameraLook);
 		}
+		if (gameObject->GetName() == L"Gun")
+		{
+			gameObject->GetGun()->SetCameraTransform(cameraTrasform);
+		}
+	}
 }
 
 
