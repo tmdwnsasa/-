@@ -42,6 +42,7 @@ public:
 	void RenderForward();
 
 	void CursorClipping();
+	void CollisionPlayerToWall();
 
 private:
 	void PushLightData();
@@ -63,6 +64,7 @@ private:
 	bool			_shopOpened;
 
 	bool			_clipcursor = false;
+	const double	py = std::acos(-1);
 	RECT			rc;
 
 	bool			_mouseLock = false;

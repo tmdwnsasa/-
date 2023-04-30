@@ -73,7 +73,7 @@ void Enemy::AstarCall()
 
 	Vec3 EPos = GetEnemyPosition();
 
-	std::cout << EPos.x << std::endl;
+	//std::cout << EPos.x << std::endl;
 
 	if (nodeList.size() != 0)
 	{

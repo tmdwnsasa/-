@@ -189,6 +189,7 @@ void Scene::Update()
 			}
 		}
 	}
+	CollisionPlayerToWall();
 
 	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
 	{
@@ -500,4 +501,108 @@ void Scene::CursorClipping()
 	rc.bottom = p2.y;
 
 	::ClipCursor(&rc);
+}
+
+void Scene::CollisionPlayerToWall()
+{
+	Vec4 playerPos;
+	Transform transform;
+	Vec4 front;
+	Vec4 right;
+
+	float minDistanceF = FLT_MAX;
+	float minDistanceB = FLT_MAX;
+	float minDistanceL = FLT_MAX;
+	float minDistanceR = FLT_MAX;
+
+	shared_ptr<GameObject> picked;
+	for (auto& gameObject : _gameObjects)
+	{
+		if (gameObject->GetName() == L"Player")
+		{
+			Vec3 Pos = gameObject->GetTransform()->GetLocalPosition();
+			Vec3 Look = gameObject->GetTransform()->GetLook();
+			Vec3 Right = gameObject->GetTransform()->GetRight();
+			playerPos = Vec4(Pos.x, Pos.y, Pos.z, 1.f);
+			front = Vec4(transform.GetLook().x, transform.GetLook().y, transform.GetLook().z, 0.0f);
+			right = Vec4(transform.GetRight().x, transform.GetRight().y, transform.GetRight().z, 0.0f);
+		}
+
+	}
+
+	for (auto& gameObject : _gameObjects)
+	{
+		if (gameObject->GetBoxCollider() == nullptr)
+			continue;
+
+		if (gameObject->GetName() != L"Wall")
+			continue;
+
+		float distanceF = FLT_MAX;
+		float distanceB = FLT_MAX;
+		float distanceL = FLT_MAX;
+		float distanceR = FLT_MAX;
+
+		if (gameObject->GetBoxCollider()->Intersects(playerPos, front , OUT distanceF) == true)
+		{
+			if (distanceF < minDistanceF)
+			{
+				minDistanceF = distanceF;
+				picked = gameObject;
+			}
+		}
+
+		if (gameObject->GetBoxCollider()->Intersects(playerPos, -front, OUT distanceB) == true)
+		{
+			if (distanceB < minDistanceB)
+			{
+				minDistanceB = distanceB;
+				picked = gameObject;
+			}
+		}
+
+		if (gameObject->GetBoxCollider()->Intersects(playerPos, right, OUT distanceR) == true)
+		{
+			if (distanceR < minDistanceR)
+			{
+				minDistanceR = distanceR;
+				picked = gameObject;
+			}
+		}
+
+		if (gameObject->GetBoxCollider()->Intersects(playerPos, -right, OUT distanceL) == true)
+		{
+			if (distanceL < minDistanceL)
+			{
+				minDistanceL = distanceL;
+				picked = gameObject;
+			}
+		}
+	}
+	for (auto& gameObject : _gameObjects)
+	{
+		if (gameObject->GetName() == L"Player")
+		{
+			if (minDistanceF < 30)
+				gameObject->GetPlayer()->collisionFront(true);
+			else
+				gameObject->GetPlayer()->collisionFront(false);
+
+			if (minDistanceB < 30)
+				gameObject->GetPlayer()->collisionBack(true);
+			else
+				gameObject->GetPlayer()->collisionBack(false);
+
+			if (minDistanceR < 30)
+				gameObject->GetPlayer()->collisionRight(true);
+			else
+				gameObject->GetPlayer()->collisionRight(false);
+
+			if (minDistanceL < 30)
+				gameObject->GetPlayer()->collisionLeft(true);
+			else
+				gameObject->GetPlayer()->collisionLeft(false);
+
+		}
+	}
 }

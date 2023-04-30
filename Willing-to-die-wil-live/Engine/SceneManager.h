@@ -23,8 +23,8 @@ public:
 	shared_ptr<class GameObject> Pick(int32 screenX, int32 screenY);
 
 	const double py = std::acos(-1);
-	const float baseX = 3000;
-	const float baseZ = -300;
+	const float baseX = 2850;
+	const float baseZ = -150;
 	const float scale = 300;
 
 public:
