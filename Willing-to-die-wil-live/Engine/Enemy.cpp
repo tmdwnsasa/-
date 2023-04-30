@@ -11,7 +11,10 @@
 #include "PathFinder.h"
 #include "Scene.h"
 #include "SceneManager.h"
+#include <iostream>
 
+//cout 출력용 코드
+//#pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console")
 
 
 Enemy::Enemy()
@@ -43,11 +46,13 @@ void Enemy::Update()
 
 	//GetTransform()->SetLocalPosition(pos);
 
-	//SetEnemyPosition(pos);
+	SetEnemyPosition(pos);
 
-	//SetPlayerPos();
+	SetPlayerPos();
 
 	AstarCall();
+
+	Animation();
 }
 
 
@@ -65,16 +70,25 @@ void Enemy::AstarCall()
 	auto nodeList = pathFinder.DoFindPath(startPos, endPos);
 	tileMap.Display(nodeList);
 
-	//int k = nodeList.front()->pos.x;
-	//int l = nodeList.front()->pos.y;
-	
-	//list<TileNode*>::iterator iter = nodeList.begin();
 
-	//advance(iter, 1);
-	//int p = (*iter)->pos.x;
-	//int q = (*iter)->pos.y;
+	Vec3 EPos = GetEnemyPosition();
 
-	//AstarMove(k, l, p, q);
+	std::cout << EPos.x << std::endl;
+
+	if (nodeList.size() != 0)
+	{
+		int k = nodeList.front()->pos.x;
+		int l = nodeList.front()->pos.y;
+
+
+		list<TileNode*>::iterator iter = nodeList.begin();
+
+		advance(iter, 1);
+		int p = (*iter)->pos.x;
+		int q = (*iter)->pos.y;
+
+		AstarMove(k, l, p, q);
+	}
 }
 
 void Enemy::AstarMove(int x, int y, int z, int w)
@@ -83,10 +97,26 @@ void Enemy::AstarMove(int x, int y, int z, int w)
 
 	x = x - z;
 	y = y - w;
+	if (x == -1)
+	{
+		pos += GetTransform()->GetRight() * _speed * 10;
+	}
+
 	if (x == 1)
+	{
+		pos -= GetTransform()->GetRight() * _speed * 10;
+	}
+
+	if (y == -1)
+	{
+		pos -= GetTransform()->GetLook() * _speed * 10;
+	}
+
+	if (y == 1)
 	{
 		pos += GetTransform()->GetLook() * _speed * 10;
 	}
+
 
 	GetTransform()->SetLocalPosition(pos);
 
@@ -96,27 +126,76 @@ void Enemy::AstarMove(int x, int y, int z, int w)
 
 void Enemy::SetPlayerPos()
 {
+	for(int i=0; i<25; i++)
+		for (int j = 0; j < 25; j++)
+		{
+			if (tileMap[i][j] == 2)
+			{
+				tileMap[i][j] = 0;
+			}
+			else if (tileMap[i][j] == 3)
+			{
+				tileMap[i][j] = 0;
+			}
+		}
 	shared_ptr<Scene> scene = GET_SINGLE(SceneManager)->GetActiveScene();
 	Vec3 PlayerPos = scene->GetPlayerPosToEnemy();
 
-	int x = PlayerPos.x;
-	int y = PlayerPos.y;
+	double k = PlayerPos.x;
+	double l = -PlayerPos.z;
 
-	x = 1;
-	y = 2;
+	k = (k / 300)-1;
+	l = (l / 300)+1;
+
+	int x = (int)k;
+	int y = (int)l;
 	tileMap[y][x] = 3;
 
 	Vec3 EPos = GetEnemyPosition();
 
-	//x = EPos.x + 3;
-	//y = EPos.y + 3;
-	x = 3;
-	y = 3;
+	k = EPos.x;
+	l = -(EPos.z);
+
+
+	k = (k / 300) - 1;
+	l = (l / 300) + 1;
+	
+
+	x = (int)k;
+	y = (int)l;
 	tileMap[y][x] = 2;
+
+	int w = x + y;
 }
 
 int(*Enemy::CreateMap())[Height]
 {
 	return tileMap;
+}
+
+void Enemy::Animation()
+{
+	if (INPUT->GetButtonDown(KEY_TYPE::KEY_1))
+	{
+		int32 count = GetAnimator()->GetAnimCount();
+		int32 currentIndex = GetAnimator()->GetCurrentClipIndex();
+
+		int32 index = (currentIndex + 1) % count;
+		GetAnimator()->Play(index);
+	}
+
+	if (INPUT->GetButtonDown(KEY_TYPE::KEY_2))
+	{
+		int32 count = GetAnimator()->GetAnimCount();
+		int32 currentIndex = GetAnimator()->GetCurrentClipIndex();
+
+		int32 index = (currentIndex - 1 + count) % count;
+		GetAnimator()->Play(index);
+	}
+
+	if (INPUT->GetButtonDown(KEY_TYPE::KEY_5))
+	{
+		GetAnimator()->Stop();
+	}
 }
 

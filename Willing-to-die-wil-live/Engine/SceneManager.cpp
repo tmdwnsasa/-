@@ -413,7 +413,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		{
 			gameObject->SetName(L"Player");
 			gameObject->SetCheckFrustum(false);
-			gameObject->GetTransform()->SetLocalPosition(Vec3(1000.f, 500.f, -100.f));
+			gameObject->GetTransform()->SetLocalPosition(Vec3(2700.f, 600.f, -300.f));
 			gameObject->GetTransform()->SetLocalScale(Vec3(0.1f, 0.1f, 0.1f));
 			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
 			gameObject->AddComponent(make_shared<Player>());
@@ -426,7 +426,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 	{
 		shared_ptr<MeshData> ZombieMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\tes.fbx");
 
-		for (int i = 0; i < 2; i++)
+		for (int i = 0; i < 1; i++)
 		{
 
 			vector<shared_ptr<GameObject>> gameObjects = ZombieMesh->Instantiate();
@@ -440,66 +440,40 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 
 				gameObject->SetName(L"Enemy");
 				gameObject->SetCheckFrustum(false);
-				gameObject->GetTransform()->SetLocalPosition(Vec3(1500.f, 300.f * i, 0.f));
+				gameObject->GetTransform()->SetLocalPosition(Vec3(1200.f, 100.f, -900.f));
 				gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 				gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
 				gameObject->AddComponent(boxCollider);
-				gameObject->AddComponent(make_shared<TestDragon>());
+				gameObject->AddComponent(make_shared<Enemy>());
 				gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 1);
 				scene->AddGameObject(gameObject);
 			}
 		}
 
-		vector<shared_ptr<GameObject>> gameObjects = ZombieMesh->Instantiate();
-		for (auto& gameObject : gameObjects)
-		{
-			shared_ptr<Enemy> EnemyObj = make_shared<Enemy>();
-			gameObject->SetName(L"Enemy");
-			gameObject->SetCheckFrustum(false);
-			gameObject->GetTransform()->SetLocalPosition(Vec3(2000.f, 300.f, 0.f));
-			gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.01f, 1.01f));
-			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
-			gameObject->AddComponent(EnemyObj);
+		//vector<shared_ptr<GameObject>> gameObjects = ZombieMesh->Instantiate();
+		//for (auto& gameObject : gameObjects)
+		//{
+		//	//shared_ptr<Enemy> EnemyObj = make_shared<Enemy>();
+		//	gameObject->SetName(L"Enemy");
+		//	gameObject->SetCheckFrustum(false);
+		//	gameObject->GetTransform()->SetLocalPosition(Vec3(2000.f, 300.f, 0.f));
+		//	gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.01f, 1.01f));
+		//	gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
+		//	//gameObject->AddComponent(EnemyObj);
 
 
-			shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
-			boxCollider->SetCenter(Vec3(0.f, 0.f, 0.f));
-			boxCollider->SetExtents(Vec3(10.f, 40.f, 10.f));
-			gameObject->AddComponent(boxCollider);
-			gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 1);
-			gameObject->AddComponent(make_shared<Enemy>());
-			scene->AddGameObject(gameObject);
-		}
+		//	shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
+		//	boxCollider->SetCenter(Vec3(0.f, 0.f, 0.f));
+		//	boxCollider->SetExtents(Vec3(10.f, 40.f, 10.f));
+		//	gameObject->AddComponent(boxCollider);
+		//	gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 1);
+		//	gameObject->AddComponent(make_shared<Enemy>());
+		//	scene->AddGameObject(gameObject);
+		//}
 
 
 		
-		shared_ptr<MeshData> SpZombieMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Spzombie.fbx");
-
-		for (int i = 0; i < 1; i++)
-		{
-
-			vector<shared_ptr<GameObject>> gameObjects = SpZombieMesh->Instantiate();
-
-			for (auto& gameObject : gameObjects)
-			{
-
-				shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
-				boxCollider->SetCenter(Vec3(0.f, 0.f, 0.f));
-				boxCollider->SetExtents(Vec3(10.f, 40.f, 10.f));
-
-				gameObject->SetName(L"SpEnemy");
-				gameObject->SetCheckFrustum(false);
-				gameObject->GetTransform()->SetLocalPosition(Vec3(1500.f, 300.f, 0.f));
-				gameObject->GetTransform()->SetLocalScale(Vec3(0.01f, 0.01f, 0.01f));
-				gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
-
-				gameObject->AddComponent(boxCollider);
-				gameObject->AddComponent(make_shared<Enemy>());
-
-				//scene->AddGameObject(gameObject);
-
-			}
-		}
+		
 	}
 	
 
@@ -555,7 +529,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			{
 				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
 				material->SetInt(0, 1);
-				meshRenderer->SetMaterial(material->Clone());
+				meshRenderer->SetMaterial(material);
 			}
 
 			obj->AddComponent(meshRenderer);
@@ -615,7 +589,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetName(L"Wall");
 			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(((baseX - scale * (4.5 + i))), 100.f, 900.f));
+			obj->GetTransform()->SetLocalPosition(Vec3(((baseX - scale * (4.5 + i))), 100.f, baseZ-scale*2));
 			obj->SetCheckFrustum(false);
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 			{
@@ -637,7 +611,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetName(L"Wall");
 			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(((baseX + scale * (4.5 + i))), 100.f, 900.f));
+			obj->GetTransform()->SetLocalPosition(Vec3(((baseX + scale * (4.5 + i))), 100.f, baseZ - scale * 2));
 			obj->SetCheckFrustum(false);
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 			{
@@ -645,12 +619,8 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				meshRenderer->SetMesh(mesh);
 			}
 			{
-				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
-
-				shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall2023", L"..\\Resources\\Texture\\veigar.jpg");
-				shared_ptr<Material> material = make_shared<Material>();
-				material->SetShader(shader);
-				material->SetTexture(0, texture);
+				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
+				material->SetInt(0, 1);
 				meshRenderer->SetMaterial(material);
 			}
 			obj->AddComponent(meshRenderer);
@@ -735,7 +705,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetName(L"Wall");
 			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 13.5, 100.f, (baseZ - scale * 7) * i)); //z -600
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 13.5, 100.f, (baseZ - scale * (7 - 2*i)))); //z -600
 			obj->SetCheckFrustum(false);
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 			{
@@ -1107,13 +1077,14 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 
 		for (int i = 0; i < 2; i++)
 		{
-			//////////////////////////////////////////////////////////////////////
+			/////////////////////////////////////////
+			////////////////////////////////////////////////////////////////////
 			shared_ptr<GameObject> obj = make_shared<GameObject>();
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetName(L"Wall");
 			obj->SetCheckFrustum(false);
 			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 1.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 6, 100.f, (baseZ - scale * 4.5) - ((baseZ - scale * 2) * i)));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 6, 100.f, (baseZ - scale * 4.5) - ((baseZ - scale * 3) * i)));
 			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 
@@ -1136,7 +1107,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetName(L"Wall");
 			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 6.5, 100.f, (baseZ - scale * 7) * i));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 6.5, 100.f, (baseZ - scale * (7 - 2 * i))));
 			obj->SetCheckFrustum(false);
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 			{
@@ -1174,7 +1145,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			obj->AddComponent(meshRenderer);
 			scene->AddGameObject(obj);
 		}
-
+////////////////// 수정 가능성 
 		{
 			//////////////////////////////////////////////////////////////////////
 			shared_ptr<GameObject> obj = make_shared<GameObject>();
@@ -1244,6 +1215,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			obj->AddComponent(meshRenderer);
 			scene->AddGameObject(obj);
 		}
+		////////// 문제 
 		for (int i = 0; i < 3; i++)
 		{
 			//////////////////////////////////////////////////////////////////////

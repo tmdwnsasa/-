@@ -148,35 +148,34 @@ void Scene::Update()
 	SetPlayerPosToEnemy();
 	
 	////복수 생성
-	//map<wstring, pair<uint32, vector<shared_ptr<GameObject>>>> name;
-	//for (const shared_ptr<GameObject>& gameObject : _gameObjects)
-	//{
-	//	name[gameObject->GetName()].first++;
-	//	name[gameObject->GetName()].second.push_back(gameObject);
-	//}
+	map<wstring, pair<uint32, vector<shared_ptr<GameObject>>>> name;
+	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
+	{
+		name[gameObject->GetName()].first++;
+		name[gameObject->GetName()].second.push_back(gameObject);
+	}
 
-	//for (auto& object : name)
-	//{
-	//	if (object.first != L"")
-	//	{
-	//		if (object.second.first > 1)
-	//		{
-	//			for (auto& nameObject : object.second.second)
-	//				if (nameObject->GetMeshRenderer() != NULL)
-	//					nameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 1);
-	//		}
+	for (auto& object : name)
+	{
+		if (object.first != L"")
+		{
+			if (object.second.first > 1)
+			{
+				for (auto& nameObject : object.second.second)
+					if (nameObject->GetMeshRenderer() != NULL)
+						nameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 1);
+			}
 
-	//		else
-	//		{
-	//			//(*object.second.second.begin())->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
+			else
+			{
 
-	//			if ((*object.second.second.begin())->GetMeshRenderer() != NULL)
-	//			{
-	//				(*object.second.second.begin())->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
-	//			}
-	//		}
-	//	}
-	//}
+				if ((*object.second.second.begin())->GetMeshRenderer() != NULL)
+				{
+					(*object.second.second.begin())->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
+				}
+			}
+		}
+	}
 
 	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
 	{
