@@ -24,7 +24,7 @@ public:
 
 	const double py = std::acos(-1);
 	const float baseX = 3000;
-	const float baseZ = -300;
+	const float baseZ = -150;
 	const float scale = 300;
 
 public:

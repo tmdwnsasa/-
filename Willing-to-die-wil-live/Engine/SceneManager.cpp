@@ -412,7 +412,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		{
 			gameObject->SetName(L"Player");
 			gameObject->SetCheckFrustum(false);
-			gameObject->GetTransform()->SetLocalPosition(Vec3(2700.f, 600.f, -300.f));
+			gameObject->GetTransform()->SetLocalPosition(Vec3(2700.f, 600.f,-300.f));
 			gameObject->GetTransform()->SetLocalScale(Vec3(0.1f, 0.1f, 0.1f));
 			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
 			gameObject->AddComponent(make_shared<Player>());
@@ -425,7 +425,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 	{
 		shared_ptr<MeshData> ZombieMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\tes.fbx");
 
-		for (int i = 0; i < 1; i++)
+		for (int i = 0; i < 3; i++)
 		{
 
 			vector<shared_ptr<GameObject>> gameObjects = ZombieMesh->Instantiate();
@@ -439,7 +439,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 
 				gameObject->SetName(L"Enemy");
 				gameObject->SetCheckFrustum(false);
-				gameObject->GetTransform()->SetLocalPosition(Vec3(1200.f, 100.f, -900.f));
+				gameObject->GetTransform()->SetLocalPosition(Vec3(1200.f *(i+1), 100.f, -900.f));
 				gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 				gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
 				gameObject->AddComponent(boxCollider);
@@ -448,6 +448,32 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				scene->AddGameObject(gameObject);
 			}
 		}
+
+		/*shared_ptr<MeshData> TestMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\sniper.fbx");
+
+		for (int i = 0; i < 1; i++)
+		{
+
+			vector<shared_ptr<GameObject>> gameObjects = TestMesh->Instantiate();
+
+			for (auto& gameObject : gameObjects)
+			{
+
+				shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
+				boxCollider->SetCenter(Vec3(0.f, 0.f, 0.f));
+				boxCollider->SetExtents(Vec3(10.f, 40.f, 10.f));
+
+				gameObject->SetName(L"Enemy");
+				gameObject->SetCheckFrustum(false);
+				gameObject->GetTransform()->SetLocalPosition(Vec3(1200.f * (i + 1), 1000.f, -900.f));
+				gameObject->GetTransform()->SetLocalScale(Vec3(10.f, 10.f, 10.f));
+				gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
+				gameObject->AddComponent(boxCollider);
+				gameObject->AddComponent(make_shared<Enemy>());
+				gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 1);
+				scene->AddGameObject(gameObject);
+			}
+		}*/
 
 		//vector<shared_ptr<GameObject>> gameObjects = ZombieMesh->Instantiate();
 		//for (auto& gameObject : gameObjects)
@@ -1054,8 +1080,8 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetName(L"Wall");
 			obj->SetCheckFrustum(false);
-			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 1.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 6, 100.f, (baseZ - scale * 4.5) - ((baseZ - scale * 3) * i)));
+			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 10.f));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 6, 100.f, (baseZ - scale * 4.5) - (scale * 3) * i));
 			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 

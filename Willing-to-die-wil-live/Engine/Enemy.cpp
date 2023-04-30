@@ -49,8 +49,13 @@ void Enemy::Update()
 	SetEnemyPosition(pos);
 
 	SetPlayerPos();
-
-	AstarCall();
+	Time += DELTA_TIME;
+	if (Time > 0.1)
+	{
+		AstarCall();
+		Time = 0;
+	}
+	AstarMove(firstx, firsty, secondx, secondy);
 
 	Animation();
 }
@@ -73,51 +78,98 @@ void Enemy::AstarCall()
 
 	Vec3 EPos = GetEnemyPosition();
 
-	std::cout << EPos.x << std::endl;
+	//std::cout <<EPos.x <<"Z좌표 :    "<< EPos.z << std::endl;
 
 	if (nodeList.size() != 0)
 	{
-		int k = nodeList.front()->pos.x;
-		int l = nodeList.front()->pos.y;
+		firstx = nodeList.front()->pos.x;
+		firsty = nodeList.front()->pos.y;
 
 
 		list<TileNode*>::iterator iter = nodeList.begin();
 
 		advance(iter, 1);
-		int p = (*iter)->pos.x;
-		int q = (*iter)->pos.y;
+		secondx = (*iter)->pos.x;
+		secondy = (*iter)->pos.y;
 
-		AstarMove(k, l, p, q);
 	}
+
 }
 
 void Enemy::AstarMove(int x, int y, int z, int w)
 {
+	if (DELTA_TIME > 1)
+		return;
 	Vec3 pos = GetTransform()->GetLocalPosition();
 
 	x = x - z;
 	y = y - w;
-	if (x == -1)
+	if (x == -1 && y == 0)
 	{
-		pos += GetTransform()->GetRight() * _speed * 10;
+		GetTransform()->SetLocalRotation(Vec3(0, py * 0.5, 0));
+		
+		pos += GetTransform()->GetLook() * _speed *DELTA_TIME; // 보는 방향기준 오른쪽
+		//float a = DELTA_TIME;
+		//pos += GetTransform()->GetRight() * _speed * 10; // 보는 방향기준 오른쪽
 	}
 
-	if (x == 1)
+	if (x == -1 && y == 1)
 	{
-		pos -= GetTransform()->GetRight() * _speed * 10;
+		GetTransform()->SetLocalRotation(Vec3(0, py * 0.25, 0));
+		
+		pos += GetTransform()->GetLook() * _speed * DELTA_TIME; // 보는 방향기준 오른쪽
+		//float a = DELTA_TIME;
+		//pos += GetTransform()->GetRight() * _speed * 10; // 보는 방향기준 오른쪽
+	}
+	if (x == -1 && y == -1)
+	{
+		GetTransform()->SetLocalRotation(Vec3(0, py * 0.75, 0));
+		
+		pos += GetTransform()->GetLook() * _speed * DELTA_TIME; // 보는 방향기준 오른쪽
+		//float a = DELTA_TIME;
+		//pos += GetTransform()->GetRight() * _speed * 10; // 보는 방향기준 오른쪽
 	}
 
-	if (y == -1)
+
+	if (x == 1 && y == 0)
 	{
-		pos -= GetTransform()->GetLook() * _speed * 10;
+		GetTransform()->SetLocalRotation(Vec3(0, -py * 0.5, 0));
+		
+		pos += GetTransform()->GetLook() * _speed *DELTA_TIME; // 보는 방향기준 왼쪽
+		//pos -= GetTransform()->GetRight() * _speed * 10; // 보는 방향기준 왼쪽
 	}
 
-	if (y == 1)
+
+	if (x == 1 && y == 1)
 	{
-		pos += GetTransform()->GetLook() * _speed * 10;
+		GetTransform()->SetLocalRotation(Vec3(0, -py * 0.25, 0));
+		
+		pos += GetTransform()->GetLook() * _speed * DELTA_TIME; // 보는 방향기준 왼쪽
+		//pos -= GetTransform()->GetRight() * _speed * 10; // 보는 방향기준 왼쪽
 	}
 
 
+	if (x == 1 && y == -1)
+	{
+		GetTransform()->SetLocalRotation(Vec3(0, -py * 0.75, 0));
+		
+		pos += GetTransform()->GetLook() * _speed * DELTA_TIME; // 보는 방향기준 왼쪽
+		//pos -= GetTransform()->GetRight() * _speed * 10; // 보는 방향기준 왼쪽
+	}
+	if (x == 0 && y == -1)
+	{
+		GetTransform()->SetLocalRotation(Vec3(0, -py, 0));
+		
+		pos += GetTransform()->GetLook() * _speed * DELTA_TIME;
+	}
+
+	if (x == 0 && y == 1)
+	{
+		GetTransform()->SetLocalRotation(Vec3(0, 0, 0));
+	
+		pos += GetTransform()->GetLook() * _speed * DELTA_TIME;
+	}
+	double rotpos = GetTransform()->GetLocalRotation().y;
 	GetTransform()->SetLocalPosition(pos);
 
 }
@@ -126,12 +178,18 @@ void Enemy::AstarMove(int x, int y, int z, int w)
 
 void Enemy::SetPlayerPos()
 {
-	for(int i=0; i<25; i++)
-		for (int j = 0; j < 25; j++)
+	for(int i=0; i<100; i++)
+		for (int j = 0; j < 100; j++)
 		{
 			if (tileMap[i][j] == 2)
 			{
 				tileMap[i][j] = 0;
+				/*EnemyCount++;
+				if (EnemyCount == 10)
+				{
+					tileMap[i][j] = 0;
+					EnemyCount = 0;
+				}*/
 			}
 			else if (tileMap[i][j] == 3)
 			{
@@ -144,8 +202,8 @@ void Enemy::SetPlayerPos()
 	double k = PlayerPos.x;
 	double l = -PlayerPos.z;
 
-	k = (k / 300)-1;
-	l = (l / 300)+1;
+	k = (k / 300 * 4)-1;
+	l = (l / 300*4)+1;
 
 	int x = (int)k;
 	int y = (int)l;
@@ -153,28 +211,35 @@ void Enemy::SetPlayerPos()
 
 	Vec3 EPos = GetEnemyPosition();
 
-	k = EPos.x;
-	l = -(EPos.z);
+	if (EPos.z > 0)
+		EPos.z = 0;
+
+	double p = EPos.x;
+	double q= -(EPos.z);
 
 
-	k = (k / 300) - 1;
-	l = (l / 300) + 1;
+	p = (p / 300 * 4) - 1;
+	q = (q / 300 * 4) + 1;
 	
 
-	x = (int)k;
-	y = (int)l;
+	x = (int)p;
+	y = (int)q;
 	tileMap[y][x] = 2;
 
 	int w = x + y;
 }
 
-int(*Enemy::CreateMap())[Height]
-{
-	return tileMap;
-}
-
 void Enemy::Animation()
 {
+	if (AnimeCount == 0)
+	{
+		int32 count = GetAnimator()->GetAnimCount();
+		int32 currentIndex = GetAnimator()->GetCurrentClipIndex();
+
+		int32 index = (currentIndex + 1) % count;
+		GetAnimator()->Play(index);
+		AnimeCount++;
+	}
 	if (INPUT->GetButtonDown(KEY_TYPE::KEY_1))
 	{
 		int32 count = GetAnimator()->GetAnimCount();
@@ -197,5 +262,10 @@ void Enemy::Animation()
 	{
 		GetAnimator()->Stop();
 	}
+}
+
+int(*Enemy::CreateMap())[Height]
+{
+	return tileMap;
 }
 
