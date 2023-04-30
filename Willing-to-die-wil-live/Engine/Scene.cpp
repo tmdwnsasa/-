@@ -583,22 +583,22 @@ void Scene::CollisionPlayerToWall()
 	{
 		if (gameObject->GetName() == L"Player")
 		{
-			if (minDistanceF < 30)
+			if (minDistanceF < DistanceWall && 0 < DistanceWall)
 				gameObject->GetPlayer()->collisionFront(true);
 			else
 				gameObject->GetPlayer()->collisionFront(false);
 
-			if (minDistanceB < 30)
+			if (minDistanceB < DistanceWall && 0 < DistanceWall)
 				gameObject->GetPlayer()->collisionBack(true);
 			else
 				gameObject->GetPlayer()->collisionBack(false);
 
-			if (minDistanceR < 30)
+			if (minDistanceR < DistanceWall && 0 < DistanceWall)
 				gameObject->GetPlayer()->collisionRight(true);
 			else
 				gameObject->GetPlayer()->collisionRight(false);
 
-			if (minDistanceL < 30)
+			if (minDistanceL < DistanceWall && 0 < DistanceWall)
 				gameObject->GetPlayer()->collisionLeft(true);
 			else
 				gameObject->GetPlayer()->collisionLeft(false);

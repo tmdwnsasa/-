@@ -44,9 +44,10 @@ public:
 	void CursorClipping();
 	void CollisionPlayerToWall();
 
+
 private:
 	void PushLightData();
-
+	int  DistanceWall = 40;
 public:
 	void AddGameObject(shared_ptr<GameObject> gameObject);
 	void RemoveGameObject(shared_ptr<GameObject> gameObject);

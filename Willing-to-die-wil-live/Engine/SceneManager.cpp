@@ -426,7 +426,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 
 #pragma region Enemy
 	{
-		shared_ptr<MeshData> ZombieMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Craw.fbx");
+		shared_ptr<MeshData> ZombieMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\tes.fbx");
 
 		for (int i = 0; i < 3; i++)
 		{
@@ -442,7 +442,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 
 				gameObject->SetName(L"Enemy");
 				gameObject->SetCheckFrustum(false);
-				gameObject->GetTransform()->SetLocalPosition(Vec3(1200.f *(i+1), 100.f, -900.f));
+				gameObject->GetTransform()->SetLocalPosition(Vec3(1200.f *(i+1), 0.f, -900.f));
 				gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 				gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
 				gameObject->AddComponent(boxCollider);

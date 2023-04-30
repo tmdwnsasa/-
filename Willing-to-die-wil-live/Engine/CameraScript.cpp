@@ -9,7 +9,7 @@
 #include "SceneManager.h"
 #include <iostream>
 //cout 출력용 코드
-#pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console")
+//#pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console")
 
 
 CameraScript::CameraScript() : Component(COMPONENT_TYPE::CAMERASCRIPT)

@@ -172,25 +172,21 @@ void Player::Update()
 	{
 		if (pos.z > oldPos.z)
 			pos.z = oldPos.z;
-		cout << "front" << endl;
 	}
 	if (_back == true)
 	{
 		if (pos.z < oldPos.z)
 			pos.z = oldPos.z;
-		cout << "back" << endl;
 	}
 	if (_right == true)
 	{
 		if (pos.x > oldPos.x)
 			pos.x = oldPos.x;
-		cout << "right" << endl;
 	}
 	if (_left == true)
 	{
 		if (pos.x < oldPos.x)
 			pos.x = oldPos.x;
-		cout << "left" << endl;
 	}
 
 	GetTransform()->SetLocalPosition(pos);
