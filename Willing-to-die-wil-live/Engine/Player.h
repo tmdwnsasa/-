@@ -55,10 +55,20 @@ public:
 
 	void SetRotateLock(bool lock) { _rotateLock = lock; };
 	void SetShopOpened(bool open) { _shopOpened = open; };
-
 	bool MoneyChange(int amount);
 
+	void collisionFront(bool front) { _front = front; };
+	void collisionBack(bool back) { _back = back; };
+	void collisionRight(bool right) { _right = right; };
+	void collisionLeft(bool left) { _left = left; };
+
 private:
+	// Move
+	bool			_front = false;
+	bool			_back = false;
+	bool			_right = false;
+	bool			_left = false;
+
 	// Shop
 	bool			_rotateLock = false;
 	bool			_shopOpened = false;
@@ -108,5 +118,5 @@ private:
 	float			_lifeTime = 5.f;
 	float			_currLifeTime = 5.f;
 	BULLET_STATE	_currState = BULLET_STATE::LIVE;
-	float			_speed = 100.0f;
+	float			_speed = 1000.0f;
 };

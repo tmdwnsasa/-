@@ -13,7 +13,7 @@
 #include "MeshRenderer.h"
 #include "BoxCollider.h"
 #include "Resources.h"
-
+#include <iostream>
 //////////////////////////////////////////////////
 // Player
 //////////////////////////////////////////////////
@@ -33,11 +33,13 @@ void Player::Update()
 	{
 		if (iter->get()->GetBullet()->GetState() == BULLET_STATE::DEAD)
 		{
-			bullets.erase(iter);
+			//bullets.erase(iter);
 		}
 	}
 
 	Vec3 pos = GetTransform()->GetLocalPosition();
+	Vec3 oldPos = pos;
+
 
 	if (INPUT->GetButton(KEY_TYPE::W))
 		pos += GetTransform()->GetLook() * _speed * DELTA_TIME;
@@ -108,7 +110,7 @@ void Player::Update()
 				shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
 
 				bullet->GetTransform()->SetLocalPosition(cameraPosForBullet);
-				bullet->GetTransform()->SetLocalScale(Vec3(10.f, 10.f, 10.f));
+				bullet->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 				bullet->GetTransform()->LookAt(cameraLookForBullet);
 				Vec3 rot = bullet->GetTransform()->GetLocalRotation();
 				float a = (((float)(RandomInt() - 50.f)) / 100000.f);
@@ -165,6 +167,32 @@ void Player::Update()
 			}
 		}
 	}
+
+	if (_front == true)
+	{
+		if (pos.z > oldPos.z)
+			pos.z = oldPos.z;
+		cout << "front" << endl;
+	}
+	if (_back == true)
+	{
+		if (pos.z < oldPos.z)
+			pos.z = oldPos.z;
+		cout << "back" << endl;
+	}
+	if (_right == true)
+	{
+		if (pos.x > oldPos.x)
+			pos.x = oldPos.x;
+		cout << "right" << endl;
+	}
+	if (_left == true)
+	{
+		if (pos.x < oldPos.x)
+			pos.x = oldPos.x;
+		cout << "left" << endl;
+	}
+
 	GetTransform()->SetLocalPosition(pos);
 }
 
@@ -221,6 +249,7 @@ void Player::ChangeWeapon(PLAYER_WEAPON weapon)
 		_reloadMaxTime = 2.5f;
 		_reloadPerAmmo = _maxAmmo;
 		_price = 1000;
+
 #pragma region Gun
 		{
 			shared_ptr<MeshData> GunMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\AWP_Dragon_Lore.fbx");
@@ -250,6 +279,7 @@ void Player::ChangeWeapon(PLAYER_WEAPON weapon)
 		_reloadMaxTime = 0.5f;
 		_reloadPerAmmo = 2;
 		_price = 2000;
+
 #pragma region Gun
 		{
 			shared_ptr<MeshData> GunMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\AWP_Dragon_Lore.fbx");
@@ -279,6 +309,7 @@ void Player::ChangeWeapon(PLAYER_WEAPON weapon)
 		_reloadMaxTime = 2.5f;
 		_reloadPerAmmo = _maxAmmo;
 		_price = 2000;
+
 #pragma region Gun
 		{
 			shared_ptr<MeshData> GunMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\AWP_Dragon_Lore.fbx");
