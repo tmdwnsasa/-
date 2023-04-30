@@ -743,7 +743,7 @@ void Resources::CreateDefaultMaterial()
 	// Wall
 	{
 		shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"MapTexture");
-		shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall", L"..\\Resources\\Texture\\Wall.png");
+		shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Wall", L"..\\Resources\\Texture\\Wall.jpg");
 		shared_ptr<Material> material = make_shared<Material>();
 		material->SetShader(shader);
 		material->SetTexture(0, texture);

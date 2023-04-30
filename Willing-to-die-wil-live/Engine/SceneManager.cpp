@@ -196,7 +196,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		}
 		{
 			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Skybox");
-			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Sky01", L"..\\Resources\\Texture\\wood.jpg");
+			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Sky01", L"..\\Resources\\Texture\\Sky01.jpg");
 			shared_ptr<Material> material = make_shared<Material>();
 			material->SetShader(shader);
 			material->SetTexture(0, texture);
@@ -246,9 +246,9 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		obj->AddComponent(make_shared<MeshRenderer>());
 
 		obj->GetTransform()->SetLocalScale(Vec3(50.f, 250.f, 50.f));
-		obj->GetTransform()->SetLocalPosition(Vec3(-100.f, -400.f, 300.f));
+		obj->GetTransform()->SetLocalPosition(Vec3(-2000.f, -100.f, -6000.f));
 		obj->SetStatic(true);
-		obj->GetTerrain()->Init(64, 64);
+		obj->GetTerrain()->Init(256, 256);
 		obj->SetCheckFrustum(false);
 
 		scene->AddGameObject(obj);
@@ -389,7 +389,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		light->AddComponent(make_shared<Transform>());
 		light->GetTransform()->SetLocalPosition(Vec3(0, 1000, 500));
 		light->AddComponent(make_shared<Light>());
-		light->GetLight()->SetLightDirection(Vec3(0, -1, 1.f));
+		light->GetLight()->SetLightDirection(Vec3(0.f, -0.5f, 1.f));
 		light->GetLight()->SetLightType(LIGHT_TYPE::DIRECTIONAL_LIGHT);
 		light->GetLight()->SetDiffuse(Vec3(1.f, 1.f, 1.f));
 		light->GetLight()->SetAmbient(Vec3(0.1f, 0.1f, 0.1f));
@@ -410,7 +410,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		{
 			gameObject->SetName(L"Player");
 			gameObject->SetCheckFrustum(false);
-			gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 1000.f, 0.f));
+			gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 0.f));
 			gameObject->GetTransform()->SetLocalScale(Vec3(0.1f, 0.1f, 0.1f));
 			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
 			gameObject->AddComponent(make_shared<Player>());
@@ -483,7 +483,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetName(L"Wall");
 			obj->GetTransform()->SetLocalScale(Vec3(scale * 8, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX, 100.f, baseZ));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX, 0.f, baseZ));
 			obj->SetCheckFrustum(false);
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 			{
@@ -508,7 +508,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			obj->SetName(L"Wall");
 			obj->SetCheckFrustum(false);
 			obj->GetTransform()->SetLocalScale(Vec3(scale * 2, scale, 1.f));
-			obj->GetTransform()->SetLocalPosition(Vec3((baseX - scale * 4) + (scale * 8 * i), 100.f, baseZ - scale));
+			obj->GetTransform()->SetLocalPosition(Vec3((baseX - scale * 4) + (scale * 8 * i), 0.f, baseZ - scale));
 			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 			{
@@ -530,7 +530,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetName(L"Wall");
 			obj->GetTransform()->SetLocalScale(Vec3(scale * 5, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(((baseX - scale * 6.5) + (scale * 13 * i)), 100.f, 900.f));
+			obj->GetTransform()->SetLocalPosition(Vec3(((baseX - scale * 6.5) + (scale * 13 * i)), 0.f, 900.f));
 			obj->SetCheckFrustum(false);
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 			{
@@ -552,7 +552,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			obj->SetName(L"Wall");
 			obj->SetCheckFrustum(false);
 			obj->GetTransform()->SetLocalScale(Vec3(scale * 2, scale, 1.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 9, 100.f, baseZ - scale * 3));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 9, 0.f, baseZ - scale * 3));
 			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 
@@ -575,7 +575,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetName(L"Wall");
 			obj->GetTransform()->SetLocalScale(Vec3(scale * 5, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 11.5, 100.f, baseZ - scale * 4));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 11.5, 0.f, baseZ - scale * 4));
 			obj->SetCheckFrustum(false);
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 			{
@@ -598,7 +598,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			obj->SetName(L"Wall");
 			obj->SetCheckFrustum(false);
 			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 1.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 14, 100.f, (baseZ - scale * 4.5) - scale * 3 * i));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 14, 0.f, (baseZ - scale * 4.5) - scale * 3 * i));
 			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 
@@ -622,7 +622,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetName(L"Wall");
 			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 13.5, 100.f, (baseZ - scale * 7) * i)); //z -600
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 13.5, 0.f, (baseZ - scale * 7) * i)); //z -600
 			obj->SetCheckFrustum(false);
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 			{
@@ -646,7 +646,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			obj->SetName(L"Wall");
 			obj->SetCheckFrustum(false);
 			obj->GetTransform()->SetLocalScale(Vec3(scale * 2, scale, 1.f));
-			obj->GetTransform()->SetLocalPosition(Vec3((baseX + scale * 13) - (scale * 6 * i), 100.f, baseZ - scale * 6));
+			obj->GetTransform()->SetLocalPosition(Vec3((baseX + scale * 13) - (scale * 6 * i), 0.f, baseZ - scale * 6));
 			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 
@@ -668,7 +668,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetName(L"Wall");
 			obj->GetTransform()->SetLocalScale(Vec3(scale * 3, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 12.5, 100.f, baseZ - scale * 8));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 12.5, 0.f, baseZ - scale * 8));
 			obj->SetCheckFrustum(false);
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 			{
@@ -691,7 +691,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			obj->SetName(L"Wall");
 			obj->SetCheckFrustum(false);
 			obj->GetTransform()->SetLocalScale(Vec3(scale * 10, scale, 1.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 11, 100.f, baseZ - scale * 13));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 11, 0.f, baseZ - scale * 13));
 			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 
@@ -714,7 +714,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetName(L"Wall");
 			obj->GetTransform()->SetLocalScale(Vec3(scale * 2, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 12, 100.f, baseZ - scale * 18));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 12, 0.f, baseZ - scale * 18));
 			obj->SetCheckFrustum(false);
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 			{
@@ -736,7 +736,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			obj->SetName(L"Wall");
 			obj->SetCheckFrustum(false);
 			obj->GetTransform()->SetLocalScale(Vec3(scale * 5, scale, 1.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 13, 100.f, baseZ - scale * 20.5));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 13, 0.f, baseZ - scale * 20.5));
 			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 
@@ -758,7 +758,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetName(L"Wall");
 			obj->GetTransform()->SetLocalScale(Vec3(scale * 6, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 10, 100.f, baseZ - scale * 23));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 10, 0.f, baseZ - scale * 23));
 			obj->SetCheckFrustum(false);
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 			{
@@ -781,7 +781,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			obj->SetName(L"Wall");
 			obj->SetCheckFrustum(false);
 			obj->GetTransform()->SetLocalScale(Vec3(scale * 2, scale, 1.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 7, 100.f, (baseZ - scale * 22) + scale * 3 * i));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 7, 0.f, (baseZ - scale * 22) + scale * 3 * i));
 			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 
@@ -804,7 +804,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetName(L"Wall");
 			obj->GetTransform()->SetLocalScale(Vec3(scale * 3, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 8.5, 100.f, baseZ - scale * 18));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 8.5, 0.f, baseZ - scale * 18));
 			obj->SetCheckFrustum(false);
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 			{
@@ -827,7 +827,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			obj->SetName(L"Wall");
 			obj->SetCheckFrustum(false);
 			obj->GetTransform()->SetLocalScale(Vec3(scale * 4, scale, 1.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 10, 100.f, baseZ - scale * 16));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 10, 0.f, baseZ - scale * 16));
 			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 
@@ -850,7 +850,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetName(L"Wall");
 			obj->GetTransform()->SetLocalScale(Vec3(scale * 7, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 6.5, 100.f, (baseZ - scale * 14) + scale * i));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 6.5, 0.f, (baseZ - scale * 14) + scale * i));
 			obj->SetCheckFrustum(false);
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 			{
@@ -873,7 +873,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			obj->SetName(L"Wall");
 			obj->SetCheckFrustum(false);
 			obj->GetTransform()->SetLocalScale(Vec3(scale * 5, scale, 1.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 10, 100.f, baseZ - scale * 10.5));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 10, 0.f, baseZ - scale * 10.5));
 			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 
@@ -895,7 +895,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetName(L"Wall");
 			obj->GetTransform()->SetLocalScale(Vec3(scale * 4, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 8, 100.f, baseZ - scale * 8));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 8, 0.f, baseZ - scale * 8));
 			obj->SetCheckFrustum(false);
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 			{
@@ -919,7 +919,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			obj->SetName(L"Wall");
 			obj->SetCheckFrustum(false);
 			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 1.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 6, 100.f, (baseZ - scale * 4.5) - ((baseZ - scale * 2) * i)));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 6, 0.f, (baseZ - scale * 4.5) - ((baseZ - scale * 2) * i)));
 			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 
@@ -942,7 +942,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetName(L"Wall");
 			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 6.5, 100.f, (baseZ - scale * 7) * i));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 6.5, 0.f, (baseZ - scale * 7) * i));
 			obj->SetCheckFrustum(false);
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 			{
@@ -964,7 +964,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetName(L"Wall");
 			obj->GetTransform()->SetLocalScale(Vec3(scale * 2, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 7, 100.f, baseZ - scale * 4));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 7, 0.f, baseZ - scale * 4));
 			obj->SetCheckFrustum(false);
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 			{
@@ -987,7 +987,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			obj->SetName(L"Wall");
 			obj->SetCheckFrustum(false);
 			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 1.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 8, 100.f, baseZ - scale * 3.5));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 8, 0.f, baseZ - scale * 3.5));
 			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 
@@ -1010,7 +1010,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetName(L"Wall");
 			obj->GetTransform()->SetLocalScale(Vec3(scale * 8, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 4, 100.f, baseZ - scale * 3));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 4, 0.f, baseZ - scale * 3));
 			obj->SetCheckFrustum(false);
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 			{
@@ -1032,7 +1032,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetName(L"Wall");
 			obj->GetTransform()->SetLocalScale(Vec3(scale * 7, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX - scale * 4.5, 100.f, baseZ - scale * 3));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX - scale * 4.5, 0.f, baseZ - scale * 3));
 			obj->SetCheckFrustum(false);
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 			{
@@ -1055,7 +1055,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			obj->SetName(L"Wall");
 			obj->SetCheckFrustum(false);
 			obj->GetTransform()->SetLocalScale(Vec3(scale * 3, scale, 1.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX - scale * i, 100.f, baseZ - scale * 4.5));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX - scale * i, 0.f, baseZ - scale * 4.5));
 			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 
@@ -1077,7 +1077,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetName(L"Wall");
 			obj->GetTransform()->SetLocalScale(Vec3(scale * 3, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 1.5, 100.f, baseZ - scale * 6));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 1.5, 0.f, baseZ - scale * 6));
 			obj->SetCheckFrustum(false);
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 			{
@@ -1098,7 +1098,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetName(L"Wall");
 			obj->GetTransform()->SetLocalScale(Vec3(scale * 3, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX - scale * 2.5, 100.f, baseZ - scale * 6));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX - scale * 2.5, 0.f, baseZ - scale * 6));
 			obj->SetCheckFrustum(false);
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 			{
@@ -1122,7 +1122,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			obj->SetName(L"Wall");
 			obj->SetCheckFrustum(false);
 			obj->GetTransform()->SetLocalScale(Vec3(scale * 7, scale, 1.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 3, 100.f, baseZ - scale * 9.5));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 3, 0.f, baseZ - scale * 9.5));
 			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 
@@ -1146,7 +1146,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			obj->SetName(L"Wall");
 			obj->SetCheckFrustum(false);
 			obj->GetTransform()->SetLocalScale(Vec3(scale * 4, scale, 1.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX - scale * 4, 100.f, baseZ - scale * 8));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX - scale * 4, 0.f, baseZ - scale * 8));
 			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 
@@ -1168,7 +1168,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetName(L"Wall");
 			obj->GetTransform()->SetLocalScale(Vec3(scale * 6, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX - scale, 100.f, baseZ - scale * 10));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX - scale, 0.f, baseZ - scale * 10));
 			obj->SetCheckFrustum(false);
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 			{
@@ -1191,7 +1191,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			obj->SetName(L"Wall");
 			obj->SetCheckFrustum(false);
 			obj->GetTransform()->SetLocalScale(Vec3(scale * 10, scale, 1.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 2, 100.f, baseZ - scale * 15));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 2, 0.f, baseZ - scale * 15));
 			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 
@@ -1215,7 +1215,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			obj->SetName(L"Wall");
 			obj->SetCheckFrustum(false);
 			obj->GetTransform()->SetLocalScale(Vec3(scale * 6, scale, 1.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 3, 100.f, baseZ - scale * 17));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 3, 0.f, baseZ - scale * 17));
 			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 
@@ -1237,7 +1237,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetName(L"Wall");
 			obj->GetTransform()->SetLocalScale(Vec3(scale * 7, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 3.5, 100.f, baseZ - scale * 21));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 3.5, 0.f, baseZ - scale * 21));
 			obj->SetCheckFrustum(false);
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 			{
@@ -1258,7 +1258,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetName(L"Wall");
 			obj->GetTransform()->SetLocalScale(Vec3(scale * 4, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 5, 100.f, baseZ - scale * 20));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 5, 0.f, baseZ - scale * 20));
 			obj->SetCheckFrustum(false);
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 			{
@@ -1279,7 +1279,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetName(L"Wall");
 			obj->GetTransform()->SetLocalScale(Vec3(scale * 2, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale, 100.f, baseZ - scale * 20));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale, 0.f, baseZ - scale * 20));
 			obj->SetCheckFrustum(false);
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 			{
@@ -1302,7 +1302,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			obj->SetName(L"Wall");
 			obj->SetCheckFrustum(false);
 			obj->GetTransform()->SetLocalScale(Vec3(scale * 2, scale, 1.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX, 100.f, baseZ - scale * 22));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX, 0.f, baseZ - scale * 22));
 			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 
@@ -1326,7 +1326,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			obj->SetName(L"Wall");
 			obj->SetCheckFrustum(false);
 			obj->GetTransform()->SetLocalScale(Vec3(scale * 2, scale, 1.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX, 100.f, baseZ - scale * 19));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX, 0.f, baseZ - scale * 19));
 			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 
@@ -1348,7 +1348,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetName(L"Wall");
 			obj->GetTransform()->SetLocalScale(Vec3(scale * 5, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX - scale * 2.5, 100.f, baseZ - scale * 23));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX - scale * 2.5, 0.f, baseZ - scale * 23));
 			obj->SetCheckFrustum(false);
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 			{
@@ -1369,7 +1369,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetName(L"Wall");
 			obj->GetTransform()->SetLocalScale(Vec3(scale * 5, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX - scale * 2.5, 100.f, baseZ - scale * 18));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX - scale * 2.5, 0.f, baseZ - scale * 18));
 			obj->SetCheckFrustum(false);
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 			{
@@ -1390,7 +1390,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetName(L"Wall");
 			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX - scale * 5.5, 100.f, baseZ - scale * 21));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX - scale * 5.5, 0.f, baseZ - scale * 21));
 			obj->SetCheckFrustum(false);
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 			{
@@ -1413,7 +1413,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			obj->SetName(L"Wall");
 			obj->SetCheckFrustum(false);
 			obj->GetTransform()->SetLocalScale(Vec3(scale * 2, scale, 1.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX - scale * 5, 100.f, baseZ - scale * 22));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX - scale * 5, 0.f, baseZ - scale * 22));
 			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 
@@ -1437,7 +1437,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			obj->SetName(L"Wall");
 			obj->SetCheckFrustum(false);
 			obj->GetTransform()->SetLocalScale(Vec3(scale * 9, scale, 1.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX - scale * 5, 100.f, baseZ - scale * 13.5));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX - scale * 5, 0.f, baseZ - scale * 13.5));
 			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 
@@ -1461,7 +1461,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			obj->SetName(L"Wall");
 			obj->SetCheckFrustum(false);
 			obj->GetTransform()->SetLocalScale(Vec3(scale * 11, scale, 1.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX - scale * 6, 100.f, baseZ - scale * 15.5));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX - scale * 6, 0.f, baseZ - scale * 15.5));
 			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 
@@ -1483,7 +1483,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetName(L"Wall");
 			obj->GetTransform()->SetLocalScale(Vec3(scale * 3, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX - scale * 6.5, 100.f, baseZ - scale * 9));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX - scale * 6.5, 0.f, baseZ - scale * 9));
 			obj->SetCheckFrustum(false);
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 			{
@@ -1505,7 +1505,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			obj->AddComponent(make_shared<Transform>());
 			obj->SetName(L"Wall");
 			obj->GetTransform()->SetLocalScale(Vec3(scale * 3, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX - scale * 7.5, 100.f, baseZ - scale * 10));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX - scale * 7.5, 0.f, baseZ - scale * 10));
 			obj->SetCheckFrustum(false);
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 			{
@@ -1528,7 +1528,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			obj->SetName(L"Wall");
 			obj->SetCheckFrustum(false);
 			obj->GetTransform()->SetLocalScale(Vec3(scale * 6, scale, 1.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX - scale * 8, 100.f, baseZ - scale * 6));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX - scale * 8, 0.f, baseZ - scale * 6));
 			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 
@@ -1552,7 +1552,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			obj->SetName(L"Wall");
 			obj->SetCheckFrustum(false);
 			obj->GetTransform()->SetLocalScale(Vec3(scale * 8, scale, 1.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX - scale * 9, 100.f, baseZ - scale * 6));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX - scale * 9, 0.f, baseZ - scale * 6));
 			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 

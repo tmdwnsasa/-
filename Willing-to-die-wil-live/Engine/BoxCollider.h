@@ -10,6 +10,7 @@ public:
 	virtual void FinalUpdate() override;
 
 	virtual bool Intersects(BoundingBox other);
+	virtual bool Intersects(Vec4 rayOrigin, Vec4 rayDir, OUT float& distance);
 
 	void SetExtents(Vec3 extents) { _extents = extents; }
 	void SetCenter(Vec3 center) { _center = center; }
