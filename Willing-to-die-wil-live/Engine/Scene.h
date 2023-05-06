@@ -44,10 +44,12 @@ public:
 	void CursorClipping();
 	void CollisionPlayerToWall();
 
+	void EnemyAtk();
 
 private:
 	void PushLightData();
 	int  DistanceWall = 40;
+	int  EnemyHp = 0;
 public:
 	void AddGameObject(shared_ptr<GameObject> gameObject);
 	void RemoveGameObject(shared_ptr<GameObject> gameObject);

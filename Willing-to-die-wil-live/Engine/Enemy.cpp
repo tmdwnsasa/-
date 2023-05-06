@@ -11,13 +11,14 @@
 #include "PathFinder.h"
 #include "Scene.h"
 #include "SceneManager.h"
+#include "Component.h"
 #include <iostream>
 
 //cout 출력용 코드
 //#pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console")
 
 
-Enemy::Enemy()
+Enemy::Enemy() : Component(COMPONENT_TYPE::ENEMY)
 {
 
 }
@@ -35,15 +36,6 @@ void Enemy::Update()
 	//pos += GetTransform()->GetRight() * _speed * DELTA_TIME;
 
 
-	if (INPUT->GetButtonDown(KEY_TYPE::KEY_3))
-	{
-		int32 count = GetAnimator()->GetAnimCount();
-		int32 currentIndex = GetAnimator()->GetCurrentClipIndex();
-
-		int32 index = (currentIndex + 1) % count;
-		GetAnimator()->Play(index);
-	}
-
 	//GetTransform()->SetLocalPosition(pos);
 
 	SetEnemyPosition(pos);
@@ -52,12 +44,18 @@ void Enemy::Update()
 	Time += DELTA_TIME;
 	if (Time > 0.1)
 	{
-		AstarCall();
+		//AstarCall();
 		Time = 0;
 	}
-	AstarMove(firstx, firsty, secondx, secondy);
+	//AstarMove(firstx, firsty, secondx, secondy);
 
 	Animation();
+
+	if (_hp <= 0)
+	{
+		AnimationCount();
+	}
+
 }
 
 
@@ -264,8 +262,34 @@ void Enemy::Animation()
 	}
 }
 
+void Enemy::AnimationCount()
+{
+	if (AnimeCount == 1)
+	{
+		int32 count = GetAnimator()->GetAnimCount();
+		int32 currentIndex = GetAnimator()->GetCurrentClipIndex();
+
+		int32 index = (currentIndex + 1) % count;
+		GetAnimator()->Play(index);
+		std::cout << index << std::endl;
+		AnimeCount++;
+	}
+
+	else if (AnimeCount == 2)
+	{
+
+	}
+}
+
+
+
 int(*Enemy::CreateMap())[Height]
 {
 	return tileMap;
+}
+
+void Enemy::LostHp()
+{
+	_hp -= 30;
 }
 

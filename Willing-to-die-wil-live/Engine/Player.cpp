@@ -109,7 +109,7 @@ void Player::Update()
 				bullet->SetCheckFrustum(false);
 				shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
 
-				bullet->GetTransform()->SetLocalPosition(cameraPosForBullet);
+				bullet->GetTransform()->SetLocalPosition(GetTransform()->GetLocalPosition());
 				bullet->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 				bullet->GetTransform()->LookAt(cameraLookForBullet);
 				Vec3 rot = bullet->GetTransform()->GetLocalRotation();

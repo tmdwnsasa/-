@@ -13,6 +13,7 @@
 #include "Material.h"
 #include "Astar.h"
 #include "TileMap.h"
+#include "Enemy.h"
 #include "Player.h"
 #include "Input.h"
 #include "BoxCollider.h"
@@ -23,7 +24,7 @@
 #include <iostream>
 
 //cout 출력용 코드
-//#pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console")
+#pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console")
 
 void Scene::Awake()
 {
@@ -213,8 +214,14 @@ void Scene::LateUpdate()
 				{
 					if (Object->GetBoxCollider()->Intersects(gameObject->GetBoxCollider()->GetColliderBox()) == true)
 					{
-						//적 공격받는 함수
-						_trashBin.push_back(gameObject);
+						Object->GetEnemy()->LostHp();
+						EnemyHp = Object->GetEnemy()->CurHp();
+						if (EnemyHp <= 0)
+						{
+							//Object->GetEnemy()->AnimationCount();
+							_trashBin.push_back(gameObject);
+							//_trashBin.push_back(Object);
+						}
 					}
 				}
 			}

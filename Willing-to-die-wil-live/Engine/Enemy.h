@@ -158,7 +158,7 @@ struct Cell {
 	double f, g, h;
 };
 
-class Enemy : public MonoBehaviour
+class Enemy : public Component
 {
 public:
 	Enemy();
@@ -205,6 +205,10 @@ public:
 	int(*CreateMap())[Height];
 	void SetWallPos();
 	void Animation();
+	void AnimationCount();
+	void LostHp();
+	int CurHp() { return _hp; };
+	
 
 	Vec3 EnemyPos;
 
@@ -224,6 +228,7 @@ public:
 	int AnimeCount = 0;
 	int EnemyCount = 0;
  
+	int _hp = 100;
 private:
 	float		_speed = 150.f;
 };
