@@ -435,12 +435,17 @@ void Scene::SetCameraPosToPlayer()	//플레이어와 카메라에게 서로의 위치를 준다.
 
 
 	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
-	{		if (gameObject->GetName() == L"Main_Camera")
+	{
+		if (gameObject->GetName() == L"Main_Camera")
 		{
 			gameObject->GetTransform()->SetLocalPosition(playerPos);
 			cameraPos = gameObject->GetTransform()->GetLocalPosition();
 			cameraLook = gameObject->GetTransform()->GetLook();
 			cameraTrasform = gameObject->GetTransform();
+		}
+		if (gameObject->GetName() == L"Light1")
+		{
+			gameObject->GetTransform()->SetLocalPosition(Vec3(playerPos.x-800.f, 1500.f, playerPos.z-500.f));
 		}
 	}
 

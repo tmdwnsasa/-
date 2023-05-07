@@ -68,6 +68,7 @@ void ConstantBuffer::CreateView()
 		
 		DEVICE->CreateConstantBufferView(&cbvDesc, cbvHandle);
 	}
+
 }
 
 void ConstantBuffer::Clear()

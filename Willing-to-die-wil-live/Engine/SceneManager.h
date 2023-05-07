@@ -29,14 +29,15 @@ public:
 
 public:
 	shared_ptr<Scene> GetActiveScene() { return _activeScene; }
-
 private:
 	shared_ptr<Scene> LoadTestScene();
+	void MakeWall(bool horizontal, int value, float xchange, float ychange, shared_ptr<Scene>& scene);
 
 private:
 	shared_ptr<Scene> _activeScene;
 
 	array<wstring, MAX_LAYER> _layerNames;
 	map<wstring, uint8> _layerIndex;
+
 };
 

@@ -34,11 +34,6 @@ void Animator::FinalUpdate()
 	_frameRatio = static_cast<float>(_frame - _frame);
 }
 
-void Animator::SetAnimClip(const vector<AnimClipInfo>* animClips)
-{
-	_animClips = animClips;
-}
-
 void Animator::PushData()
 {
 	uint32 boneCount = static_cast<uint32>(_bones->size());

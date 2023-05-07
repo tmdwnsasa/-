@@ -48,7 +48,7 @@ void Enemy::Update()
 
 	SetEnemyPosition(pos);
 
-	SetPlayerPos();
+	//SetPlayerPos();
 	Time += DELTA_TIME;
 	if (Time > 0.1)
 	{

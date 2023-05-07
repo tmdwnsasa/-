@@ -14,7 +14,7 @@ public:
 
 public:
 	void SetBones(const vector<BoneInfo>* bones) { _bones = bones; }
-	void SetAnimClip(const vector<AnimClipInfo>* animClips);
+	void SetAnimClip(const vector<AnimClipInfo>* animClips) { _animClips = animClips; };
 	void PushData();
 
 	int32 GetAnimCount() { return static_cast<uint32>(_animClips->size()); }

@@ -47,7 +47,7 @@ public:
 
 private:
 	void PushLightData();
-	int  DistanceWall = 40;
+	int  DistanceWall = 70;
 public:
 	void AddGameObject(shared_ptr<GameObject> gameObject);
 	void RemoveGameObject(shared_ptr<GameObject> gameObject);
