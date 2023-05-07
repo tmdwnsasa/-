@@ -25,7 +25,8 @@ public:
 	const double py = std::acos(-1);
 	const float baseX = 3000;
 	const float baseZ = -150;
-	const float scale = 300;
+	const float posScale = 300;
+	const float scale = 349;
 
 public:
 	shared_ptr<Scene> GetActiveScene() { return _activeScene; }

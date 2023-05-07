@@ -14,10 +14,12 @@ public:
 
 	void SetExtents(Vec3 extents) { _extents = extents; }
 	void SetCenter(Vec3 center) { _center = center; }
+	void SetOnOff(bool onoff) { _onOff = onoff; };
 
 	BoundingBox GetColliderBox() { return _boundingBox; };
 private:
 	// Local ±‚¡ÿ
+	bool		_onOff = true;
 	const double py = std::acos(-1);
 	Vec3		_center = Vec3(0.f, 0.f, 0.f);
 	Vec3		_extents = Vec3(1.f, 1.f, 1.f);

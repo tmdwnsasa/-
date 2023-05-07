@@ -237,7 +237,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		obj->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
 		obj->AddComponent(make_shared<Transform>());
 		obj->GetTransform()->SetLocalScale(Vec3(100.f, 100.f, 100.f));
-		obj->GetTransform()->SetLocalPosition(Vec3(-350.f + (i * 110), 250.f, 500.f));
+		obj->GetTransform()->SetLocalPosition(Vec3(-350.f + (i * 110), 550.f, 500.f));
 		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 		{
 			shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
@@ -422,7 +422,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 	{
 		shared_ptr<MeshData> ZombieMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\tes.fbx");
 
-		for (int i = 0; i < 3; i++)
+		for (int i = 0; i < 1; i++)
 		{
 
 			vector<shared_ptr<GameObject>> gameObjects = ZombieMesh->Instantiate();
@@ -431,18 +431,72 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			{
 
 				shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
-				boxCollider->SetCenter(Vec3(0.f, 0.f, 0.f));
-				boxCollider->SetExtents(Vec3(10.f, 40.f, 10.f));
+				boxCollider->SetCenter(Vec3(0.f, 150.f, 0.f));
+				boxCollider->SetExtents(Vec3(200.f, 300.f, 200.f));
 
 				gameObject->SetName(L"Enemy");
 				gameObject->SetCheckFrustum(false);
 				gameObject->SetStatic(false);
-				gameObject->GetTransform()->SetLocalPosition(Vec3(1200.f *(i+1), -100.f, -900.f));
+				gameObject->GetTransform()->SetLocalPosition(Vec3(1450.f *(i+1), -100.f, -900.f));
 				gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 				gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
 				gameObject->AddComponent(boxCollider);
 				gameObject->AddComponent(make_shared<Enemy>());
-				gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 1);
+				gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
+				scene->AddGameObject(gameObject);
+			}
+		}
+
+		shared_ptr<MeshData> TZombieMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\test.fbx");
+
+		for (int i = 0; i < 1; i++)
+		{
+
+			vector<shared_ptr<GameObject>> gameObjects = TZombieMesh->Instantiate();
+
+			for (auto& gameObject : gameObjects)
+			{
+
+				shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
+				boxCollider->SetCenter(Vec3(0.f, 150.f, 0.f));
+				boxCollider->SetExtents(Vec3(200.f, 300.f, 200.f));
+
+				gameObject->SetName(L"Enemy");
+				gameObject->SetCheckFrustum(false);
+				gameObject->SetStatic(false);
+				gameObject->GetTransform()->SetLocalPosition(Vec3(6250.f * (i + 1), -100.f, -3000.f));
+				gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+				gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
+				gameObject->AddComponent(boxCollider);
+				gameObject->AddComponent(make_shared<Enemy>());
+				gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
+				scene->AddGameObject(gameObject);
+			}
+		}
+
+		shared_ptr<MeshData> TTZombieMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\testt.fbx");
+
+		for (int i = 0; i < 1; i++)
+		{
+
+			vector<shared_ptr<GameObject>> gameObjects = TTZombieMesh->Instantiate();
+
+			for (auto& gameObject : gameObjects)
+			{
+
+				shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
+				boxCollider->SetCenter(Vec3(0.f, 150.f, 0.f));
+				boxCollider->SetExtents(Vec3(200.f, 300.f, 200.f));
+
+				gameObject->SetName(L"Enemy");
+				gameObject->SetCheckFrustum(false);
+				gameObject->SetStatic(false);
+				gameObject->GetTransform()->SetLocalPosition(Vec3(6250.f * (i + 1), -100.f, -6450.f));
+				gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+				gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
+				gameObject->AddComponent(boxCollider);
+				gameObject->AddComponent(make_shared<Enemy>());
+				gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
 				scene->AddGameObject(gameObject);
 			}
 		}
@@ -584,12 +638,12 @@ void SceneManager::MakeWall(bool horizontal, int value, float xchange, float ych
 		obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 50.f));
 		if (horizontal == false)	//세로
 		{
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * xchange, 0.f, baseZ + scale * (ychange + 0.5f + i)));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX + posScale * xchange, 0.f, baseZ + posScale * (ychange + 0.5f + i)));
 			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
 		}
 		else						//가로
 		{
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * (xchange + 0.5f + i), 0.f, baseZ + scale * (ychange)));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX + posScale * (xchange + 0.5f + i), 0.f, baseZ + posScale * (ychange)));
 		}
 		obj->SetCheckFrustum(false);
 		obj->SetStatic(false);

@@ -113,8 +113,7 @@ void Player::Update()
 				bullet->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 				bullet->GetTransform()->LookAt(cameraLookForBullet);
 				Vec3 rot = bullet->GetTransform()->GetLocalRotation();
-				float a = (((float)(RandomInt() - 50.f)) / 100000.f);
-				bullet->GetTransform()->SetLocalRotation(Vec3(rot.x + ((float)(RandomInt() - 50) / 1000), rot.y + ((float)(RandomInt() - 50) / 1000), rot.z + ((float)(RandomInt() - 50) / 1000)));
+				bullet->GetTransform()->SetLocalRotation(Vec3(rot.x + ((float)(RandomInt() - 50) / 1000), rot.y + ((float)(RandomInt() - 50) / 1000), rot.z));
 				bullet->SetStatic(false);
 
 				shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
@@ -227,6 +226,8 @@ void Player::ChangeWeapon(PLAYER_WEAPON weapon)
 				gameObject->GetTransform()->SetLocalPosition(cameraPosForBullet);
 				gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 				gameObject->GetTransform()->LookAt(cameraLookForBullet);
+				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Gun");
+				gameObject->GetMeshRenderer()->GetMaterial()->SetShader(shader);
 				gameObject->AddComponent(make_shared<Gun>());
 				gunObject.push_back(gameObject);
 			}
@@ -258,6 +259,8 @@ void Player::ChangeWeapon(PLAYER_WEAPON weapon)
 				gameObject->GetTransform()->SetLocalPosition(cameraPosForBullet);
 				gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 				gameObject->GetTransform()->LookAt(cameraLookForBullet);
+				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Gun");
+				gameObject->GetMeshRenderer()->GetMaterial()->SetShader(shader);
 				gameObject->AddComponent(make_shared<Gun>());
 				gunObject.push_back(gameObject);
 			}
@@ -288,10 +291,11 @@ void Player::ChangeWeapon(PLAYER_WEAPON weapon)
 				gameObject->GetTransform()->SetLocalPosition(cameraPosForBullet);
 				gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 				gameObject->GetTransform()->LookAt(cameraLookForBullet);
+				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Gun");
+				gameObject->GetMeshRenderer()->GetMaterial()->SetShader(shader);
 				gameObject->AddComponent(make_shared<Gun>());
 				gunObject.push_back(gameObject);
 			}
-
 		}
 #pragma endregion
 	}
@@ -318,6 +322,8 @@ void Player::ChangeWeapon(PLAYER_WEAPON weapon)
 				gameObject->GetTransform()->SetLocalPosition(cameraPosForBullet);
 				gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 				gameObject->GetTransform()->LookAt(cameraLookForBullet);
+				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Gun");
+				gameObject->GetMeshRenderer()->GetMaterial()->SetShader(shader);
 				gameObject->AddComponent(make_shared<Gun>());
 				gunObject.push_back(gameObject);
 			}
