@@ -24,7 +24,7 @@
 #include <iostream>
 
 //cout 출력용 코드
-#pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console")
+//#pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console")
 
 void Scene::Awake()
 {
@@ -219,7 +219,7 @@ void Scene::LateUpdate()
 						EnemyHp = Object->GetEnemy()->CurHp();
 						_trashBin.push_back(gameObject);
 
-						cout << EnemyHp << endl;
+						//cout << EnemyHp << endl;
 						if (EnemyHp <= 0)
 						{
 							Object->GetBoxCollider()->SetOnOff(false);

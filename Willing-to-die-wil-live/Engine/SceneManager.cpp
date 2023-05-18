@@ -24,6 +24,7 @@
 #include "Enemy.h"
 #include "Shop.h"
 #include "Gun.h"
+#include "FBXLoader.h"
 
 #include <iostream>
 
@@ -136,7 +137,11 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 	SetLayerName(0, L"Default");
 	SetLayerName(1, L"UI");
 #pragma endregion
-
+	//shared_ptr<MeshData> ZombieMesh2 = make_shared<MeshData>();
+	//ZombieMesh2->Save(L"..\\Resources\\FBX\\tes.fbx");
+	shared_ptr<MeshData> ZombieMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\tes.bin");
+	shared_ptr<MeshData> TZombieMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\test.bin");
+	shared_ptr<MeshData> TTZombieMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\testt.bin");
 #pragma region ComputeShader
 	{
 		shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"ComputeShader");
@@ -260,7 +265,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			meshRenderer->SetMaterial(material);
 		}
 		obj->AddComponent(meshRenderer);
-		scene->AddGameObject(obj);
+		//scene->AddGameObject(obj);
 	}
 #pragma endregion
 
@@ -420,14 +425,15 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 
 #pragma region Enemy
 	{
-		shared_ptr<MeshData> ZombieMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\tes.fbx");
+		//shared_ptr<MeshData> ZombieMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\tes.fbx");
+
+		vector<shared_ptr<GameObject>> gameObjects1 = ZombieMesh->Instantiate();
+		vector<shared_ptr<GameObject>> gameObjects2 = TZombieMesh->Instantiate();
+		vector<shared_ptr<GameObject>> gameObjects3 = TTZombieMesh->Instantiate();
 
 		for (int i = 0; i < 1; i++)
 		{
-
-			vector<shared_ptr<GameObject>> gameObjects = ZombieMesh->Instantiate();
-
-			for (auto& gameObject : gameObjects)
+			for (auto& gameObject : gameObjects1)
 			{
 
 				shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
@@ -442,19 +448,13 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
 				gameObject->AddComponent(boxCollider);
 				gameObject->AddComponent(make_shared<Enemy>());
-				gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
 				scene->AddGameObject(gameObject);
 			}
 		}
 
-		shared_ptr<MeshData> TZombieMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\test.fbx");
-
 		for (int i = 0; i < 1; i++)
 		{
-
-			vector<shared_ptr<GameObject>> gameObjects = TZombieMesh->Instantiate();
-
-			for (auto& gameObject : gameObjects)
+			for (auto& gameObject : gameObjects2)
 			{
 
 				shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
@@ -469,26 +469,21 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
 				gameObject->AddComponent(boxCollider);
 				gameObject->AddComponent(make_shared<Enemy>());
-				gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
 				scene->AddGameObject(gameObject);
-			}
+			}	
 		}
 
-		shared_ptr<MeshData> TTZombieMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\testt.fbx");
-
+		
 		for (int i = 0; i < 1; i++)
 		{
-
-			vector<shared_ptr<GameObject>> gameObjects = TTZombieMesh->Instantiate();
-
-			for (auto& gameObject : gameObjects)
+			for (auto& gameObject : gameObjects3)
 			{
 
 				shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
 				boxCollider->SetCenter(Vec3(0.f, 150.f, 0.f));
 				boxCollider->SetExtents(Vec3(200.f, 300.f, 200.f));
 
-				gameObject->SetName(L"Enemy");
+				gameObject->SetName(L"Enemy"); 
 				gameObject->SetCheckFrustum(false);
 				gameObject->SetStatic(false);
 				gameObject->GetTransform()->SetLocalPosition(Vec3(6250.f * (i + 1), -100.f, -6450.f));
@@ -496,7 +491,6 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
 				gameObject->AddComponent(boxCollider);
 				gameObject->AddComponent(make_shared<Enemy>());
-				gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 0);
 				scene->AddGameObject(gameObject);
 			}
 		}

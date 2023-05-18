@@ -68,13 +68,14 @@ private:
 	bool			_back = false;
 	bool			_right = false;
 	bool			_left = false;
+	bool			_jump = false;
 
 	// Shop
 	bool			_rotateLock = false;
 	bool			_shopOpened = false;
 	
 	// Status
-	float			_speed = 10000.0f;
+	float			_speed = 5000.0f;
 	POINT			_mousePos = {};
 	POINT			_oldMousePos = {};
 	float			_cxdelta = 0.f;

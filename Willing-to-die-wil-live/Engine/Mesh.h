@@ -1,5 +1,6 @@
 #pragma once
 #include "Object.h"
+#include "FBXLoader.h"
 
 class Material;
 class StructuredBuffer;
@@ -47,11 +48,15 @@ public:
 	void Render(shared_ptr<class InstancingBuffer>& buffer, uint32 idx = 0);
 
 	static shared_ptr<Mesh> CreateFromFBX(const struct FbxMeshInfo* meshInfo, class FBXLoader& loader);
-
+	//For Load
+	static shared_ptr<Mesh> CreateFromFBX(const FbxMeshInfo* meshInfo, vector<shared_ptr<FbxAnimClipInfo>>& animClip, vector<shared_ptr<FbxBoneInfo>>& bone);
+	
 private:
 	void CreateVertexBuffer(const vector<Vertex>& buffer);
 	void CreateIndexBuffer(const vector<uint32>& buffer);
 	void CreateBonesAndAnimations(class FBXLoader& loader);
+	//For Load
+	void CreateBonesAndAnimations(vector<shared_ptr<FbxAnimClipInfo>>& animClip, vector<shared_ptr<FbxBoneInfo>>& bone);
 	Matrix GetMatrix(FbxAMatrix& matrix);
 
 public:

@@ -44,7 +44,10 @@ void Enemy::Update()
 	Time += DELTA_TIME;
 	if (Time > 0.1)
 	{
-		AstarCall();
+		if (_hp > 0)
+		{
+			AstarCall();
+		}
 		Time = 0;
 	}
 	

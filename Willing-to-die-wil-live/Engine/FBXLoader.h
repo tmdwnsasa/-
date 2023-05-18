@@ -86,6 +86,7 @@ public:
 public:
 	int32 GetMeshCount() { return static_cast<int32>(_meshes.size()); }
 	const FbxMeshInfo& GetMesh(int32 idx) { return _meshes[idx]; }
+	//void SetMesh(vector<FbxMeshInfo> mesh) { _meshes = mesh; alreadySet = true; };
 	vector<shared_ptr<FbxBoneInfo>>& GetBones() { return _bones; }
 	vector<shared_ptr<FbxAnimClipInfo>>& GetAnimClip() { return _animClips; }
 private:
@@ -120,10 +121,15 @@ private:
 	void FillBoneWeight(FbxMesh* mesh, FbxMeshInfo* meshInfo);
 
 private:
-	FbxManager* _manager = nullptr;
-	FbxScene* _scene = nullptr;
-	FbxImporter* _importer = nullptr;
+	FbxManager*		_manager = nullptr;
+	FbxScene*		_scene = nullptr;
+	FbxImporter*	_importer = nullptr;
 	wstring			_resourceDirectory;
+
+	HANDLE			file;
+	LPCWSTR			filename;
+
+	//bool			alreadySet = false;
 
 	vector<FbxMeshInfo>					_meshes;
 	vector<shared_ptr<FbxBoneInfo>>		_bones;

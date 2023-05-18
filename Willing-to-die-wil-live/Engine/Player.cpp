@@ -52,7 +52,13 @@ void Player::Update()
 
 	if (INPUT->GetButton(KEY_TYPE::D))
 		pos += GetTransform()->GetRight() * _speed * DELTA_TIME;
-
+	//점프 구현 필요
+	if(INPUT->GetButton(KEY_TYPE::Space ))
+		if (!_jump)
+		{
+			pos += GetTransform()->GetUp() * _speed * DELTA_TIME;
+			_jump = true;
+		}
 	if (INPUT->GetButtonDown(KEY_TYPE::R))
 	{
 		if(_reloading == false)
@@ -189,6 +195,12 @@ void Player::Update()
 	}
 
 	GetTransform()->SetLocalPosition(pos);
+	if (_jump)
+	{
+		pos -= GetTransform()->GetUp() * _speed * DELTA_TIME;
+		_jump = false;
+	}
+	
 }
 
 void Player::PlayerRotate()

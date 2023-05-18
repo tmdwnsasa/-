@@ -50,6 +50,7 @@ private:
 private:
 	using KeyObjMap = std::map<wstring/*key*/, shared_ptr<Object>>;
 	array<KeyObjMap, OBJECT_TYPE_COUNT> _resources;
+	int keynum = 0;
 };
 
 template<typename T>
