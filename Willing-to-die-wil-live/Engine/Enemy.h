@@ -209,6 +209,7 @@ public:
 	void LostHp();
 	int CurHp() { return _hp; };
 	
+	void Respone();
 
 	Vec3 EnemyPos;
 
@@ -229,6 +230,15 @@ public:
 	int EnemyCount = 0;
  
 	int _hp = 100;
+
+	int CheckPoint = 0;
+
+	Vec3 ResponeArea1 = Vec3(3600, -100, -3600);
+	Vec3 ResponeArea2 = Vec3(0, -100, 0);
+	Vec3 ResponeArea3 = Vec3(0, -100, 0);
+	Vec3 ResponeArea4 = Vec3(3300, -100,-1200);
+
+	bool ResponeCheck = false;
 private:
 	float		_speed = 150.f;
 };

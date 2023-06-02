@@ -25,7 +25,7 @@ void Gun::Update()
 		Pos += Up * -130;
 		Pos += Look * 100;
 		GetTransform()->SetLocalPosition(Pos);
-		GetTransform()->SetLocalScale(Vec3(10.f, 10.f, 10.f));
+		GetTransform()->SetLocalScale(Vec3(30.f, 30.f, 30.f));
 		GetTransform()->LookAt(Vec3(Look));
 	}
 }
