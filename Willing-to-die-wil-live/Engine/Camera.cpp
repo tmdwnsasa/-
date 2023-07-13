@@ -147,6 +147,6 @@ void Camera::Render_Shadow()
 
 	for (auto& gameObject : _vecShadow)
 	{
-		//gameObject->GetMeshRenderer()->RenderShadow();
+		gameObject->GetMeshRenderer()->RenderShadow();
 	}
 }

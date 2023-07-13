@@ -33,6 +33,7 @@ enum class KEY_TYPE
 
 	LBUTTON = VK_LBUTTON,
 	RBUTTON = VK_RBUTTON,
+	Space = VK_SPACE,
 
 	ESC = VK_ESCAPE,
 };

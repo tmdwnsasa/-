@@ -27,7 +27,7 @@
 #include <iostream>
 
 //cout 출력용 코드
-#pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console")
+//#pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console")
 
 void Scene::Awake()
 {
@@ -173,7 +173,7 @@ void Scene::Update()
 	SetPlayerPosToEnemy();
 	
 	////복수 생성
-	map<wstring, pair<uint32, vector<shared_ptr<GameObject>>>> name;
+	/*map<wstring, pair<uint32, vector<shared_ptr<GameObject>>>> name;
 	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
 	{
 		name[gameObject->GetName()].first++;
@@ -200,6 +200,7 @@ void Scene::Update()
 				}
 			}
 		}
+<<<<<<< HEAD
 	}
 
 	// Wave
@@ -207,6 +208,9 @@ void Scene::Update()
 	//EnemyCount가 0이 되면 Wave 체인지
 	CheckWave();
 
+=======
+	}*/
+>>>>>>> 36043eb59c0512caba7c30a8e4518f5d80178b63
 	CollisionPlayerToWall();
 
 	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
@@ -231,13 +235,22 @@ void Scene::LateUpdate()
 				{
 					if (Object->GetBoxCollider()->Intersects(gameObject->GetBoxCollider()->GetColliderBox()) == true)
 					{
+						gameObject->GetBullet()->SetState(BULLET_STATE::DEAD);
 						Object->GetEnemy()->LostHp();
 						EnemyHp = Object->GetEnemy()->CurHp();
+						_trashBin.push_back(gameObject);
+
+						//cout << EnemyHp << endl;
 						if (EnemyHp <= 0)
 						{
+							Object->GetBoxCollider()->SetOnOff(false);
 							//Object->GetEnemy()->AnimationCount();
+<<<<<<< HEAD
 							DeathCount++;
 							_trashBin.push_back(gameObject);
+=======
+							
+>>>>>>> 36043eb59c0512caba7c30a8e4518f5d80178b63
 							//_trashBin.push_back(Object);
 						}
 					}
@@ -465,12 +478,17 @@ void Scene::SetCameraPosToPlayer()	//플레이어와 카메라에게 서로의 위치를 준다.
 
 
 	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
-	{		if (gameObject->GetName() == L"Main_Camera")
+	{
+		if (gameObject->GetName() == L"Main_Camera")
 		{
 			gameObject->GetTransform()->SetLocalPosition(playerPos);
 			cameraPos = gameObject->GetTransform()->GetLocalPosition();
 			cameraLook = gameObject->GetTransform()->GetLook();
 			cameraTrasform = gameObject->GetTransform();
+		}
+		if (gameObject->GetName() == L"Light1")
+		{
+			gameObject->GetTransform()->SetLocalPosition(Vec3(playerPos.x-800.f, 2000.f, playerPos.z-500.f));
 		}
 	}
 
@@ -479,7 +497,7 @@ void Scene::SetCameraPosToPlayer()	//플레이어와 카메라에게 서로의 위치를 준다.
 	{
 		if (gameObject->GetName() == L"Player")
 		{
-			gameObject->GetPlayer()->SetBulletPos(cameraPos);
+			gameObject->GetPlayer()->SetBulletPos(Vec3(cameraPos.x, cameraPos.y, cameraPos.z-20.f));
 			gameObject->GetPlayer()->SetBulletLook(cameraLook);
 		}
 		if (gameObject->GetName() == L"Gun")
@@ -619,7 +637,7 @@ void Scene::CollisionPlayerToWall()
 				gameObject->GetPlayer()->collisionFront(false);
 
 			if (minDistanceB < DistanceWall && 0 < DistanceWall)
-				gameObject->GetPlayer()->collisionBack(true);
+			gameObject->GetPlayer()->collisionBack(true);
 			else
 				gameObject->GetPlayer()->collisionBack(false);
 

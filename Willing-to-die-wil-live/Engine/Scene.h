@@ -51,7 +51,7 @@ public:
 
 private:
 	void PushLightData();
-	int  DistanceWall = 40;
+	int  DistanceWall = 70;
 	int  EnemyHp = 0;
 public:
 	void AddGameObject(shared_ptr<GameObject> gameObject);

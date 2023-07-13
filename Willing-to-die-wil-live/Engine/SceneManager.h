@@ -25,18 +25,20 @@ public:
 	const double py = std::acos(-1);
 	const float baseX = 3000;
 	const float baseZ = -150;
-	const float scale = 300;
+	const float posScale = 300;
+	const float scale = 349;
 
 public:
 	shared_ptr<Scene> GetActiveScene() { return _activeScene; }
-
 private:
 	shared_ptr<Scene> LoadTestScene();
+	void MakeWall(bool horizontal, int value, float xchange, float ychange, shared_ptr<Scene>& scene);
 
 private:
 	shared_ptr<Scene> _activeScene;
 
 	array<wstring, MAX_LAYER> _layerNames;
 	map<wstring, uint8> _layerIndex;
+
 };
 

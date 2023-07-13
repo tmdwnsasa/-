@@ -24,6 +24,7 @@
 #include "Enemy.h"
 #include "Shop.h"
 #include "Gun.h"
+#include "FBXLoader.h"
 
 #include <iostream>
 
@@ -136,7 +137,11 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 	SetLayerName(0, L"Default");
 	SetLayerName(1, L"UI");
 #pragma endregion
-
+	//shared_ptr<MeshData> ZombieMesh2 = make_shared<MeshData>();
+	//ZombieMesh2->Save(L"..\\Resources\\FBX\\tes.fbx");
+	shared_ptr<MeshData> ZombieMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\tes.bin");
+	shared_ptr<MeshData> TZombieMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\test.bin");
+	shared_ptr<MeshData> TTZombieMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\testt.bin");
 #pragma region ComputeShader
 	{
 		shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"ComputeShader");
@@ -212,46 +217,16 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 	}
 #pragma endregion
 
-#pragma region Object
-		//{
-		//	shared_ptr<GameObject> obj = make_shared<GameObject>();
-		//	obj->SetName(L"OBJ");
-		//	obj->AddComponent(make_shared<Transform>());
-		//	obj->GetTransform()->SetLocalScale(Vec3(100.f, 100.f, 100.f));
-		//	obj->GetTransform()->SetLocalPosition(Vec3(100.f, 100.f, 500.f));
-		//	obj->SetCheckFrustum(false);
-
-		//	shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-		//	{
-		//		shared_ptr<Mesh> sphereMesh = GET_SINGLE(Resources)->LoadSphereMesh();
-		//		meshRenderer->SetMesh(sphereMesh);
-
-		//		shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"GameObject");
-		//		material->SetInt(0, 1);
-		//		meshRenderer->SetMaterial(material);
-		//	}
-
-		//	shared_ptr<SphereCollider> spherecollider = make_shared<SphereCollider>();
-		//	obj->SetStatic(false);
-
-		//	spherecollider->SetRadius(0.5f);
-		//	spherecollider->SetCenter(Vec3(0.f, 0.f, 0.f));
-
-		//	obj->AddComponent(spherecollider);
-		//	obj->AddComponent(meshRenderer);
-		//	scene->AddGameObject(obj);
-		//}
-#pragma endregion
-
 #pragma region Terrain
 	{
 		shared_ptr<GameObject> obj = make_shared<GameObject>();
+		obj->SetName(L"Terrain");
 		obj->AddComponent(make_shared<Transform>());
 		obj->AddComponent(make_shared<Terrain>());
 		obj->AddComponent(make_shared<MeshRenderer>());
 
 		obj->GetTransform()->SetLocalScale(Vec3(50.f, 250.f, 50.f));
-		obj->GetTransform()->SetLocalPosition(Vec3(-2000.f, -100.f, -6000.f));
+		obj->GetTransform()->SetLocalPosition(Vec3(-4000.f, -100.f, -8000.f));
 		obj->SetStatic(true);
 		obj->GetTerrain()->Init(256, 256);
 		obj->SetCheckFrustum(false);
@@ -267,14 +242,14 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		obj->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
 		obj->AddComponent(make_shared<Transform>());
 		obj->GetTransform()->SetLocalScale(Vec3(100.f, 100.f, 100.f));
-		obj->GetTransform()->SetLocalPosition(Vec3(-350.f + (i * 120), 500.f, 500.f));
+		obj->GetTransform()->SetLocalPosition(Vec3(-350.f + (i * 110), 550.f, 500.f));
 		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 		{
 			shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
 			meshRenderer->SetMesh(mesh);
 		}
 		{
-			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture2");
 
 			shared_ptr<Texture> texture;
 			if (i < 3)
@@ -290,7 +265,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 			meshRenderer->SetMaterial(material);
 		}
 		obj->AddComponent(meshRenderer);
-		scene->AddGameObject(obj);
+		//scene->AddGameObject(obj);
 	}
 #pragma endregion
 
@@ -388,13 +363,37 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 	}
 #pragma endregion
 
+//#pragma region Object
+//	{
+//		shared_ptr<GameObject> obj = make_shared<GameObject>();
+//		obj->SetName(L"OBJ");
+//		obj->AddComponent(make_shared<Transform>());
+//		obj->GetTransform()->SetLocalScale(Vec3(200.f, 200.f, 200.f));
+//		obj->GetTransform()->SetLocalPosition(Vec3(5000.f, 100.f, -1500.f));
+//		obj->SetCheckFrustum(false);
+//		obj->SetStatic(false);
+//
+//		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+//		{
+//			shared_ptr<Mesh> sphereMesh = GET_SINGLE(Resources)->LoadSphereMesh();
+//			meshRenderer->SetMesh(sphereMesh);
+//
+//			shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"GameObject");
+//			meshRenderer->SetMaterial(material->Clone());
+//		}
+//		obj->AddComponent(meshRenderer);
+//		scene->AddGameObject(obj);
+//	}
+//#pragma endregion
+
 #pragma region Directional Light
 	{
 		shared_ptr<GameObject> light = make_shared<GameObject>();
+		light->SetName(L"Light1");
 		light->AddComponent(make_shared<Transform>());
-		light->GetTransform()->SetLocalPosition(Vec3(0, 1000, 500));
+		light->GetTransform()->SetLocalPosition(Vec3(5000.f, 1200, -1500.f));
 		light->AddComponent(make_shared<Light>());
-		light->GetLight()->SetLightDirection(Vec3(0, -1, 1.f));
+		light->GetLight()->SetLightDirection(Vec3(0.3f, -1.0f, 0.3f));
 		light->GetLight()->SetLightType(LIGHT_TYPE::DIRECTIONAL_LIGHT);
 		light->GetLight()->SetDiffuse(Vec3(1.f, 1.f, 1.f));
 		light->GetLight()->SetAmbient(Vec3(0.1f, 0.1f, 0.1f));
@@ -426,8 +425,80 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 
 #pragma region Enemy
 	{
+<<<<<<< HEAD
 
 		
+=======
+		//shared_ptr<MeshData> ZombieMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\tes.fbx");
+
+		vector<shared_ptr<GameObject>> gameObjects1 = ZombieMesh->Instantiate();
+		vector<shared_ptr<GameObject>> gameObjects2 = TZombieMesh->Instantiate();
+		vector<shared_ptr<GameObject>> gameObjects3 = TTZombieMesh->Instantiate();
+
+		for (int i = 0; i < 1; i++)
+		{
+			for (auto& gameObject : gameObjects1)
+			{
+
+				shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
+				boxCollider->SetCenter(Vec3(0.f, 150.f, 0.f));
+				boxCollider->SetExtents(Vec3(200.f, 300.f, 200.f));
+
+				gameObject->SetName(L"Enemy");
+				gameObject->SetCheckFrustum(false);
+				gameObject->SetStatic(false);
+				gameObject->GetTransform()->SetLocalPosition(Vec3(1450.f *(i+1), -100.f, -900.f));
+				gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+				gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
+				gameObject->AddComponent(boxCollider);
+				gameObject->AddComponent(make_shared<Enemy>());
+				scene->AddGameObject(gameObject);
+			}
+		}
+
+		for (int i = 0; i < 1; i++)
+		{
+			for (auto& gameObject : gameObjects2)
+			{
+
+				shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
+				boxCollider->SetCenter(Vec3(0.f, 150.f, 0.f));
+				boxCollider->SetExtents(Vec3(200.f, 300.f, 200.f));
+
+				gameObject->SetName(L"Enemy");
+				gameObject->SetCheckFrustum(false);
+				gameObject->SetStatic(false);
+				gameObject->GetTransform()->SetLocalPosition(Vec3(6250.f * (i + 1), -100.f, -3000.f));
+				gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+				gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
+				gameObject->AddComponent(boxCollider);
+				gameObject->AddComponent(make_shared<Enemy>());
+				scene->AddGameObject(gameObject);
+			}	
+		}
+
+		
+		for (int i = 0; i < 1; i++)
+		{
+			for (auto& gameObject : gameObjects3)
+			{
+
+				shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
+				boxCollider->SetCenter(Vec3(0.f, 150.f, 0.f));
+				boxCollider->SetExtents(Vec3(200.f, 300.f, 200.f));
+
+				gameObject->SetName(L"Enemy"); 
+				gameObject->SetCheckFrustum(false);
+				gameObject->SetStatic(false);
+				gameObject->GetTransform()->SetLocalPosition(Vec3(6250.f * (i + 1), -100.f, -6450.f));
+				gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+				gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
+				gameObject->AddComponent(boxCollider);
+				gameObject->AddComponent(make_shared<Enemy>());
+				scene->AddGameObject(gameObject);
+			}
+		}
+>>>>>>> 36043eb59c0512caba7c30a8e4518f5d80178b63
 
 		/*shared_ptr<MeshData> TestMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\sniper.fbx");
 
@@ -475,1559 +546,6 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		//	gameObject->AddComponent(make_shared<Enemy>());
 		//	scene->AddGameObject(gameObject);
 		//}
-
-
-		
-		
-	}
-	
-
-#pragma endregion
-
-
-#pragma region MapDesign
-
-	{
-		// 벽 기본스케일 300,300,10
-		//////////////////////////////////////////////////////////////////////24.12 ~ 24.19
-		for (int i = 0; i < 8; i++)
-		{
-			shared_ptr<GameObject> obj = make_shared<GameObject>();
-			obj->AddComponent(make_shared<Transform>());
-			obj->SetName(L"Wall");
-			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * (3.5 - i), 0.f, baseZ));
-			obj->SetCheckFrustum(false);
-			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-			{
-				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-				meshRenderer->SetMesh(mesh);
-			}
-			{
-				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
-				material->SetInt(0, 1);
-				meshRenderer->SetMaterial(material);
-			}
-			shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
-			boxCollider->SetCenter(Vec3(0.f, 0.f, 0.f));
-			boxCollider->SetExtents(Vec3(1.f, 1.f, 1.f));
-			obj->AddComponent(boxCollider);
-
-			obj->AddComponent(meshRenderer);
-			scene->AddGameObject(obj);
-
-		}
-		//////////////////////////////////////////////////////////////////////24.12 23.12 ,//24.19 23.19
-		for (int i = 0; i < 2; i++)
-		{
-			shared_ptr<GameObject> obj = make_shared<GameObject>();
-			obj->AddComponent(make_shared<Transform>());
-			obj->SetName(L"Wall");
-			obj->SetCheckFrustum(false);
-			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 1.f));
-			obj->GetTransform()->SetLocalPosition(Vec3((baseX - scale * 4), 0.f, baseZ - scale * (0.5 + i)));
-			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
-			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-			{
-				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-				meshRenderer->SetMesh(mesh);
-			}
-			{
-				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
-				material->SetInt(0, 1);
-				meshRenderer->SetMaterial(material);
-			}
-			shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
-			boxCollider->SetCenter(Vec3(0.f, 0.f, 0.f));
-			boxCollider->SetExtents(Vec3(1.f, 1.f, 1.f));
-			obj->AddComponent(boxCollider);
-
-			obj->AddComponent(meshRenderer);
-			scene->AddGameObject(obj);
-		}
-
-		for (int i = 0; i < 2; i++)
-		{
-			shared_ptr<GameObject> obj = make_shared<GameObject>();
-			obj->AddComponent(make_shared<Transform>());
-			obj->SetName(L"Wall");
-			obj->SetCheckFrustum(false);
-			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 1.f));
-			obj->GetTransform()->SetLocalPosition(Vec3((baseX + scale * 4), 0.f, baseZ - scale * (0.5 + i)));
-			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
-			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-			{
-				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-				meshRenderer->SetMesh(mesh);
-			}
-			{
-				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
-				material->SetInt(0, 1);
-				meshRenderer->SetMaterial(material);
-			}
-			shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
-			boxCollider->SetCenter(Vec3(0.f, 0.f, 0.f));
-			boxCollider->SetExtents(Vec3(1.f, 1.f, 1.f));
-			obj->AddComponent(boxCollider);
-
-			obj->AddComponent(meshRenderer);
-			scene->AddGameObject(obj);
-		}
-		//////////////////////////////////////////////////////////////////////23.7,23.11 / 23.20 , 23.24
-		for (int i = 0; i < 5; i++)
-		{
-			shared_ptr<GameObject> obj = make_shared<GameObject>();
-			obj->AddComponent(make_shared<Transform>());
-			obj->SetName(L"Wall");
-			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(((baseX - scale * (4.5 + i))), 0.f, baseZ-scale*2));
-			obj->SetCheckFrustum(false);
-			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-			{
-				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-				meshRenderer->SetMesh(mesh);
-			}
-			{
-				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
-				material->SetInt(0, 1);
-				meshRenderer->SetMaterial(material);
-			}
-			shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
-			boxCollider->SetCenter(Vec3(0.f, 0.f, 0.f));
-			boxCollider->SetExtents(Vec3(1.f, 1.f, 1.f));
-			obj->AddComponent(boxCollider);
-
-			obj->AddComponent(meshRenderer);
-			scene->AddGameObject(obj);
-		}
-
-		for (int i = 0; i < 5; i++)
-		{
-			shared_ptr<GameObject> obj = make_shared<GameObject>();
-			obj->AddComponent(make_shared<Transform>());
-			obj->SetName(L"Wall");
-			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(((baseX + scale * (4.5 + i))), 0.f, baseZ - scale * 2));
-			obj->SetCheckFrustum(false);
-			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-			{
-				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-				meshRenderer->SetMesh(mesh);
-			}
-			{
-				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
-				material->SetInt(0, 1);
-				meshRenderer->SetMaterial(material);
-			}
-			shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
-			boxCollider->SetCenter(Vec3(0.f, 0.f, 0.f));
-			boxCollider->SetExtents(Vec3(1.f, 1.f, 1.f));
-			obj->AddComponent(boxCollider);
-
-			obj->AddComponent(meshRenderer);
-			scene->AddGameObject(obj);
-		}
-		for (int i = 0; i < 2; i++)
-		{
-			//////////////////////////////////////////////////////////////////////23.7 22.6
-			shared_ptr<GameObject> obj = make_shared<GameObject>();
-			obj->AddComponent(make_shared<Transform>());
-			obj->SetName(L"Wall");
-			obj->SetCheckFrustum(false);
-			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 1.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 9, 0.f, baseZ - scale * (2.5 + i)));
-			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
-			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-
-			{
-				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-				meshRenderer->SetMesh(mesh);
-			}
-			{
-				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
-				material->SetInt(0, 1);
-				meshRenderer->SetMaterial(material);
-			}
-			shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
-			boxCollider->SetCenter(Vec3(0.f, 0.f, 0.f));
-			boxCollider->SetExtents(Vec3(1.f, 1.f, 1.f));
-			obj->AddComponent(boxCollider);
-
-			obj->AddComponent(meshRenderer);
-			scene->AddGameObject(obj);
-		}
-
-		//////////////////////////////////////////////////////////////////////21.2 ~ 21.6
-		for (int i = 0; i < 5; i++)
-		{
-			shared_ptr<GameObject> obj = make_shared<GameObject>();
-			obj->AddComponent(make_shared<Transform>());
-			obj->SetName(L"Wall");
-			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * (9.5 + i), 0.f, baseZ - scale * 4));
-			obj->SetCheckFrustum(false);
-			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-			{
-				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-				meshRenderer->SetMesh(mesh);
-			}
-			{
-				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
-				material->SetInt(0, 1);
-				meshRenderer->SetMaterial(material);
-			}
-			shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
-			boxCollider->SetCenter(Vec3(0.f, 0.f, 0.f));
-			boxCollider->SetExtents(Vec3(1.f, 1.f, 1.f));
-			obj->AddComponent(boxCollider);
-
-			obj->AddComponent(meshRenderer);
-			scene->AddGameObject(obj);
-		}
-		for (int i = 0; i < 2; i++)
-		{
-			//////////////////////////////////////////////////////////////////////21.2 20.2
-			shared_ptr<GameObject> obj = make_shared<GameObject>();
-			obj->AddComponent(make_shared<Transform>());
-			obj->SetName(L"Wall");
-			obj->SetCheckFrustum(false);
-			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 1.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 14, 0.f, (baseZ - scale * 4.5) - scale * 3 * i));
-			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
-			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-
-			{
-				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-				meshRenderer->SetMesh(mesh);
-			}
-			{
-				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
-				material->SetInt(0, 1);
-				meshRenderer->SetMaterial(material);
-			}
-			shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
-			boxCollider->SetCenter(Vec3(0.f, 0.f, 0.f));
-			boxCollider->SetExtents(Vec3(1.f, 1.f, 1.f));
-			obj->AddComponent(boxCollider);
-
-			obj->AddComponent(meshRenderer);
-			scene->AddGameObject(obj);
-		}
-
-		//////////////////////////////////////////////////////////////////////20.2 ~ 20.3
-		for (int i = 0; i < 2; i++)
-		{
-			shared_ptr<GameObject> obj = make_shared<GameObject>();
-			obj->AddComponent(make_shared<Transform>());
-			obj->SetName(L"Wall");
-			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 13.5, 0.f, (baseZ - scale * (7 - 2*i)))); //z -600
-			obj->SetCheckFrustum(false);
-			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-			{
-				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-				meshRenderer->SetMesh(mesh);
-			}
-			{
-				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
-				material->SetInt(0, 1);
-				meshRenderer->SetMaterial(material);
-			}
-			shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
-			boxCollider->SetCenter(Vec3(0.f, 0.f, 0.f));
-			boxCollider->SetExtents(Vec3(1.f, 1.f, 1.f));
-			obj->AddComponent(boxCollider);
-
-			obj->AddComponent(meshRenderer);
-			scene->AddGameObject(obj);
-		}
-		//////////////////////////////////////////////////////////////////////
-		for (int i = 0; i < 2; i++)
-		{
-			//19.3 18.3, 18.9 19.9
-			shared_ptr<GameObject> obj = make_shared<GameObject>();
-			obj->AddComponent(make_shared<Transform>());
-			obj->SetName(L"Wall");
-			obj->SetCheckFrustum(false);
-			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 1.f));
-			obj->GetTransform()->SetLocalPosition(Vec3((baseX + scale * 13), 0.f, baseZ - scale * (5.5 + i)));
-			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
-			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-
-			{
-				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-				meshRenderer->SetMesh(mesh);
-			}
-			{
-				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
-				material->SetInt(0, 1);
-				meshRenderer->SetMaterial(material);
-			}
-			shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
-			boxCollider->SetCenter(Vec3(0.f, 0.f, 0.f));
-			boxCollider->SetExtents(Vec3(1.f, 1.f, 1.f));
-			obj->AddComponent(boxCollider);
-
-			obj->AddComponent(meshRenderer);
-			scene->AddGameObject(obj);
-		}
-
-		for (int i = 0; i < 2; i++)
-		{
-			//19.3 18.3, 18.9 19.9
-			shared_ptr<GameObject> obj = make_shared<GameObject>();
-			obj->AddComponent(make_shared<Transform>());
-			obj->SetName(L"Wall");
-			obj->SetCheckFrustum(false);
-			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 1.f));
-			obj->GetTransform()->SetLocalPosition(Vec3((baseX + scale * 7), 0.f, baseZ - scale * (5.5 + i)));
-			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
-			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-
-			{
-				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-				meshRenderer->SetMesh(mesh);
-			}
-			{
-				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
-				material->SetInt(0, 1);
-				meshRenderer->SetMaterial(material);
-			}
-			shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
-			boxCollider->SetCenter(Vec3(0.f, 0.f, 0.f));
-			boxCollider->SetExtents(Vec3(1.f, 1.f, 1.f));
-			obj->AddComponent(boxCollider);
-
-			obj->AddComponent(meshRenderer);
-			scene->AddGameObject(obj);
-		}
-		//////////////////////////////////////////////////////////////////////
-		for (int i = 0; i < 3; i++)
-		{
-			shared_ptr<GameObject> obj = make_shared<GameObject>();
-			obj->AddComponent(make_shared<Transform>());
-			obj->SetName(L"Wall");
-			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * (11.5 + i), 0.f, baseZ - scale * 8));
-			obj->SetCheckFrustum(false);
-			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-			{
-				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-				meshRenderer->SetMesh(mesh);
-			}
-			{
-				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
-				material->SetInt(0, 1);
-				meshRenderer->SetMaterial(material);
-			}
-			shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
-			boxCollider->SetCenter(Vec3(0.f, 0.f, 0.f));
-			boxCollider->SetExtents(Vec3(1.f, 1.f, 1.f));
-			obj->AddComponent(boxCollider);
-
-			obj->AddComponent(meshRenderer);
-			scene->AddGameObject(obj);
-		}
-		//////////////////////////////////////////////////////////////////////
-		for (int i = 0; i < 10; i++)
-		{
-			//20.2 18.2
-			shared_ptr<GameObject> obj = make_shared<GameObject>();
-			obj->AddComponent(make_shared<Transform>());
-			obj->SetName(L"Wall");
-			obj->SetCheckFrustum(false);
-			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 1.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 11, 0.f, baseZ - scale * (8.5 + i)));
-			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
-			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-
-			{
-				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-				meshRenderer->SetMesh(mesh);
-			}
-			{
-				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
-				material->SetInt(0, 1);
-				meshRenderer->SetMaterial(material);
-			}
-			shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
-			boxCollider->SetCenter(Vec3(0.f, 0.f, 0.f));
-			boxCollider->SetExtents(Vec3(1.f, 1.f, 1.f));
-			obj->AddComponent(boxCollider);
-
-			obj->AddComponent(meshRenderer);
-			scene->AddGameObject(obj);
-		}
-
-		//////////////////////////////////////////////////////////////////////
-		for (int i = 0; i < 2; i++)
-		{
-			shared_ptr<GameObject> obj = make_shared<GameObject>();
-			obj->AddComponent(make_shared<Transform>());
-			obj->SetName(L"Wall");
-			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * (11.5 + i), 0.f, baseZ - scale * 18));
-			obj->SetCheckFrustum(false);
-			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-			{
-				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-				meshRenderer->SetMesh(mesh);
-			}
-			{
-				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
-				material->SetInt(0, 1);
-				meshRenderer->SetMaterial(material);
-			}
-			shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
-			boxCollider->SetCenter(Vec3(0.f, 0.f, 0.f));
-			boxCollider->SetExtents(Vec3(1.f, 1.f, 1.f));
-			obj->AddComponent(boxCollider);
-
-			obj->AddComponent(meshRenderer);
-			scene->AddGameObject(obj);
-		}
-		//????????????????????????
-		//////////////////////////////////////////////////////////////////////
-		for (int i = 0; i < 5; i++)
-		{
-			shared_ptr<GameObject> obj = make_shared<GameObject>();
-			obj->AddComponent(make_shared<Transform>());
-			obj->SetName(L"Wall");
-			obj->SetCheckFrustum(false);
-			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 1.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 13, 0.f, baseZ - scale * (18.5 + i)));
-			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
-			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-
-			{
-				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-				meshRenderer->SetMesh(mesh);
-			}
-			{
-				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
-				material->SetInt(0, 1);
-				meshRenderer->SetMaterial(material);
-			}
-			shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
-			boxCollider->SetCenter(Vec3(0.f, 0.f, 0.f));
-			boxCollider->SetExtents(Vec3(1.f, 1.f, 1.f));
-			obj->AddComponent(boxCollider);
-
-			obj->AddComponent(meshRenderer);
-			scene->AddGameObject(obj);
-		}
-		//////////////////////////////////////////////////////////////////////
-		for (int i = 0; i < 6; i++)
-		{
-			shared_ptr<GameObject> obj = make_shared<GameObject>();
-			obj->AddComponent(make_shared<Transform>());
-			obj->SetName(L"Wall");
-			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * (7.5 + i), 0.f, baseZ - scale * 23));
-			obj->SetCheckFrustum(false);
-			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-			{
-				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-				meshRenderer->SetMesh(mesh);
-			}
-			{
-				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
-				material->SetInt(0, 1);
-				meshRenderer->SetMaterial(material);
-			}
-			shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
-			boxCollider->SetCenter(Vec3(0.f, 0.f, 0.f));
-			boxCollider->SetExtents(Vec3(1.f, 1.f, 1.f));
-			obj->AddComponent(boxCollider);
-
-			obj->AddComponent(meshRenderer);
-			scene->AddGameObject(obj);
-		}
-		//////////////////////////////////////////////////////////////////////
-		for (int i = 0; i < 2; i++)
-		{
-			shared_ptr<GameObject> obj = make_shared<GameObject>();
-			obj->AddComponent(make_shared<Transform>());
-			obj->SetName(L"Wall");
-			obj->SetCheckFrustum(false);
-			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 1.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 7, 0.f, (baseZ - scale * (21.5 + i))));
-			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
-			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-
-			{
-				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-				meshRenderer->SetMesh(mesh);
-			}
-			{
-				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
-				material->SetInt(0, 1);
-				meshRenderer->SetMaterial(material);
-			}
-			shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
-			boxCollider->SetCenter(Vec3(0.f, 0.f, 0.f));
-			boxCollider->SetExtents(Vec3(1.f, 1.f, 1.f));
-			obj->AddComponent(boxCollider);
-
-			obj->AddComponent(meshRenderer);
-			scene->AddGameObject(obj);
-		}
-
-		for (int i = 0; i < 2; i++)
-		{
-			shared_ptr<GameObject> obj = make_shared<GameObject>();
-			obj->AddComponent(make_shared<Transform>());
-			obj->SetName(L"Wall");
-			obj->SetCheckFrustum(false);
-			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 1.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 7, 0.f, (baseZ - scale * (18.5 + i))));
-			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
-			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-
-			{
-				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-				meshRenderer->SetMesh(mesh);
-			}
-			{
-				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
-				material->SetInt(0, 1);
-				meshRenderer->SetMaterial(material);
-			}
-			shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
-			boxCollider->SetCenter(Vec3(0.f, 0.f, 0.f));
-			boxCollider->SetExtents(Vec3(1.f, 1.f, 1.f));
-			obj->AddComponent(boxCollider);
-
-			obj->AddComponent(meshRenderer);
-			scene->AddGameObject(obj);
-		}
-
-		//////////////////////////////////////////////////////////////////////
-		for (int i = 0; i < 3; i++)
-		{
-			shared_ptr<GameObject> obj = make_shared<GameObject>();
-			obj->AddComponent(make_shared<Transform>());
-			obj->SetName(L"Wall");
-			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * (7.5 + i), 0.f, baseZ - scale * 18));
-			obj->SetCheckFrustum(false);
-			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-			{
-				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-				meshRenderer->SetMesh(mesh);
-			}
-			{
-				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
-				material->SetInt(0, 1);
-				meshRenderer->SetMaterial(material);
-			}
-			shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
-			boxCollider->SetCenter(Vec3(0.f, 0.f, 0.f));
-			boxCollider->SetExtents(Vec3(1.f, 1.f, 1.f));
-			obj->AddComponent(boxCollider);
-
-			obj->AddComponent(meshRenderer);
-			scene->AddGameObject(obj);
-		}
-
-		//////////////////////////////////////////////////////////////////////
-		for (int i = 0; i < 4; i++)
-		{
-			shared_ptr<GameObject> obj = make_shared<GameObject>();
-			obj->AddComponent(make_shared<Transform>());
-			obj->SetName(L"Wall");
-			obj->SetCheckFrustum(false);
-			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 1.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 10, 0.f, baseZ - scale * (14.5 + i)));
-			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
-			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-
-			{
-				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-				meshRenderer->SetMesh(mesh);
-			}
-			{
-				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
-				material->SetInt(0, 1);
-				meshRenderer->SetMaterial(material);
-			}
-			shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
-			boxCollider->SetCenter(Vec3(0.f, 0.f, 0.f));
-			boxCollider->SetExtents(Vec3(1.f, 1.f, 1.f));
-			obj->AddComponent(boxCollider);
-
-			obj->AddComponent(meshRenderer);
-			scene->AddGameObject(obj);
-		}
-		//////////////////////////////////////////////////////////////////////
-		for (int i = 0; i < 7; i++)
-		{
-			shared_ptr<GameObject> obj = make_shared<GameObject>();
-			obj->AddComponent(make_shared<Transform>());
-			obj->SetName(L"Wall");
-			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * (3.5 + i), 0.f, (baseZ - scale * 14)));
-			obj->SetCheckFrustum(false);
-			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-			{
-				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-				meshRenderer->SetMesh(mesh);
-			}
-			{
-				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
-				material->SetInt(0, 1);
-				meshRenderer->SetMaterial(material);
-			}
-			shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
-			boxCollider->SetCenter(Vec3(0.f, 0.f, 0.f));
-			boxCollider->SetExtents(Vec3(1.f, 1.f, 1.f));
-			obj->AddComponent(boxCollider);
-
-			obj->AddComponent(meshRenderer);
-			scene->AddGameObject(obj);
-		}
-
-		for (int i = 0; i < 7; i++)
-		{
-			shared_ptr<GameObject> obj = make_shared<GameObject>();
-			obj->AddComponent(make_shared<Transform>());
-			obj->SetName(L"Wall");
-			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * (3.5 + i), 0.f, (baseZ - scale * 13)));
-			obj->SetCheckFrustum(false);
-			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-			{
-				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-				meshRenderer->SetMesh(mesh);
-			}
-			{
-				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
-				material->SetInt(0, 1);
-				meshRenderer->SetMaterial(material);
-			}
-			shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
-			boxCollider->SetCenter(Vec3(0.f, 0.f, 0.f));
-			boxCollider->SetExtents(Vec3(1.f, 1.f, 1.f));
-			obj->AddComponent(boxCollider);
-
-			obj->AddComponent(meshRenderer);
-			scene->AddGameObject(obj);
-		}
-
-		//////////////////////////////////////////////////////////////////////
-		for (int i = 0; i < 5; i++)
-		{
-			shared_ptr<GameObject> obj = make_shared<GameObject>();
-			obj->AddComponent(make_shared<Transform>());
-			obj->SetName(L"Wall");
-			obj->SetCheckFrustum(false);
-			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 1.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 10, 0.f, baseZ - scale * (8.5 + i)));
-			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
-			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-
-			{
-				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-				meshRenderer->SetMesh(mesh);
-			}
-			{
-				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
-				material->SetInt(0, 1);
-				meshRenderer->SetMaterial(material);
-			}
-			shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
-			boxCollider->SetCenter(Vec3(0.f, 0.f, 0.f));
-			boxCollider->SetExtents(Vec3(1.f, 1.f, 1.f));
-			obj->AddComponent(boxCollider);
-
-			obj->AddComponent(meshRenderer);
-			scene->AddGameObject(obj);
-		}
-		//////////////////////////////////////////////////////////////
-		for (int i = 0; i < 4; i++)
-		{
-			shared_ptr<GameObject> obj = make_shared<GameObject>();
-			obj->AddComponent(make_shared<Transform>());
-			obj->SetName(L"Wall");
-			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * (6.5 + i), 0.f, baseZ - scale * 8));
-			obj->SetCheckFrustum(false);
-			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-			{
-				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-				meshRenderer->SetMesh(mesh);
-			}
-			{
-				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
-				material->SetInt(0, 1);
-				meshRenderer->SetMaterial(material);
-			}
-			shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
-			boxCollider->SetCenter(Vec3(0.f, 0.f, 0.f));
-			boxCollider->SetExtents(Vec3(1.f, 1.f, 1.f));
-			obj->AddComponent(boxCollider);
-
-			obj->AddComponent(meshRenderer);
-			scene->AddGameObject(obj);
-		}
-
-		for (int i = 0; i < 2; i++)
-		{
-			/////////////////////////////////////////
-			////////////////////////////////////////////////////////////////////
-			shared_ptr<GameObject> obj = make_shared<GameObject>();
-			obj->AddComponent(make_shared<Transform>());
-			obj->SetName(L"Wall");
-			obj->SetCheckFrustum(false);
-			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 6, 100.f, (baseZ - scale * 4.5) - (scale * 3) * i));
-			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
-			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-
-			{
-				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-				meshRenderer->SetMesh(mesh);
-			}
-			{
-				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
-				material->SetInt(0, 1);
-				meshRenderer->SetMaterial(material);
-			}
-			shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
-			boxCollider->SetCenter(Vec3(0.f, 0.f, 0.f));
-			boxCollider->SetExtents(Vec3(1.f, 1.f, 1.f));
-			obj->AddComponent(boxCollider);
-
-			obj->AddComponent(meshRenderer);
-			scene->AddGameObject(obj);
-		}
-		//////////////////////////////////////////////17.9 20.9
-		for (int i = 0; i < 2; i++)
-		{
-			shared_ptr<GameObject> obj = make_shared<GameObject>();
-			obj->AddComponent(make_shared<Transform>());
-			obj->SetName(L"Wall");
-			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 6.5, 0.f, (baseZ - scale * (7 - 2 * i))));
-			obj->SetCheckFrustum(false);
-			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-			{
-				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-				meshRenderer->SetMesh(mesh);
-			}
-			{
-				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
-				material->SetInt(0, 1);
-				meshRenderer->SetMaterial(material);
-			}
-			shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
-			boxCollider->SetCenter(Vec3(0.f, 0.f, 0.f));
-			boxCollider->SetExtents(Vec3(1.f, 1.f, 1.f));
-			obj->AddComponent(boxCollider);
-
-			obj->AddComponent(meshRenderer);
-			scene->AddGameObject(obj);
-		}
-
-		//////////////////////////////////////////////20.10,20.9
-		for (int i = 0; i < 2; i++)
-		{
-			shared_ptr<GameObject> obj = make_shared<GameObject>();
-			obj->AddComponent(make_shared<Transform>());
-			obj->SetName(L"Wall");
-			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * (6.5 + i), 0.f, baseZ - scale * 4));
-			obj->SetCheckFrustum(false);
-			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-			{
-				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-				meshRenderer->SetMesh(mesh);
-			}
-			{
-				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
-				material->SetInt(0, 1);
-				meshRenderer->SetMaterial(material);
-			}
-			shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
-			boxCollider->SetCenter(Vec3(0.f, 0.f, 0.f));
-			boxCollider->SetExtents(Vec3(1.f, 1.f, 1.f));
-			obj->AddComponent(boxCollider);
-
-			obj->AddComponent(meshRenderer);
-			scene->AddGameObject(obj);
-		}
-////////////////// 수정 가능성 
-		{
-			//////////////////////////////////////////////////////////////////////
-			shared_ptr<GameObject> obj = make_shared<GameObject>();
-			obj->AddComponent(make_shared<Transform>());
-			obj->SetName(L"Wall");
-			obj->SetCheckFrustum(false);
-			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 1.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 8, 0.f, baseZ - scale * 3.5));
-			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
-			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-
-			{
-				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-				meshRenderer->SetMesh(mesh);
-			}
-			{
-				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
-				material->SetInt(0, 1);
-				meshRenderer->SetMaterial(material);
-			}
-			shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
-			boxCollider->SetCenter(Vec3(0.f, 0.f, 0.f));
-			boxCollider->SetExtents(Vec3(1.f, 1.f, 1.f));
-			obj->AddComponent(boxCollider);
-
-			obj->AddComponent(meshRenderer);
-			scene->AddGameObject(obj);
-		}
-
-		//////////////////////////////////////////////
-		for (int i = 0; i < 8; i++)
-		{
-			shared_ptr<GameObject> obj = make_shared<GameObject>();
-			obj->AddComponent(make_shared<Transform>());
-			obj->SetName(L"Wall");
-			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * (0.5 + i), 0.f, baseZ - scale * 3));
-			obj->SetCheckFrustum(false);
-			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-			{
-				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-				meshRenderer->SetMesh(mesh);
-			}
-			{
-				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
-				material->SetInt(0, 1);
-				meshRenderer->SetMaterial(material);
-			}
-			shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
-			boxCollider->SetCenter(Vec3(0.f, 0.f, 0.f));
-			boxCollider->SetExtents(Vec3(1.f, 1.f, 1.f));
-			obj->AddComponent(boxCollider);
-
-			obj->AddComponent(meshRenderer);
-			scene->AddGameObject(obj);
-		}
-
-		//////////////////////////////////////////////
-		for (int i = 0; i < 7; i++)
-		{
-			shared_ptr<GameObject> obj = make_shared<GameObject>();
-			obj->AddComponent(make_shared<Transform>());
-			obj->SetName(L"Wall");
-			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX - scale * (1.5 + i), 0.f, baseZ - scale * 3));
-			obj->SetCheckFrustum(false);
-			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-			{
-				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-				meshRenderer->SetMesh(mesh);
-			}
-			{
-				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
-				material->SetInt(0, 1);
-				meshRenderer->SetMaterial(material);
-			}
-			shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
-			boxCollider->SetCenter(Vec3(0.f, 0.f, 0.f));
-			boxCollider->SetExtents(Vec3(1.f, 1.f, 1.f));
-			obj->AddComponent(boxCollider);
-
-			obj->AddComponent(meshRenderer);
-			scene->AddGameObject(obj);
-		}
-		////////// 문제 
-		for (int i = 0; i < 3; i++)
-		{
-			//////////////////////////////////////////////////////////////////////
-			shared_ptr<GameObject> obj = make_shared<GameObject>();
-			obj->AddComponent(make_shared<Transform>());
-			obj->SetName(L"Wall");
-			obj->SetCheckFrustum(false);
-			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 1.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX, 0.f, baseZ - scale * (3.5 + i)));
-			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
-			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-
-			{
-				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-				meshRenderer->SetMesh(mesh);
-			}
-			{
-				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
-				material->SetInt(0, 1);
-				meshRenderer->SetMaterial(material);
-			}
-			shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
-			boxCollider->SetCenter(Vec3(0.f, 0.f, 0.f));
-			boxCollider->SetExtents(Vec3(1.f, 1.f, 1.f));
-			obj->AddComponent(boxCollider);
-
-			obj->AddComponent(meshRenderer);
-			scene->AddGameObject(obj);
-		}
-
-		for (int i = 0; i < 3; i++)
-		{
-			//////////////////////////////////////////////////////////////////////
-			shared_ptr<GameObject> obj = make_shared<GameObject>();
-			obj->AddComponent(make_shared<Transform>());
-			obj->SetName(L"Wall");
-			obj->SetCheckFrustum(false);
-			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 1.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX - scale, 0.f, baseZ - scale * (3.5 + i)));
-			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
-			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-
-			{
-				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-				meshRenderer->SetMesh(mesh);
-			}
-			{
-				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
-				material->SetInt(0, 1);
-				meshRenderer->SetMaterial(material);
-			}
-			shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
-			boxCollider->SetCenter(Vec3(0.f, 0.f, 0.f));
-			boxCollider->SetExtents(Vec3(1.f, 1.f, 1.f));
-			obj->AddComponent(boxCollider);
-
-			obj->AddComponent(meshRenderer);
-			scene->AddGameObject(obj);
-		}
-
-		for (int i = 0; i < 3; i++)
-		{
-			shared_ptr<GameObject> obj = make_shared<GameObject>();
-			obj->AddComponent(make_shared<Transform>());
-			obj->SetName(L"Wall");
-			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * (0.5 + i), 0.f, baseZ - scale * 6));
-			obj->SetCheckFrustum(false);
-			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-			{
-				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-				meshRenderer->SetMesh(mesh);
-			}
-			{
-				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
-				material->SetInt(0, 1);
-				meshRenderer->SetMaterial(material);
-			}
-			shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
-			boxCollider->SetCenter(Vec3(0.f, 0.f, 0.f));
-			boxCollider->SetExtents(Vec3(1.f, 1.f, 1.f));
-			obj->AddComponent(boxCollider);
-
-			obj->AddComponent(meshRenderer);
-			scene->AddGameObject(obj);
-		}
-
-		for (int i = 0; i < 3; i++)
-		{
-			shared_ptr<GameObject> obj = make_shared<GameObject>();
-			obj->AddComponent(make_shared<Transform>());
-			obj->SetName(L"Wall");
-			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX - scale * (1.5 + i), 0.f, baseZ - scale * 6));
-			obj->SetCheckFrustum(false);
-			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-			{
-				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-				meshRenderer->SetMesh(mesh);
-			}
-			{
-				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
-				material->SetInt(0, 1);
-				meshRenderer->SetMaterial(material);
-			}
-			shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
-			boxCollider->SetCenter(Vec3(0.f, 0.f, 0.f));
-			boxCollider->SetExtents(Vec3(1.f, 1.f, 1.f));
-			obj->AddComponent(boxCollider);
-
-			obj->AddComponent(meshRenderer);
-			scene->AddGameObject(obj);
-		}
-
-		for (int i = 0; i < 7; i++)
-		{
-			//////////////////////////////////////////////////////////////////////
-			shared_ptr<GameObject> obj = make_shared<GameObject>();
-			obj->AddComponent(make_shared<Transform>());
-			obj->SetName(L"Wall");
-			obj->SetCheckFrustum(false);
-			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 1.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 3, 0.f, baseZ - scale * (6.5 + i)));
-			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
-			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-
-			{
-				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-				meshRenderer->SetMesh(mesh);
-			}
-			{
-				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
-				material->SetInt(0, 1);
-				meshRenderer->SetMaterial(material);
-			}
-			shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
-			boxCollider->SetCenter(Vec3(0.f, 0.f, 0.f));
-			boxCollider->SetExtents(Vec3(1.f, 1.f, 1.f));
-			obj->AddComponent(boxCollider);
-
-			obj->AddComponent(meshRenderer);
-			scene->AddGameObject(obj);
-		}
-
-		for (int i = 0; i < 4; i++)
-		{
-			//////////////////////////////////////////////////////////////////////
-			shared_ptr<GameObject> obj = make_shared<GameObject>();
-			obj->AddComponent(make_shared<Transform>());
-			obj->SetName(L"Wall");
-			obj->SetCheckFrustum(false);
-			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 1.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX - scale * 4, 0.f, baseZ - scale * (6.5 + i)));
-			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
-			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-
-			{
-				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-				meshRenderer->SetMesh(mesh);
-			}
-			{
-				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
-				material->SetInt(0, 1);
-				meshRenderer->SetMaterial(material);
-			}
-			shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
-			boxCollider->SetCenter(Vec3(0.f, 0.f, 0.f));
-			boxCollider->SetExtents(Vec3(1.f, 1.f, 1.f));
-			obj->AddComponent(boxCollider);
-
-			obj->AddComponent(meshRenderer);
-			scene->AddGameObject(obj);
-		}
-
-		for (int i = 0; i < 6; i++)
-		{
-			shared_ptr<GameObject> obj = make_shared<GameObject>();
-			obj->AddComponent(make_shared<Transform>());
-			obj->SetName(L"Wall");
-			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX - scale * (-1.5 + i), 0.f, baseZ - scale * 10));
-			obj->SetCheckFrustum(false);
-			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-			{
-				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-				meshRenderer->SetMesh(mesh);
-			}
-			{
-				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
-				material->SetInt(0, 1);
-				meshRenderer->SetMaterial(material);
-			}
-			shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
-			boxCollider->SetCenter(Vec3(0.f, 0.f, 0.f));
-			boxCollider->SetExtents(Vec3(1.f, 1.f, 1.f));
-			obj->AddComponent(boxCollider);
-
-			obj->AddComponent(meshRenderer);
-			scene->AddGameObject(obj);
-		}
-
-		for (int i = 0; i < 10; i++)
-		{
-			//////////////////////////////////////////////////////////////////////
-			shared_ptr<GameObject> obj = make_shared<GameObject>();
-			obj->AddComponent(make_shared<Transform>());
-			obj->SetName(L"Wall");
-			obj->SetCheckFrustum(false);
-			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 1.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 2, 0.f, baseZ - scale * (10.5 + i)));
-			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
-			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-
-			{
-				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-				meshRenderer->SetMesh(mesh);
-			}
-			{
-				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
-				material->SetInt(0, 1);
-				meshRenderer->SetMaterial(material);
-			}
-			shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
-			boxCollider->SetCenter(Vec3(0.f, 0.f, 0.f));
-			boxCollider->SetExtents(Vec3(1.f, 1.f, 1.f));
-			obj->AddComponent(boxCollider);
-
-			obj->AddComponent(meshRenderer);
-			scene->AddGameObject(obj);
-		}
-
-		for (int i = 0; i < 6; i++)
-		{
-			//////////////////////////////////////////////////////////////////////
-			shared_ptr<GameObject> obj = make_shared<GameObject>();
-			obj->AddComponent(make_shared<Transform>());
-			obj->SetName(L"Wall");
-			obj->SetCheckFrustum(false);
-			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 1.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * 3, 0.f, baseZ - scale * (14.5 + i)));
-			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
-			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-
-			{
-				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-				meshRenderer->SetMesh(mesh);
-			}
-			{
-				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
-				material->SetInt(0, 1);
-				meshRenderer->SetMaterial(material);
-			}
-			shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
-			boxCollider->SetCenter(Vec3(0.f, 0.f, 0.f));
-			boxCollider->SetExtents(Vec3(1.f, 1.f, 1.f));
-			obj->AddComponent(boxCollider);
-
-			obj->AddComponent(meshRenderer);
-			scene->AddGameObject(obj);
-		}
-
-		for (int i = 0; i < 7; i++)
-		{
-			shared_ptr<GameObject> obj = make_shared<GameObject>();
-			obj->AddComponent(make_shared<Transform>());
-			obj->SetName(L"Wall");
-			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * (0.5 + i), 0.f, baseZ - scale * 21));
-			obj->SetCheckFrustum(false);
-			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-			{
-				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-				meshRenderer->SetMesh(mesh);
-			}
-			{
-				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
-				material->SetInt(0, 1);
-				meshRenderer->SetMaterial(material);
-			}
-			shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
-			boxCollider->SetCenter(Vec3(0.f, 0.f, 0.f));
-			boxCollider->SetExtents(Vec3(1.f, 1.f, 1.f));
-			obj->AddComponent(boxCollider);
-
-			obj->AddComponent(meshRenderer);
-			scene->AddGameObject(obj);
-		}
-
-		for (int i = 0; i < 4; i++)
-		{
-			shared_ptr<GameObject> obj = make_shared<GameObject>();
-			obj->AddComponent(make_shared<Transform>());
-			obj->SetName(L"Wall");
-			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * (3.5 + i), 0.f, baseZ - scale * 20));
-			obj->SetCheckFrustum(false);
-			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-			{
-				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-				meshRenderer->SetMesh(mesh);
-			}
-			{
-				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
-				material->SetInt(0, 1);
-				meshRenderer->SetMaterial(material);
-			}
-			shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
-			boxCollider->SetCenter(Vec3(0.f, 0.f, 0.f));
-			boxCollider->SetExtents(Vec3(1.f, 1.f, 1.f));
-			obj->AddComponent(boxCollider);
-
-			obj->AddComponent(meshRenderer);
-			scene->AddGameObject(obj);
-		}
-
-		for (int i = 0; i < 2; i++)
-		{
-			shared_ptr<GameObject> obj = make_shared<GameObject>();
-			obj->AddComponent(make_shared<Transform>());
-			obj->SetName(L"Wall");
-			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + scale * (0.5 + i), 0.f, baseZ - scale * 20));
-			obj->SetCheckFrustum(false);
-			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-			{
-				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-				meshRenderer->SetMesh(mesh);
-			}
-			{
-				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
-				material->SetInt(0, 1);
-				meshRenderer->SetMaterial(material);
-			}
-			shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
-			boxCollider->SetCenter(Vec3(0.f, 0.f, 0.f));
-			boxCollider->SetExtents(Vec3(1.f, 1.f, 1.f));
-			obj->AddComponent(boxCollider);
-
-			obj->AddComponent(meshRenderer);
-			scene->AddGameObject(obj);
-		}
-
-		for (int i = 0; i < 2; i++)
-		{
-			//////////////////////////////////////////////////////////////////////
-			shared_ptr<GameObject> obj = make_shared<GameObject>();
-			obj->AddComponent(make_shared<Transform>());
-			obj->SetName(L"Wall");
-			obj->SetCheckFrustum(false);
-			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 1.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX, 0.f, baseZ - scale * (21.5 + i)));
-			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
-			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-
-			{
-				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-				meshRenderer->SetMesh(mesh);
-			}
-			{
-				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
-				material->SetInt(0, 1);
-				meshRenderer->SetMaterial(material);
-			}
-			shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
-			boxCollider->SetCenter(Vec3(0.f, 0.f, 0.f));
-			boxCollider->SetExtents(Vec3(1.f, 1.f, 1.f));
-			obj->AddComponent(boxCollider);
-
-			obj->AddComponent(meshRenderer);
-			scene->AddGameObject(obj);
-		}
-
-
-		for (int i = 0; i < 2; i++)
-		{
-			//////////////////////////////////////////////////////////////////////
-			shared_ptr<GameObject> obj = make_shared<GameObject>();
-			obj->AddComponent(make_shared<Transform>());
-			obj->SetName(L"Wall");
-			obj->SetCheckFrustum(false);
-			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 1.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX, 0.f, baseZ - scale * (18.5 + i)));
-			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
-			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-
-			{
-				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-				meshRenderer->SetMesh(mesh);
-			}
-			{
-				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
-				material->SetInt(0, 1);
-				meshRenderer->SetMaterial(material);
-			}
-			shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
-			boxCollider->SetCenter(Vec3(0.f, 0.f, 0.f));
-			boxCollider->SetExtents(Vec3(1.f, 1.f, 1.f));
-			obj->AddComponent(boxCollider);
-
-			obj->AddComponent(meshRenderer);
-			scene->AddGameObject(obj);
-		}
-
-		for (int i = 0; i < 5; i++)
-		{
-			shared_ptr<GameObject> obj = make_shared<GameObject>();
-			obj->AddComponent(make_shared<Transform>());
-			obj->SetName(L"Wall");
-			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX - scale * (0.5 + i), 0.f, baseZ - scale * 23));
-			obj->SetCheckFrustum(false);
-			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-			{
-				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-				meshRenderer->SetMesh(mesh);
-			}
-			{
-				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
-				material->SetInt(0, 1);
-				meshRenderer->SetMaterial(material);
-			}
-			shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
-			boxCollider->SetCenter(Vec3(0.f, 0.f, 0.f));
-			boxCollider->SetExtents(Vec3(1.f, 1.f, 1.f));
-			obj->AddComponent(boxCollider);
-
-			obj->AddComponent(meshRenderer);
-			scene->AddGameObject(obj);
-		}
-
-		for (int i = 0; i < 5; i++)
-		{
-			shared_ptr<GameObject> obj = make_shared<GameObject>();
-			obj->AddComponent(make_shared<Transform>());
-			obj->SetName(L"Wall");
-			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX - scale * (0.5 + i), 0.f, baseZ - scale * 18));
-			obj->SetCheckFrustum(false);
-			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-			{
-				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-				meshRenderer->SetMesh(mesh);
-			}
-			{
-				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
-				material->SetInt(0, 1);
-				meshRenderer->SetMaterial(material);
-			}
-			shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
-			boxCollider->SetCenter(Vec3(0.f, 0.f, 0.f));
-			boxCollider->SetExtents(Vec3(1.f, 1.f, 1.f));
-			obj->AddComponent(boxCollider);
-
-			obj->AddComponent(meshRenderer);
-			scene->AddGameObject(obj);
-		}
-
-		{
-			shared_ptr<GameObject> obj = make_shared<GameObject>();
-			obj->AddComponent(make_shared<Transform>());
-			obj->SetName(L"Wall");
-			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX - scale * 5.5, 0.f, baseZ - scale * 21));
-			obj->SetCheckFrustum(false);
-			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-			{
-				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-				meshRenderer->SetMesh(mesh);
-			}
-			{
-				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
-				material->SetInt(0, 1);
-				meshRenderer->SetMaterial(material);
-			}
-			shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
-			boxCollider->SetCenter(Vec3(0.f, 0.f, 0.f));
-			boxCollider->SetExtents(Vec3(1.f, 1.f, 1.f));
-			obj->AddComponent(boxCollider);
-
-			obj->AddComponent(meshRenderer);
-			scene->AddGameObject(obj);
-		}
-
-		for (int i = 0; i < 2; i++)
-		{
-			//////////////////////////////////////////////////////////////////////
-			shared_ptr<GameObject> obj = make_shared<GameObject>();
-			obj->AddComponent(make_shared<Transform>());
-			obj->SetName(L"Wall");
-			obj->SetCheckFrustum(false);
-			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 1.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX - scale * 5, 0.f, baseZ - scale * (21.5 + i)));
-			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
-			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-
-			{
-				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-				meshRenderer->SetMesh(mesh);
-			}
-			{
-				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
-				material->SetInt(0, 1);
-				meshRenderer->SetMaterial(material);
-			}
-			shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
-			boxCollider->SetCenter(Vec3(0.f, 0.f, 0.f));
-			boxCollider->SetExtents(Vec3(1.f, 1.f, 1.f));
-			obj->AddComponent(boxCollider);
-
-			obj->AddComponent(meshRenderer);
-			scene->AddGameObject(obj);
-		}
-
-		for (int i = 0; i < 9; i++)
-		{
-			//////////////////////////////////////////////////////////////////////
-			shared_ptr<GameObject> obj = make_shared<GameObject>();
-			obj->AddComponent(make_shared<Transform>());
-			obj->SetName(L"Wall");
-			obj->SetCheckFrustum(false);
-			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 1.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX - scale * 5, 0.f, baseZ - scale * (9.5 + i)));
-			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
-			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-
-			{
-				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-				meshRenderer->SetMesh(mesh);
-			}
-			{
-				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
-				material->SetInt(0, 1);
-				meshRenderer->SetMaterial(material);
-			}
-			shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
-			boxCollider->SetCenter(Vec3(0.f, 0.f, 0.f));
-			boxCollider->SetExtents(Vec3(1.f, 1.f, 1.f));
-			obj->AddComponent(boxCollider);
-
-			obj->AddComponent(meshRenderer);
-			scene->AddGameObject(obj);
-		}
-
-		for (int i = 0; i < 11; i++)
-		{
-			//////////////////////////////////////////////////////////////////////
-			shared_ptr<GameObject> obj = make_shared<GameObject>();
-			obj->AddComponent(make_shared<Transform>());
-			obj->SetName(L"Wall");
-			obj->SetCheckFrustum(false);
-			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 1.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX - scale * 6, 0.f, baseZ - scale * (10.5 + i)));
-			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
-			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-
-			{
-				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-				meshRenderer->SetMesh(mesh);
-			}
-			{
-				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
-				material->SetInt(0, 1);
-				meshRenderer->SetMaterial(material);
-			}
-			shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
-			boxCollider->SetCenter(Vec3(0.f, 0.f, 0.f));
-			boxCollider->SetExtents(Vec3(1.f, 1.f, 1.f));
-			obj->AddComponent(boxCollider);
-
-			obj->AddComponent(meshRenderer);
-			scene->AddGameObject(obj);
-		}
-
-		for (int i = 0; i < 3; i++)
-		{
-			shared_ptr<GameObject> obj = make_shared<GameObject>();
-			obj->AddComponent(make_shared<Transform>());
-			obj->SetName(L"Wall");
-			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX - scale * (5.5 + i), 0.f, baseZ - scale * 9));
-			obj->SetCheckFrustum(false);
-			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-			{
-				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-				meshRenderer->SetMesh(mesh);
-			}
-			{
-				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
-				material->SetInt(0, 1);
-				meshRenderer->SetMaterial(material);
-			}
-			shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
-			boxCollider->SetCenter(Vec3(0.f, 0.f, 0.f));
-			boxCollider->SetExtents(Vec3(1.f, 1.f, 1.f));
-			obj->AddComponent(boxCollider);
-
-			obj->AddComponent(meshRenderer);
-			scene->AddGameObject(obj);
-		}
-
-		for (int i = 0; i < 3; i++)
-		{
-			shared_ptr<GameObject> obj = make_shared<GameObject>();
-			obj->AddComponent(make_shared<Transform>());
-			obj->SetName(L"Wall");
-			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX - scale * (6.5 + i), 0.f, baseZ - scale * 10));
-			obj->SetCheckFrustum(false);
-			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-			{
-				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-				meshRenderer->SetMesh(mesh);
-			}
-			{
-				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
-				material->SetInt(0, 1);
-				meshRenderer->SetMaterial(material);
-			}
-			shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
-			boxCollider->SetCenter(Vec3(0.f, 0.f, 0.f));
-			boxCollider->SetExtents(Vec3(1.f, 1.f, 1.f));
-			obj->AddComponent(boxCollider);
-
-			obj->AddComponent(meshRenderer);
-			scene->AddGameObject(obj);
-		}
-
-		for (int i = 0; i < 6; i++)
-		{
-			//////////////////////////////////////////////////////////////////////
-			shared_ptr<GameObject> obj = make_shared<GameObject>();
-			obj->AddComponent(make_shared<Transform>());
-			obj->SetName(L"Wall");
-			obj->SetCheckFrustum(false);
-			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX - scale * 8, 0.f, baseZ - scale * (3.5 + i)));
-			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
-			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-
-			{
-				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-				meshRenderer->SetMesh(mesh);
-			}
-			{
-				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
-				material->SetInt(0, 1);
-				meshRenderer->SetMaterial(material);
-			}
-			shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
-			boxCollider->SetCenter(Vec3(0.f, 0.f, 0.f));
-			boxCollider->SetExtents(Vec3(1.f, 1.f, 1.f));
-			obj->AddComponent(boxCollider);
-
-			obj->AddComponent(meshRenderer);
-			scene->AddGameObject(obj);
-		}
-
-		for (int i = 0; i < 8; i++)
-		{
-			//////////////////////////////////////////////////////////////////////
-			shared_ptr<GameObject> obj = make_shared<GameObject>();
-			obj->AddComponent(make_shared<Transform>());
-			obj->SetName(L"Wall");
-			obj->SetCheckFrustum(false);
-			obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 10.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX - scale * 9, 0.f, baseZ - scale * (2.5 + i)));
-			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
-			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-
-			{
-				shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-				meshRenderer->SetMesh(mesh);
-			}
-			{
-				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
-				material->SetInt(0, 1);
-				meshRenderer->SetMaterial(material);
-			}
-			shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
-			boxCollider->SetCenter(Vec3(0.f, 0.f, 0.f));
-			boxCollider->SetExtents(Vec3(1.f, 1.f, 1.f));
-			obj->AddComponent(boxCollider);
-
-			obj->AddComponent(meshRenderer);
-			scene->AddGameObject(obj);
-		}
 	}
 #pragma endregion
 
@@ -2041,6 +559,109 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		scene->AddGameObject(ShopUI);
 	}
 #pragma endregion
+
+#pragma region MapDesign
+
+	{
+		MakeWall(false, 2, -4, -2, scene);
+		MakeWall(false, 2, 4, -2, scene);
+		MakeWall(false, 2, 9, -4, scene);
+		MakeWall(false, 1, 14, -8, scene);
+		MakeWall(false, 1, 14, -5, scene);
+		MakeWall(false, 2, 13, -7, scene);
+		MakeWall(false, 2, 7, -7, scene);
+		MakeWall(false, 10, 11, -18, scene);
+		MakeWall(false, 5, 13, -23, scene);
+		MakeWall(false, 2, 7, -23, scene);
+		MakeWall(false, 2, 7, -20, scene);
+		MakeWall(false, 4, 10, -18, scene);
+		MakeWall(false, 5, 10, -13, scene);
+		MakeWall(false, 1, 6, -5, scene);
+		MakeWall(false, 1, 6, -8, scene);
+		MakeWall(false, 1, 8, -4, scene);
+		MakeWall(false, 3, 0, -6, scene);
+		MakeWall(false, 3, -1, -6, scene);
+		MakeWall(false, 7, 3, -13, scene);
+		MakeWall(false, 4, -4, -10, scene);
+		MakeWall(false, 10, 2, -20, scene);
+		MakeWall(false, 2, 0, -23, scene);
+		MakeWall(false, 2, 0, -20, scene);
+		MakeWall(false, 2, -5, -23, scene);
+		MakeWall(false, 9, -5, -18, scene);
+		MakeWall(false, 11, -6, -21, scene);
+		MakeWall(false , 6, -8, -9, scene);
+		MakeWall(false, 8, -9, -10, scene);
+		MakeWall(false, 6, 3, -20, scene);
+		MakeWall(true, 8, -4, 0, scene);
+		MakeWall(true, 5, -9, -2, scene);
+		MakeWall(true, 5, 4, -2, scene);
+		MakeWall(true, 5, 9, -4, scene);
+		MakeWall(true, 1, 13, -7, scene);
+		MakeWall(true, 1, 13, -5, scene);
+		MakeWall(true, 3, 11, -8, scene);
+		MakeWall(true, 2, 11, -18, scene);
+		MakeWall(true, 6, 7, -23, scene);
+		MakeWall(true, 3, 7, -18, scene);
+		MakeWall(true, 7, 3, -14, scene);
+		MakeWall(true, 7, 3, -13, scene);
+		MakeWall(true, 4, 6, -8, scene);
+		MakeWall(true, 1, 6, -7, scene);
+		MakeWall(true, 1, 6, -5, scene);
+		MakeWall(true, 2, 6, -4, scene);
+		MakeWall(true, 8, 0, -3, scene);
+		MakeWall(true, 7, -8, -3, scene);
+		MakeWall(true, 3, 0, -6, scene);
+		MakeWall(true, 3, -4, -6, scene);
+		MakeWall(true, 6, -4, -10, scene);
+		MakeWall(true, 2, 0, -20, scene);
+		MakeWall(true, 7, 0, -21, scene);
+		MakeWall(true, 4, 3, -20, scene);
+		MakeWall(true, 1, -6, -21, scene);
+		MakeWall(true, 5, -5, -23, scene);
+		MakeWall(true, 5, -5, -18, scene);
+		MakeWall(true, 3, -8, -9, scene);
+		MakeWall(true, 3, -9, -10, scene);
+	}
+#pragma endregion
+
 	return scene;
 }
 
+void SceneManager::MakeWall(bool horizontal, int value, float xchange, float ychange, shared_ptr<Scene>& scene)
+{
+	for (int i = 0; i < value; i++)
+	{
+		shared_ptr<GameObject> obj = make_shared<GameObject>();
+		obj->AddComponent(make_shared<Transform>());
+		obj->SetName(L"Wall");
+		obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 50.f));
+		if (horizontal == false)	//세로
+		{
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX + posScale * xchange, 0.f, baseZ + posScale * (ychange + 0.5f + i)));
+			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
+		}
+		else						//가로
+		{
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX + posScale * (xchange + 0.5f + i), 0.f, baseZ + posScale * (ychange)));
+		}
+		obj->SetCheckFrustum(false);
+		obj->SetStatic(false);
+		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+		{
+			shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadCubeMesh();
+			meshRenderer->SetMesh(mesh);
+		}
+		{
+			shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"Wall");
+			material->SetInt(0, 1);
+			meshRenderer->SetMaterial(material);
+		}
+		shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
+		boxCollider->SetCenter(Vec3(0.f, 0.f, 0.f));
+		boxCollider->SetExtents(Vec3(1.f, 1.f, 1.f));
+		obj->AddComponent(boxCollider);
+
+		obj->AddComponent(meshRenderer);
+		scene->AddGameObject(obj);
+	}
+}

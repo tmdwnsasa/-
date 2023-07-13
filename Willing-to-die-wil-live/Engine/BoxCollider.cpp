@@ -16,7 +16,10 @@ BoxCollider::~BoxCollider()
 
 void BoxCollider::FinalUpdate()
 {
-	_boundingBox.Center = GetGameObject()->GetTransform()->GetWorldPosition();
+	Vec3 pos = GetGameObject()->GetTransform()->GetWorldPosition();
+
+	_boundingBox.Center = pos;
+		//Vec3(pos.x + _center.x, pos.y + _center.y, pos.z + _center.z);
 
 	Vec3 scale = GetGameObject()->GetTransform()->GetLocalScale();
 	Vec3 rotation = GetGameObject()->GetTransform()->GetLocalRotation();
@@ -31,10 +34,20 @@ void BoxCollider::FinalUpdate()
 
 bool BoxCollider::Intersects(BoundingBox other)
 {
-	return _boundingBox.Intersects(other);
+	if (_onOff == true)
+	{
+		return _boundingBox.Intersects(other);
+	}
+	else
+		return false;
 }
 
 bool BoxCollider::Intersects(Vec4 rayOrigin, Vec4 rayDir, OUT float& distance)
 {
-	return _boundingBox.Intersects(rayOrigin, rayDir, OUT distance);
+	if (_onOff == true)
+	{
+		return _boundingBox.Intersects(rayOrigin, rayDir, OUT distance);
+	}
+	else
+		return false;
 }
