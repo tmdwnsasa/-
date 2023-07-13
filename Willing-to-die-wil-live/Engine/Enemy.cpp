@@ -70,7 +70,7 @@ void Enemy::AstarCall()
 
 	Vector2 startPos;
 	Vector2 endPos;
-	tileMap.CreateTile(startPos, endPos);
+	tileMap.CreateTile(startPos, endPos,1);
 
 	//tileMap.Display(std::list<TileNode*>());
 	//printf("\n\n");

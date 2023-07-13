@@ -4,6 +4,8 @@
 #include "GameObject.h"
 #include "Scene.h"
 #include "Enemy.h"
+#include "StalkerEnemy.h"
+#include"BruserEnemy.h"
 
 
 
@@ -17,10 +19,23 @@ TileMap::~TileMap()
 
 }
 
-void TileMap::CreateTile(Vector2& outStart, Vector2& outEnd)
+void TileMap::CreateTile(Vector2& outStart, Vector2& outEnd,int Checker)
 {
 	Enemy e;
-	int (*tileMapArray)[kHeight] = e.CreateMap();
+	StalkerEnemy Se;
+	BruserEnemy Be;
+	if (Checker == 1)
+	{
+		int(*tileMapArray)[kHeight] = e.CreateMap();
+	}
+	else if (Checker == 2)
+	{
+		int(*tileMapArray)[kHeight] = Se.CreateMap();
+	}
+	else if (Checker == 3)
+	{
+		int(*tileMapArray)[kHeight] = Be.CreateMap();
+	}
 
 	for (int y = 0; y < kHeight; ++y)
 	{

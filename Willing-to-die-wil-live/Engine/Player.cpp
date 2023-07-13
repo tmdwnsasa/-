@@ -217,7 +217,7 @@ void Player::ChangeWeapon(PLAYER_WEAPON weapon)
 
 #pragma region Gun
 		{
-			shared_ptr<MeshData> GunMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\shot.fbx");
+			shared_ptr<MeshData> GunMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\AWP_Dragon_Lore.fbx");
 			vector<shared_ptr<GameObject>> gun = GunMesh->Instantiate();
 
 			for (auto& gameObject : gun)
@@ -248,7 +248,7 @@ void Player::ChangeWeapon(PLAYER_WEAPON weapon)
 
 #pragma region Gun
 		{
-			shared_ptr<MeshData> GunMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\shot.fbx");
+			shared_ptr<MeshData> GunMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\AWP_Dragon_Lore.fbx");
 			vector<shared_ptr<GameObject>> gun = GunMesh->Instantiate();
 
 			for (auto& gameObject : gun)
@@ -278,7 +278,7 @@ void Player::ChangeWeapon(PLAYER_WEAPON weapon)
 
 #pragma region Gun
 		{
-			shared_ptr<MeshData> GunMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\shot.fbx");
+			shared_ptr<MeshData> GunMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\AWP_Dragon_Lore.fbx");
 			vector<shared_ptr<GameObject>> gun = GunMesh->Instantiate();
 
 			for (auto& gameObject : gun)
@@ -308,7 +308,7 @@ void Player::ChangeWeapon(PLAYER_WEAPON weapon)
 
 #pragma region Gun
 		{
-			shared_ptr<MeshData> GunMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\shot.fbx");
+			shared_ptr<MeshData> GunMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\AWP_Dragon_Lore.fbx");
 			vector<shared_ptr<GameObject>> gun = GunMesh->Instantiate();
 
 			for (auto& gameObject : gun)

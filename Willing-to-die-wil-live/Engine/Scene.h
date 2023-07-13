@@ -1,6 +1,7 @@
 #pragma once
 
 class GameObject;
+class MeshData;
 
 enum class SCENE_STATE : uint8
 {
@@ -45,6 +46,8 @@ public:
 	void CollisionPlayerToWall();
 
 	void EnemyAtk();
+	void CheckWave();
+	void MakeEnemy(int Wave);
 
 private:
 	void PushLightData();
@@ -53,16 +56,27 @@ private:
 public:
 	void AddGameObject(shared_ptr<GameObject> gameObject);
 	void RemoveGameObject(shared_ptr<GameObject> gameObject);
-
 	const vector<shared_ptr<GameObject>>& GetGameObjects() { return _gameObjects; }
 	Vec3			PlayerObPos;
 	Vec3			WallObPos;
+	int				CurrentWave = 1;
+	int				DeathCount = 0;
+	int				EnemyCount = 0;
+	int				Wave1 = 5;
+	int				Wave2 = 10;
+	int				STZCount = 0;
+	int				BrZCount = 0;
+	int				ZCount = 0;
+
 
 private:
 	vector<shared_ptr<GameObject>>		_gameObjects;
 	vector<shared_ptr<class Camera>>	_cameras;
 	vector<shared_ptr<class Light>>		_lights;
 	vector<shared_ptr<GameObject>>		_trashBin;
+	shared_ptr<MeshData>				ZombieMesh;
+	shared_ptr<MeshData>				StalkerZombieMesh;
+	shared_ptr<MeshData>				BruserZombieMesh;
 
 	bool			_shopOpened;
 
