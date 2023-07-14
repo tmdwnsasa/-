@@ -39,7 +39,6 @@ void Enemy::Update()
 	//GetTransform()->SetLocalPosition(pos);
 
 	SetEnemyPosition(pos);
-
 	SetPlayerPos();
 	if (!ResponeCheck)
 	{
@@ -48,32 +47,17 @@ void Enemy::Update()
 	Time += DELTA_TIME;
 	if (Time > 0.1)
 	{
-<<<<<<< HEAD
 		AstarCall();
 		Time = 0;
 	}
 	AstarMove(firstx, firsty, secondx, secondy);
 
-=======
-		if (_hp > 0)
-		{
-			//AstarCall();
-		}
-		Time = 0;
-	}
-	
-	if (_hp > 0)
-	{
-		AstarMove(firstx, firsty, secondx, secondy);
-	}
->>>>>>> 36043eb59c0512caba7c30a8e4518f5d80178b63
 	Animation();
 
 	if (_hp <= 0)
 	{
 		AnimationCount();
 	}
-
 }
 
 
