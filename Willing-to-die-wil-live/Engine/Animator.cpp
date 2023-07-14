@@ -15,6 +15,7 @@ Animator::Animator() : Component(COMPONENT_TYPE::ANIMATOR)
 
 Animator::~Animator()
 {
+
 }
 
 void Animator::FinalUpdate()

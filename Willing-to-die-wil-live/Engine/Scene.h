@@ -1,4 +1,5 @@
 #pragma once
+#include "Fmod.hpp"
 
 class GameObject;
 class MeshData;
@@ -67,6 +68,7 @@ public:
 	int				STZCount = 0;
 	int				BrZCount = 0;
 	int				ZCount = 0;
+
 
 
 private:

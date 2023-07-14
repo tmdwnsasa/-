@@ -37,6 +37,11 @@ void InstancingBuffer::AddData(InstancingParams& params)
 	_data.push_back(params);
 }
 
+InstancingParams& InstancingBuffer::GetData(int count)
+{
+	return _data[count];
+}
+
 void InstancingBuffer::PushData()
 {
 	const uint32 dataCount = GetCount();

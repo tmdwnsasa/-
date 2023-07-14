@@ -2,9 +2,14 @@
 #include "Transform.h"
 #include "Gun.h"
 
-Gun::Gun() :Component(COMPONENT_TYPE::GUN)
+Gun::Gun() : Component(COMPONENT_TYPE::GUN)
 {
 
+}
+
+Gun::Gun(PLAYER_WEAPON gun) : Component(COMPONENT_TYPE::GUN)
+{
+	weapon = gun;
 }
 
 Gun::~Gun()
@@ -28,4 +33,32 @@ void Gun::Update()
 		GetTransform()->SetLocalScale(Vec3(10.f, 10.f, 10.f));
 		GetTransform()->LookAt(Vec3(Look));
 	}
+	recoil();
+}
+
+void Gun::recoil()
+{
+
+	Vec3 basePos = GetTransform()->GetLocalPosition();
+	Vec3 baseRot = GetTransform()->GetLocalRotation();
+	if (_curRecoil > 0.f)
+	{
+		_curRecoil -= _downForce;
+		_recoilAmount += _curRecoil;
+		basePos += GetTransform()->GetLook() * -_curRecoil / 4;
+		basePos += GetTransform()->GetUp() * _curRecoil / 8;
+		GetTransform()->SetLocalRotation(Vec3(baseRot.x - _curRecoil / 70.f, baseRot.y, baseRot.z));
+		
+	}
+	else if (_recoilAmount > 0.f)
+	{
+		_recoilAmount -= _downForce;
+		_curRecoil = 0;
+		basePos += GetTransform()->GetLook() * +_downForce / 10;
+		basePos += GetTransform()->GetUp() * -_downForce / 25;
+		GetTransform()->SetLocalRotation(Vec3(baseRot.x + _downForce / 30.f, baseRot.y, baseRot.z));
+	
+	}
+
+	GetTransform()->SetLocalPosition(basePos);
 }

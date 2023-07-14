@@ -57,7 +57,7 @@ void Enemy::Update()
 =======
 		if (_hp > 0)
 		{
-			AstarCall();
+			//AstarCall();
 		}
 		Time = 0;
 	}

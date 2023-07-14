@@ -16,5 +16,4 @@ void CS_Main(int3 threadIndex : SV_DispatchThreadID)
     else
         g_rwtex_0[threadIndex.xy] = float4(0.f, 1.f, 0.f, 1.f);
 }
-
 #endif

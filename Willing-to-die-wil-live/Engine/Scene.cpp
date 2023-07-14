@@ -24,10 +24,12 @@
 #include "Shop.h"
 #include "Button.h"
 #include "Gun.h"
+#include "SoundManager.h"
 #include <iostream>
 
 //cout 출력용 코드
-//#pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console")
+#pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console")
+
 
 void Scene::Awake()
 {
@@ -70,7 +72,6 @@ void Scene::Update()
 
 	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
 	{
-
 		if (gameObject->GetName() == L"Gun3")
 		{
 			//cout << gameObject->GetTransform()->GetLocalPosition().x << ", " << gameObject->GetTransform()->GetLocalPosition().y << "," << gameObject->GetTransform()->GetLocalPosition().z << endl;
@@ -83,6 +84,7 @@ void Scene::Update()
 			}
 		}
 	}
+
 	//상점열기
 	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
 	{
@@ -97,14 +99,14 @@ void Scene::Update()
 						if (object->GetName() == L"Player")
 						{
 							object->GetPlayer()->ChangeWeapon(gameObject->GetShop()->GetSelected()->GetButton()->GetMerchandise());
-							for (auto& makeTrash : _gameObjects)
+							for (auto& makeTrash : _gameObjects)	// 무기를 사면 총을 지우고
 							{
 								if (makeTrash->GetName() == L"Gun")
 								{
 									_trashBin.push_back(makeTrash);
 								}
 							}
-							for (auto& gunobject : object->GetPlayer()->GetGun())
+							for (auto& gunobject : object->GetPlayer()->GetGun())	//총을 만든다
 							{
 								_gameObjects.push_back(gunobject);
 							}
@@ -154,7 +156,7 @@ void Scene::Update()
 	{
 		if (gameObject->GetName() == L"Player")
 		{
-			for (const shared_ptr<GameObject>& bullet : (gameObject->GetPlayer()->GetBullet()))
+			for (const shared_ptr<GameObject>& bullet : gameObject->GetPlayer()->GetBullet())
 			{
 				if (bullet->GetBullet()->GetState() == BULLET_STATE::DEAD)
 				{
@@ -163,15 +165,43 @@ void Scene::Update()
 
 				if (bullet->GetBullet()->GetState() == BULLET_STATE::LIVE)
 				{
+					for (const shared_ptr<GameObject>& gun : _gameObjects)
+					{
+						if (gun->GetGun() != nullptr)
+						{
+							gun->GetGun()->SetRecoil(gameObject->GetPlayer()->GetRecoil());
+						}
+					}
+
+					for (const shared_ptr<GameObject>& camera : _gameObjects)
+					{
+						if (camera->GetCameraScript() != nullptr)
+						{
+							camera->GetCameraScript()->SetRecoil(gameObject->GetPlayer()->GetRecoil());
+						}
+					}
+
+					for (const shared_ptr<GameObject>& muzzleflash : gameObject->GetPlayer()->GetMuzzleFlash())
+					{
+						_gameObjects.push_back(muzzleflash);
+					}
+
 					_gameObjects.push_back(bullet);
 					bullet->GetBullet()->SetState(BULLET_STATE::SHOOT);
+				}
+			}
+			for (const shared_ptr<GameObject>& muzzleflash : gameObject->GetPlayer()->GetMuzzleFlash())
+			{
+				if (muzzleflash->GetMuzzleFlash()->GetState() == MUZZLEFLASH_STATE::DEAD)
+				{
+					_trashBin.push_back(muzzleflash);
 				}
 			}
 		}
 	}
 
 	SetPlayerPosToEnemy();
-	
+
 	////복수 생성
 	/*map<wstring, pair<uint32, vector<shared_ptr<GameObject>>>> name;
 	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
@@ -210,7 +240,7 @@ void Scene::Update()
 
 =======
 	}*/
->>>>>>> 36043eb59c0512caba7c30a8e4518f5d80178b63
+
 	CollisionPlayerToWall();
 
 	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
@@ -245,12 +275,9 @@ void Scene::LateUpdate()
 						{
 							Object->GetBoxCollider()->SetOnOff(false);
 							//Object->GetEnemy()->AnimationCount();
-<<<<<<< HEAD
 							DeathCount++;
 							_trashBin.push_back(gameObject);
-=======
 							
->>>>>>> 36043eb59c0512caba7c30a8e4518f5d80178b63
 							//_trashBin.push_back(Object);
 						}
 					}
