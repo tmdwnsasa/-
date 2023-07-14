@@ -28,6 +28,7 @@ public:
 	void SetMaterial(shared_ptr<Material> material, uint32 idx = 0);
 
 	void Render();
+	void Render(uint32 instanceCount);
 	void Render(shared_ptr<class InstancingBuffer>& buffer);
 	void RenderShadow();
 

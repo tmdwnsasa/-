@@ -69,6 +69,27 @@ void MeshRenderer::Render(shared_ptr<InstancingBuffer>& buffer)
 	}
 }
 
+void MeshRenderer::Render(uint32 instanceCount)
+{
+	for (uint32 i = 0; i < _materials.size(); i++)
+	{
+		shared_ptr<Material>& material = _materials[i];
+
+		if (material == nullptr || material->GetShader() == nullptr)
+			continue;
+
+		GetTransform()->PushData();
+
+		if (GetAnimator())
+		{
+			GetAnimator()->PushData();
+			material->SetInt(1, 1);
+		}
+
+		material->PushGraphicsData();
+		_mesh->Render(instanceCount, i);
+	}
+}
 void MeshRenderer::RenderShadow()
 {
 	GetTransform()->PushData();

@@ -58,4 +58,6 @@ private:
 	vector<shared_ptr<Material>>	_materials;
 
 	vector<MeshRenderInfo>			_meshRenders;
+
+	bool							_find = true;
 };

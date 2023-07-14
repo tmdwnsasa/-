@@ -230,6 +230,7 @@ public:
 	int EnemyCount = 0;
  
 	int _hp = 100;
+
 private:
 	float		_speed = 150.f;
 };

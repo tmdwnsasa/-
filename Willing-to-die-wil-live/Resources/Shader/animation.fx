@@ -21,6 +21,7 @@ RWStructuredBuffer<matrix>          g_final : register(u0);
 // g_int_1 : CurrentFrame
 // g_int_2 : NextFrame
 // g_float_0 : Ratio
+
 [numthreads(256, 1, 1)]
 void CS_Main(int3 threadIdx : SV_DispatchThreadID)
 {

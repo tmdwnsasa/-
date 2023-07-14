@@ -208,6 +208,12 @@ shared_ptr<Gun> GameObject::GetGun()
 	return static_pointer_cast<Gun>(component);
 }
 
+shared_ptr<MuzzleFlash> GameObject::GetMuzzleFlash()
+{
+	shared_ptr<Component> component = GetFixedComponent(COMPONENT_TYPE::MUZZLEFLASH);
+	return static_pointer_cast<MuzzleFlash>(component);
+}
+
 void GameObject::AddComponent(shared_ptr<Component> component)
 {
 	component->SetGameObject(shared_from_this());

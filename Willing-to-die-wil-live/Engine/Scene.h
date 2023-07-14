@@ -1,4 +1,5 @@
 #pragma once
+#include "Fmod.hpp"
 
 class GameObject;
 
@@ -57,6 +58,7 @@ public:
 	const vector<shared_ptr<GameObject>>& GetGameObjects() { return _gameObjects; }
 	Vec3			PlayerObPos;
 	Vec3			WallObPos;
+
 
 private:
 	vector<shared_ptr<GameObject>>		_gameObjects;

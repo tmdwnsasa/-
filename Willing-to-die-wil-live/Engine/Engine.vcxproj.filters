@@ -195,6 +195,9 @@
     <ClInclude Include="Gun.h">
       <Filter>Object\Component</Filter>
     </ClInclude>
+    <ClInclude Include="SoundManager.h">
+      <Filter>Manager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TableDescriptorHeap.cpp">
@@ -352,6 +355,9 @@
     </ClCompile>
     <ClCompile Include="Gun.cpp">
       <Filter>Object\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundManager.cpp">
+      <Filter>Manager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

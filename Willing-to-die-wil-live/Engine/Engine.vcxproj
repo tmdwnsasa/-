@@ -65,6 +65,7 @@
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Shop.h" />
     <ClInclude Include="SimpleMath.h" />
+    <ClInclude Include="SoundManager.h" />
     <ClInclude Include="SphereCollider.h" />
     <ClInclude Include="StructuredBuffer.h" />
     <ClInclude Include="SwapChain.h" />
@@ -129,6 +130,7 @@
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Shop.cpp" />
     <ClCompile Include="SimpleMath.cpp" />
+    <ClCompile Include="SoundManager.cpp" />
     <ClCompile Include="SphereCollider.cpp" />
     <ClCompile Include="StructuredBuffer.cpp" />
     <ClCompile Include="SwapChain.cpp" />
@@ -288,19 +290,19 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(SolutionDir)Library/Include/;$(SolutionDir)Library/Include/FBX/;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Library/Include/;$(SolutionDir)Library/Include/FBX/;$(SolutionDir)Library/Include/Fmod/;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)Output\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(SolutionDir)Library/Include/;$(SolutionDir)Library/Include/FBX/;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Library/Include/;$(SolutionDir)Library/Include/FBX/;$(SolutionDir)Library/Include/Fmod/;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)Output\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(SolutionDir)Library/Include/;$(SolutionDir)Library/Include/FBX/;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Library/Include/;$(SolutionDir)Library/Include/FBX/;$(SolutionDir)Library/Include/Fmod/;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)Output\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(SolutionDir)Library/Include/;$(SolutionDir)Library/Include/FBX/;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Library/Include/;$(SolutionDir)Library/Include/FBX/;$(SolutionDir)Library/Include/Fmod/;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)Output\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -313,6 +315,7 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <AdditionalIncludeDirectories>$(SolutionDir)Library/Include/Fmod/;$(SolutionDir)Library/Include/FmodStudio/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -338,6 +341,7 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <AdditionalIncludeDirectories>$(SolutionDir)Library/Include/Fmod/;$(SolutionDir)Library/Include/FmodStudio/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -363,6 +367,7 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <AdditionalIncludeDirectories>$(SolutionDir)Library/Include/Fmod/;$(SolutionDir)Library/Include/FmodStudio/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -388,6 +393,7 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <AdditionalIncludeDirectories>$(SolutionDir)Library/Include/Fmod/;$(SolutionDir)Library/Include/FmodStudio/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>

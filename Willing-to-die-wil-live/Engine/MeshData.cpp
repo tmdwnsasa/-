@@ -19,12 +19,13 @@ MeshData::~MeshData()
 shared_ptr<MeshData> MeshData::LoadFromFBX(const wstring& path)
 {
 	FBXLoader loader;
+
 	shared_ptr<MeshData> meshData = make_shared<MeshData>();
-	if (path == L"..\\Resources\\FBX\\tes.bin" ||
-		path == L"..\\Resources\\FBX\\test.bin" || 
-		path == L"..\\Resources\\FBX\\testt.bin")
+
+
+	meshData->Load(path);
+	if (meshData->_find == true)
 	{
-		meshData->Load(path);
 		return meshData;
 	}
 	else
@@ -61,12 +62,24 @@ void MeshData::Load(const wstring& _strFilePath)
 	LoadBones(_scene->GetRootNode());
 	LoadAnimationInfo();
 
+	if (fs::path(_strFilePath).extension() != ".bin")
+	{
+		_find = false;
+		return;
+	}
+
 #pragma region ParseNode Parts
 	{
 		DWORD dwBytes;
 		HANDLE file;
 
 		file = CreateFile(_strFilePath.c_str(), GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+		if (file == INVALID_HANDLE_VALUE)
+		{
+			_find = false;
+			return;
+		}
+
 		int32 meshcount = 0;
 		ReadFile(file, &meshcount, sizeof(int32), &dwBytes, NULL);
 
@@ -370,7 +383,7 @@ vector<shared_ptr<GameObject>> MeshData::Instantiate()
 		gameObject->GetMeshRenderer()->SetMesh(info.mesh);
 
 		for (uint32 i = 0; i < info.materials.size(); i++)
-			gameObject->GetMeshRenderer()->SetMaterial(info.materials[i], i);
+			gameObject->GetMeshRenderer()->SetMaterial(info.materials[i]->Clone(), i);
 
 		if (info.mesh->IsAnimMesh())
 		{

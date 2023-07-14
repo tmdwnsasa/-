@@ -17,6 +17,7 @@ public:
 
 	void Clear();
 	void AddData(InstancingParams& params);
+	InstancingParams& GetData(int count);
 	void PushData();
 
 public:
