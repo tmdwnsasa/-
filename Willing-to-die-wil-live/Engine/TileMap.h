@@ -119,7 +119,7 @@ public:
 	TileMap();
 	~TileMap();
 
-	void CreateTile(Vector2& start, Vector2& end);
+	void CreateTile(Vector2& start, Vector2& end, int Checker);
 	void Display(std::list<TileNode*> moveNodeList);
 	void CreateMap();
 	TileNode* GetTileNode(int x, int y) const;

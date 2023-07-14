@@ -21,6 +21,8 @@ class Bullet;
 class Shop;
 class Button;
 class Gun;
+class StalkerEnemy;
+class BruserEnemy;
 class MuzzleFlash;
 
 class GameObject : public Object, public enable_shared_from_this<GameObject>
@@ -50,6 +52,8 @@ public:
 	shared_ptr<Player> GetPlayer();
 	shared_ptr<Bullet> GetBullet();
 	shared_ptr<Enemy> GetEnemy();
+	shared_ptr<StalkerEnemy> GetStalkerEnemy();
+	shared_ptr<BruserEnemy> GetBruserEnemy();
 	shared_ptr<CameraScript> GetCameraScript();
 	shared_ptr<Font> GetFont();
 	shared_ptr<Shop> GetShop();

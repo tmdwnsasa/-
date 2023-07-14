@@ -195,6 +195,12 @@
     <ClInclude Include="Gun.h">
       <Filter>Object\Component</Filter>
     </ClInclude>
+    <ClInclude Include="StalkerEnemy.h">
+      <Filter>Object\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="BruserEnemy.h">
+      <Filter>Object\Component</Filter>
+    </ClInclude>
     <ClInclude Include="SoundManager.h">
       <Filter>Manager</Filter>
     </ClInclude>
@@ -354,6 +360,12 @@
       <Filter>Object\Component</Filter>
     </ClCompile>
     <ClCompile Include="Gun.cpp">
+      <Filter>Object\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="StalkerEnemy.cpp">
+      <Filter>Object\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="BruserEnemy.cpp">
       <Filter>Object\Component</Filter>
     </ClCompile>
     <ClCompile Include="SoundManager.cpp">

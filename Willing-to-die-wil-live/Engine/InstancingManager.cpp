@@ -19,7 +19,7 @@ void InstancingManager::Render(vector<shared_ptr<GameObject>>& gameObjects)
 	for (auto& pair : cache)
 	{
 		const vector<shared_ptr<GameObject>>& vec = pair.second;
-
+		
 		if (vec.size() == 1)
 		{
 			vec[0]->GetMeshRenderer()->Render();
@@ -27,7 +27,9 @@ void InstancingManager::Render(vector<shared_ptr<GameObject>>& gameObjects)
 		else
 		{
 			const uint64 instanceId = pair.first;
-
+			int count = 0;
+			
+			
 			for (const shared_ptr<GameObject>& gameObject : vec)
 			{
 				InstancingParams params;
@@ -36,6 +38,9 @@ void InstancingManager::Render(vector<shared_ptr<GameObject>>& gameObjects)
 				params.matWVP = params.matWorld * Camera::S_MatView * Camera::S_MatProjection;
 
 				AddParam(instanceId, params);
+				//shared_ptr<InstancingBuffer>& buffer = _buffers[instanceId];
+				//vec[count]->GetMeshRenderer()->Render(buffer);
+				//count++;
 			}
 
 			shared_ptr<InstancingBuffer>& buffer = _buffers[instanceId];

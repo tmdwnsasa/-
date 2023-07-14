@@ -385,7 +385,7 @@ void Resources::CreateDefaultShader()
 	{
 		ShaderInfo info =
 		{
-			SHADER_TYPE::DEFERRED
+			SHADER_TYPE::DEFERRED,
 		};
 
 		shared_ptr<Shader> shader = make_shared<Shader>();
@@ -393,17 +393,30 @@ void Resources::CreateDefaultShader()
 		Add<Shader>(L"Deferred", shader);
 	}
 
+<<<<<<< HEAD
+	// Gun
+=======
 	// Deferred (For gun)
+>>>>>>> 36043eb59c0512caba7c30a8e4518f5d80178b63
 	{
 		ShaderInfo info =
 		{
 			SHADER_TYPE::DEFERRED,
+<<<<<<< HEAD
+			RASTERIZER_TYPE::CULL_FRONT,
+			DEPTH_STENCIL_TYPE::NO_DEPTH_TEST
+=======
 			RASTERIZER_TYPE::CULL_NONE,
+>>>>>>> 36043eb59c0512caba7c30a8e4518f5d80178b63
 		};
 
 		shared_ptr<Shader> shader = make_shared<Shader>();
 		shader->CreateGraphicsShader(L"..\\Resources\\Shader\\deferred.fx", info);
+<<<<<<< HEAD
+		Add<Shader>(L"GunDeffered", shader);
+=======
 		Add<Shader>(L"Gun", shader);
+>>>>>>> 36043eb59c0512caba7c30a8e4518f5d80178b63
 	}
 
 	// Forward (Forward)

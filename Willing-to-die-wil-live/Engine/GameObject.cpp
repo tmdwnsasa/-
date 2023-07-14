@@ -13,6 +13,8 @@
 #include "Player.h"
 #include "CameraScript.h"
 #include "Enemy.h"
+#include "StalkerEnemy.h"
+#include "BruserEnemy.h"
 #include "Font.h"
 #include "Shop.h"
 #include "Button.h"
@@ -176,6 +178,18 @@ shared_ptr<Enemy> GameObject::GetEnemy()
 {
 	shared_ptr<Component> component = GetFixedComponent(COMPONENT_TYPE::ENEMY);
 	return static_pointer_cast<Enemy>(component);
+}
+
+shared_ptr<StalkerEnemy> GameObject::GetStalkerEnemy()
+{
+	shared_ptr<Component> component = GetFixedComponent(COMPONENT_TYPE::StalkerEnemy);
+	return static_pointer_cast<StalkerEnemy>(component);
+}
+
+shared_ptr<BruserEnemy> GameObject::GetBruserEnemy()
+{
+	shared_ptr<Component> component = GetFixedComponent(COMPONENT_TYPE::BruserEnemy);
+	return static_pointer_cast<BruserEnemy>(component);
 }
 
 shared_ptr<CameraScript> GameObject::GetCameraScript()

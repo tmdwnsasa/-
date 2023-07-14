@@ -41,9 +41,20 @@ void Enemy::Update()
 	SetEnemyPosition(pos);
 
 	SetPlayerPos();
+	if (!ResponeCheck)
+	{
+		Respone();
+	}
 	Time += DELTA_TIME;
 	if (Time > 0.1)
 	{
+<<<<<<< HEAD
+		AstarCall();
+		Time = 0;
+	}
+	AstarMove(firstx, firsty, secondx, secondy);
+
+=======
 		if (_hp > 0)
 		{
 			//AstarCall();
@@ -55,6 +66,7 @@ void Enemy::Update()
 	{
 		AstarMove(firstx, firsty, secondx, secondy);
 	}
+>>>>>>> 36043eb59c0512caba7c30a8e4518f5d80178b63
 	Animation();
 
 	if (_hp <= 0)
@@ -72,7 +84,7 @@ void Enemy::AstarCall()
 
 	Vector2 startPos;
 	Vector2 endPos;
-	tileMap.CreateTile(startPos, endPos);
+	tileMap.CreateTile(startPos, endPos,1);
 
 	//tileMap.Display(std::list<TileNode*>());
 	//printf("\n\n");
@@ -301,5 +313,42 @@ int(*Enemy::CreateMap())[Height]
 void Enemy::LostHp()
 {
 	_hp -= 30;
+}
+
+void Enemy::Respone()
+{
+	shared_ptr<Scene> scene = GET_SINGLE(SceneManager)->GetActiveScene();
+	Vec3 PlayerPos = scene->GetPlayerPosToEnemy();
+
+	if (PlayerPos.x > 3500)
+		if (PlayerPos.z < -3500)
+			CheckPoint = 1;
+		else if (PlayerPos.z >= -3500)
+			CheckPoint = 2;
+	if (PlayerPos.x <= 3500)
+		if (PlayerPos.z < -3500)
+			CheckPoint = 3;
+		else if (PlayerPos.z >= -3500)
+			CheckPoint = 4;
+	
+	switch (CheckPoint)
+	{
+	case 1:
+		GetTransform()->SetLocalPosition(ResponeArea1);
+		break;
+	case 2:
+		GetTransform()->SetLocalPosition(ResponeArea2);
+		break;
+	case 3:
+		GetTransform()->SetLocalPosition(ResponeArea3);
+		break;
+	case 4:
+		GetTransform()->SetLocalPosition(ResponeArea4);
+		break;
+	default:
+		break;
+	}
+
+	ResponeCheck = true;
 }
 

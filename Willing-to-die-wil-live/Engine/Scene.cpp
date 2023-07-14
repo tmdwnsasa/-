@@ -10,10 +10,13 @@
 #include "Transform.h"
 #include "CameraScript.h"
 #include "MeshRenderer.h"
+#include "MeshData.h"
 #include "Material.h"
 #include "Astar.h"
 #include "TileMap.h"
 #include "Enemy.h"
+#include "StalkerEnemy.h"
+#include "BruserEnemy.h"
 #include "Player.h"
 #include "Input.h"
 #include "BoxCollider.h"
@@ -36,6 +39,12 @@ void Scene::Awake()
 	{
 		gameObject->Awake();
 	}
+
+	ZombieMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Parasite.fbx");
+	StalkerZombieMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\war.fbx");
+	BruserZombieMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\SpZombie.fbx");
+
+	//parasite,war,Spzombie
 }
 
 void Scene::Start()
@@ -59,7 +68,7 @@ void Scene::Update()
 	//		z = gameObject->GetTransform()->GetLocalPosition().z;
 	//	}
 	//}
-
+	MakeEnemy(CurrentWave);
 
 	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
 	{
@@ -221,6 +230,15 @@ void Scene::Update()
 				}
 			}
 		}
+<<<<<<< HEAD
+	}
+
+	// Wave
+	//Enemy수를 Wave마다 정하고 생성
+	//EnemyCount가 0이 되면 Wave 체인지
+	CheckWave();
+
+=======
 	}*/
 
 	CollisionPlayerToWall();
@@ -257,14 +275,24 @@ void Scene::LateUpdate()
 						{
 							Object->GetBoxCollider()->SetOnOff(false);
 							//Object->GetEnemy()->AnimationCount();
+<<<<<<< HEAD
+							DeathCount++;
+							_trashBin.push_back(gameObject);
+=======
 							
+>>>>>>> 36043eb59c0512caba7c30a8e4518f5d80178b63
 							//_trashBin.push_back(Object);
 						}
 					}
 				}
 			}
 		}
-
+		//wave 변경
+		if (DeathCount == EnemyCount)
+		{
+			//Wave 끝
+			CurrentWave++;
+		}
 		//체력, 총알, 돈 출력
 		if (gameObject->GetName() == L"Player")
 		{
@@ -653,6 +681,121 @@ void Scene::CollisionPlayerToWall()
 			else
 				gameObject->GetPlayer()->collisionLeft(false);
 
+		}
+	}
+}
+
+void Scene:: CheckWave()
+{
+	switch (CurrentWave)
+	{
+	case 1:
+		EnemyCount = Wave1;
+		break;
+	case 2:
+		EnemyCount = Wave2;
+		break;
+
+	default:
+		break;
+	}
+}
+
+void Scene::MakeEnemy(int Wave)
+{
+	// 개체수는 나중에 생각
+	switch (Wave)
+	{
+	case 1:
+		ZCount = 5;
+		BrZCount = 0;
+		STZCount = 0;
+		break;
+	case 2:
+		ZCount = 5;
+		BrZCount = 1;
+		STZCount = 2;
+		break;
+	case 3:
+		ZCount = 5;
+		BrZCount = 5;
+		STZCount = 5;
+		break;
+	default:
+		break;
+	}
+	for (int i = 0; i < ZCount; i++)
+	{
+
+		vector<shared_ptr<GameObject>> gameObjects = ZombieMesh->Instantiate();
+
+
+		for (auto& gameObject : gameObjects)
+		{
+
+			shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
+			boxCollider->SetCenter(Vec3(0.f, 0.f, 0.f));
+			boxCollider->SetExtents(Vec3(150.f, 300.f, 150.f));
+
+			gameObject->SetName(L"Enemy");
+			gameObject->SetCheckFrustum(false);
+			gameObject->GetTransform()->SetLocalPosition(Vec3(1200.f * (i + 1), -100.f, -900.f));
+			gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
+			gameObject->AddComponent(boxCollider);
+			gameObject->AddComponent(make_shared<Enemy>());
+			//gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 1);
+			AddGameObject(gameObject);
+		}
+	}
+
+	for (int i = 0; i < STZCount; i++)
+	{
+
+		vector<shared_ptr<GameObject>> gameObjects = StalkerZombieMesh->Instantiate();
+
+
+		for (auto& gameObject : gameObjects)
+		{
+
+			shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
+			boxCollider->SetCenter(Vec3(0.f, 0.f, 0.f));
+			boxCollider->SetExtents(Vec3(150.f, 300.f, 150.f));
+
+			gameObject->SetName(L"STEnemy");
+			gameObject->SetCheckFrustum(false);
+			gameObject->GetTransform()->SetLocalPosition(Vec3(1200.f * (i + 1), -100.f, -900.f));
+			gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
+			gameObject->AddComponent(boxCollider);
+			gameObject->AddComponent(make_shared<StalkerEnemy>());
+			//gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 1);
+			AddGameObject(gameObject);
+		}
+	}
+
+	for (int i = 0; i < BrZCount; i++)
+	{
+
+		vector<shared_ptr<GameObject>> gameObjects = BruserZombieMesh->Instantiate();
+
+
+		for (auto& gameObject : gameObjects)
+		{
+
+			shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
+			boxCollider->SetCenter(Vec3(0.f, 0.f, 0.f));
+			boxCollider->SetExtents(Vec3(150.f, 300.f, 150.f));
+
+			gameObject->SetName(L"BrEnemy");
+			gameObject->SetCheckFrustum(false);
+			gameObject->GetTransform()->SetLocalPosition(Vec3(1200.f * (i + 1), -100.f, -900.f));
+			gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+			gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
+			gameObject->AddComponent(boxCollider);
+			gameObject->AddComponent(make_shared<BruserEnemy>());
+			//gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 1);
+			AddGameObject(gameObject);
 		}
 	}
 }
