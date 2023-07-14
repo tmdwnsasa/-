@@ -68,7 +68,7 @@ void Scene::Update()
 	//		z = gameObject->GetTransform()->GetLocalPosition().z;
 	//	}
 	//}
-	MakeEnemy(CurrentWave);
+	//MakeEnemy(CurrentWave);
 
 	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
 	{

@@ -52,6 +52,16 @@ void Enemy::Update()
 	}
 	AstarMove(firstx, firsty, secondx, secondy);
 
+	if (_hp > 0)
+	{
+		//AstarCall();
+	}
+
+	Time = 0;
+	if (_hp > 0)
+	{
+		AstarMove(firstx, firsty, secondx, secondy);
+	}
 	Animation();
 
 	if (_hp <= 0)

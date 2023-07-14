@@ -427,10 +427,6 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 
 #pragma region Enemy
 	{
-<<<<<<< HEAD
-
-		
-=======
 		//shared_ptr<MeshData> ZombieMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\tes.fbx");
 
 		vector<shared_ptr<GameObject>> gameObjects1 = ZombieMesh->Instantiate();
@@ -480,7 +476,6 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 				scene->AddGameObject(gameObject);
 			}
 		}
->>>>>>> 36043eb59c0512caba7c30a8e4518f5d80178b63
 
 		/*shared_ptr<MeshData> TestMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\sniper.fbx");
 

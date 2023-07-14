@@ -393,25 +393,19 @@ void Resources::CreateDefaultShader()
 		Add<Shader>(L"Deferred", shader);
 	}
 
-
 	// Gun
-
 	// Deferred (For gun)
-
 	{
 		ShaderInfo info =
 		{
 			SHADER_TYPE::DEFERRED,
-			RASTERIZER_TYPE::CULL_FRONT,
-			DEPTH_STENCIL_TYPE::NO_DEPTH_TEST,
 			RASTERIZER_TYPE::CULL_NONE,
+			DEPTH_STENCIL_TYPE::NO_DEPTH_TEST,
 		};
 
 		shared_ptr<Shader> shader = make_shared<Shader>();
 		shader->CreateGraphicsShader(L"..\\Resources\\Shader\\deferred.fx", info);
-
 		Add<Shader>(L"GunDeffered", shader);
-
 		Add<Shader>(L"Gun", shader);
 	}
 
@@ -420,6 +414,7 @@ void Resources::CreateDefaultShader()
 		ShaderInfo info =
 		{
 			SHADER_TYPE::FORWARD,
+			RASTERIZER_TYPE::CULL_NONE,
 		};
 
 		shared_ptr<Shader> shader = make_shared<Shader>();
