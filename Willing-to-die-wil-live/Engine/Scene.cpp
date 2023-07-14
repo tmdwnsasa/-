@@ -275,12 +275,9 @@ void Scene::LateUpdate()
 						{
 							Object->GetBoxCollider()->SetOnOff(false);
 							//Object->GetEnemy()->AnimationCount();
-<<<<<<< HEAD
 							DeathCount++;
 							_trashBin.push_back(gameObject);
-=======
 							
->>>>>>> 36043eb59c0512caba7c30a8e4518f5d80178b63
 							//_trashBin.push_back(Object);
 						}
 					}
