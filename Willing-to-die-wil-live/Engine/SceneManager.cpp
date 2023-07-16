@@ -140,9 +140,9 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 #pragma endregion
 	//shared_ptr<MeshData> ZombieMesh2 = make_shared<MeshData>();
 	//ZombieMesh2->Save(L"..\\Resources\\FBX\\tes.fbx");
-	shared_ptr<MeshData> ZombieMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\tes.bin");
-	shared_ptr<MeshData> TZombieMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\test.bin");
-	shared_ptr<MeshData> TTZombieMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\testt.bin");
+	shared_ptr<MeshData> ZombieMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\tes.fbx");
+	shared_ptr<MeshData> TZombieMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\test.fbx");
+	shared_ptr<MeshData> TTZombieMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\testt.fbx");
 	
 #pragma region ComputeShader
 	{

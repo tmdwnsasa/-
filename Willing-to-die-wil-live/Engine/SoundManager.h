@@ -15,22 +15,14 @@ public:
 	void CreateSound(const string& filename, const string& soundname, const bool& loop);
 	void PlaySound(const string& sound_name, float volume);
 	void StopSound(const string& sound_name);
+	bool IsPlaying(const std::string& sound_name);
 
 private:
 	FMOD::System* system;
 
 	std::map<std::string, FMOD::Sound*> _SoundMap;
+	std::vector<std::string> _PlayingSoundVector;
 
-
-	//Spawn
-	FMOD::Sound* Bruisersound;
-	FMOD::Sound* Stalkersound;
-
-	//Enemy
-	FMOD::Sound* Deadsound;
-
-	//Shop
-	FMOD::Sound* Buyingsound;
 
 	FMOD::Channel* channel;
 	void* fextradriverdata;
