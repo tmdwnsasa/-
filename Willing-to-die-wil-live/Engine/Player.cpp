@@ -38,19 +38,50 @@ void Player::Update()
 {
 	Vec3 pos = GetTransform()->GetLocalPosition();
 	Vec3 oldPos = pos;
-
+	bool a = GET_SINGLE(SoundManager)->IsPlaying("Footwalksound");
+	cout << a;
 
 	if (INPUT->GetButton(KEY_TYPE::W))
+	{
 		pos += GetTransform()->GetLook() * _speed * DELTA_TIME;
+		
+		if (GET_SINGLE(SoundManager)->IsPlaying("Footwalksound") == false)
+		{
+			GET_SINGLE(SoundManager)->PlaySound("Footwalksound", 0.3f);
+		}
+	}
 
 	if (INPUT->GetButton(KEY_TYPE::S))
+	{
 		pos -= GetTransform()->GetLook() * _speed * DELTA_TIME;
+		if (GET_SINGLE(SoundManager)->IsPlaying("Footwalksound") == false)
+		{
+			GET_SINGLE(SoundManager)->PlaySound("Footwalksound", 0.3f);
+		}
+	}
 
 	if (INPUT->GetButton(KEY_TYPE::A))
+	{
 		pos -= GetTransform()->GetRight() * _speed * DELTA_TIME;
+		if (GET_SINGLE(SoundManager)->IsPlaying("Footwalksound") == false)
+		{
+			GET_SINGLE(SoundManager)->PlaySound("Footwalksound", 0.3f);
+		}
+	}
 
 	if (INPUT->GetButton(KEY_TYPE::D))
+	{
 		pos += GetTransform()->GetRight() * _speed * DELTA_TIME;
+		if (GET_SINGLE(SoundManager)->IsPlaying("Footwalksound") == false)
+		{
+			GET_SINGLE(SoundManager)->PlaySound("Footwalksound", 0.3f);
+		}
+	}
+
+	if (INPUT->GetButtonUp(KEY_TYPE::W))
+	{
+		GET_SINGLE(SoundManager)->StopSound("Footwalksound");
+	}
 
 	//점프 구현 필요
 	if(INPUT->GetButton(KEY_TYPE::Space ))

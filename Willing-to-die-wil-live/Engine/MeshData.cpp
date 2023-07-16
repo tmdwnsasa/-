@@ -16,20 +16,30 @@ MeshData::~MeshData()
 {
 }
 
-shared_ptr<MeshData> MeshData::LoadFromFBX(const wstring& path)
+shared_ptr<MeshData> MeshData::LoadFromFBX(const wstring& strpath)
 {
 	FBXLoader loader;
 
 	shared_ptr<MeshData> meshData = make_shared<MeshData>();
-
-
+	wstring path = fs::path(strpath).parent_path().wstring() + L"\\" + fs::path(strpath).filename().stem().wstring() + L".bin";
 	meshData->Load(path);
+
 	if (meshData->_find == true)
 	{
 		return meshData;
 	}
 	else
-		loader.LoadFbx(path);
+	{
+		meshData->Save(strpath);
+		meshData->Load(path);
+	}
+
+	if (meshData->_find == true)
+	{
+		return meshData;
+	}
+	else
+		loader.LoadFbx(strpath);
 
 
 	for (int32 i = 0; i < loader.GetMeshCount(); i++)
@@ -252,8 +262,8 @@ void MeshData::Save(const wstring& _strFilePath)
 	loader.LoadFbx(_strFilePath);
 	DWORD dwBytes;
 	HANDLE file;
-
-	file = CreateFile(L"..\\Resources\\FBX\\test.bin", GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+	wstring path = fs::path(_strFilePath).parent_path().wstring() + L"\\" + fs::path(_strFilePath).filename().stem().wstring() + L".bin";
+	file = CreateFile(path.c_str(), GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 	int32 meshcount = loader.GetMeshCount();
 	WriteFile(file, &meshcount, sizeof(int32), &dwBytes, NULL);
 	for (int i = 0; i < loader.GetMeshCount(); i++)

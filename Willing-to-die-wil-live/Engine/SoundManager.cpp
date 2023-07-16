@@ -17,6 +17,7 @@ void SoundManager::Init()
 		assert(1);
 
 	//result = system->createSound("singing.wav", FMOD_LOOP_NORMAL, 0, &fsound);
+	CreateSound("..\\Resources\\Sound\\Footsteps.wav", "Footwalksound", true);
 
 	CreateSound("..\\Resources\\Sound\\PistolShot.wav", "Pistolsound", false);
 	CreateSound("..\\Resources\\Sound\\ShotgunShot.wav", "Shotgunsound", false);
@@ -54,13 +55,26 @@ void SoundManager::CreateSound(const std::string& filename, const std::string& s
 	}
 }
 
-void SoundManager::PlaySound(const std::string& sound_name, float volume)
+void SoundManager::PlaySound(const std::string& soundname, float volume)
 {
-	result = system->playSound(_SoundMap[sound_name], 0, false, &channel);
+	result = system->playSound(_SoundMap[soundname], 0, false, &channel);
 	channel->setVolume(volume);
+	_PlayingSoundVector.push_back(soundname);
 }
 
-void SoundManager::StopSound(const std::string& sound_name)
+void SoundManager::StopSound(const std::string& soundname)
 {
-	result = system->playSound(_SoundMap[sound_name], 0, true, &channel);
+	result = system->playSound(_SoundMap[soundname], 0, true, &channel);
+}
+
+bool SoundManager::IsPlaying(const std::string& soundname)
+{
+	for (auto sound : _SoundMap)
+	{
+		if (sound.first == soundname)
+		{
+			return true;
+		}
+	}
+	return false;
 }
