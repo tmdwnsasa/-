@@ -12,6 +12,7 @@
 #include "MeshRenderer.h"
 #include "MeshData.h"
 #include "Material.h"
+#include "Timer.h"
 #include "Astar.h"
 #include "TileMap.h"
 #include "Enemy.h"
@@ -68,7 +69,28 @@ void Scene::Update()
 	//		z = gameObject->GetTransform()->GetLocalPosition().z;
 	//	}
 	//}
-	//MakeEnemy(CurrentWave);
+	if (!IsRest)
+	{
+		SponeTime += 1 * DELTA_TIME;
+
+		if (SponeTime >= 10)
+		{
+			MakeEnemy(CurrentWave);
+			SponeTime = 0.0f;
+		}
+	}
+
+	if (IsRest)
+	{
+		RestTime += 1 * DELTA_TIME;
+		if (RestTime >= 30)
+		{
+			// 휴식 끝 Wave시작
+			RestTime = 0;
+			IsRest = false;
+		}
+	}
+
 
 	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
 	{
@@ -289,6 +311,7 @@ void Scene::LateUpdate()
 		{
 			//Wave 끝
 			CurrentWave++;
+			IsRest = true;
 		}
 		//체력, 총알, 돈 출력
 		if (gameObject->GetName() == L"Player")

@@ -69,6 +69,9 @@ public:
 	int				BrZCount = 0;
 	int				ZCount = 0;
 
+	float			RestTime = 0.0f;
+	float			SponeTime = 0.0f;
+	bool			IsRest = false;
 
 
 private:
