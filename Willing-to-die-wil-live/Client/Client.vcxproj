@@ -84,7 +84,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>$(SolutionDir)Library/Include/;$(SolutionDir)Engine\;$(SolutionDir)Library/Include/FBX/;$(SolutionDir)Library/Include/Fmod/;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)Library/Lib/;$(SolutionDir)Output/;$(SolutionDir)Library/Lib/Fmod/;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)Library/Lib/Fmod/;$(SolutionDir)Library/Lib/;$(SolutionDir)Output/;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>$(SolutionDir)Library/Include/;$(SolutionDir)Engine\;$(SolutionDir)Library/Include/FBX/;$(SolutionDir)Library/Include/Fmod/;$(IncludePath)</IncludePath>
