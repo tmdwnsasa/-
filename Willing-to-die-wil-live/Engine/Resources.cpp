@@ -392,13 +392,37 @@ void Resources::CreateDefaultShader()
 		Add<Shader>(L"Deferred", shader);
 	}
 
+	// Deferred (Translucent)
+	{
+		ShaderInfo info =
+		{
+			SHADER_TYPE::DEFERRED,
+			RASTERIZER_TYPE::CULL_BACK,
+			DEPTH_STENCIL_TYPE::LESS_EQUAL,
+			BLEND_TYPE::ALPHA_BLEND,
+		};
+
+		ShaderArg arg =
+		{
+			"VS_TRANSLUCENT_Main",
+			"",
+			"",
+			"",
+			"PS_TRANSLUCENT_Main"
+		};
+
+		shared_ptr<Shader> shader = make_shared<Shader>();
+		shader->CreateGraphicsShader(L"..\\Resources\\Shader\\deferred.fx", info, arg);
+		Add<Shader>(L"Translucent", shader);
+	}
+
 	// Gun
 	// Deferred (For gun)
 	{
 		ShaderInfo info =
 		{
 			SHADER_TYPE::DEFERRED,
-			RASTERIZER_TYPE::CULL_NONE,
+			RASTERIZER_TYPE::CULL_BACK,
 			DEPTH_STENCIL_TYPE::NO_DEPTH_TEST,
 		};
 
@@ -562,6 +586,30 @@ void Resources::CreateDefaultShader()
 		shared_ptr<Shader> shader = make_shared<Shader>();
 		shader->CreateGraphicsShader(L"..\\Resources\\Shader\\lighting.fx", info, arg);
 		Add<Shader>(L"DirLight", shader);
+	}
+
+	// SpotLight
+	{
+		ShaderInfo info =
+		{
+			SHADER_TYPE::LIGHTING,
+			RASTERIZER_TYPE::CULL_NONE,
+			DEPTH_STENCIL_TYPE::NO_DEPTH_TEST_NO_WRITE,
+			BLEND_TYPE::ONE_TO_ONE_BLEND
+		};
+
+		ShaderArg arg =
+		{
+			"VS_SpotLight",
+			"",
+			"",
+			"",
+			"PS_SpotLight"
+		};
+
+		shared_ptr<Shader> shader = make_shared<Shader>();
+		shader->CreateGraphicsShader(L"..\\Resources\\Shader\\lighting.fx", info, arg);
+		Add<Shader>(L"SpotLight", shader);
 	}
 
 	// PointLight
@@ -815,6 +863,16 @@ void Resources::CreateDefaultMaterial()
 		material->SetShader(shader);
 		material->SetTexture(0, texture);
 		Add<Material>(L"MuzzleFlash", material);
+	}
+
+	// Bloody Screen
+	{
+		shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+		shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"BloodyScreen", L"..\\Resources\\Texture\\bloody screen.png");
+		shared_ptr<Material> material = make_shared<Material>();
+		material->SetShader(shader);
+		material->SetTexture(0, texture);
+		Add<Material>(L"BloodyScreen", material);
 	}
 
 	// Wall

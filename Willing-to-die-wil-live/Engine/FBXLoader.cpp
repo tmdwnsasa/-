@@ -330,6 +330,8 @@ void FBXLoader::CreateMaterials()
 				material->SetShader(GET_SINGLE(Resources)->Get<Shader>(L"GunDeffered"));
 			else if (_meshes[i].materials[j].name == L"Awp_DL_scope.001")
 				material->SetShader(GET_SINGLE(Resources)->Get<Shader>(L"GunDeffered"));
+			else if(_meshes[i].materials[j].name == L"Awp_DL.001")
+				material->SetShader(GET_SINGLE(Resources)->Get<Shader>(L"Deferred"));
 			else
 				material->SetShader(GET_SINGLE(Resources)->Get<Shader>(L"Deferred"));
 			{

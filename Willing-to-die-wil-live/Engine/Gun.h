@@ -11,14 +11,16 @@ public:
 
 	virtual void Update() override;
 	void recoil();
-	void SetRecoil(float recoil) { _curRecoil += recoil; };
+	void SetRecoil(float recoil) { _curRecoil += recoil; _curRecoil2 += recoil; };
 	void SetCameraTransform(shared_ptr<Transform> transform) { CameraTransform = transform; };
 
 private:
 
 	PLAYER_WEAPON weapon;
 	shared_ptr<Transform> CameraTransform;
+
 	float				_recoilAmount = 0.0f;
 	float				_curRecoil = 0.0f;
-	float				_downForce = 1.f;
+	float				_curRecoil2 = 0.0f;
+	float				_downForce = 0.5f;
 };

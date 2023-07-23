@@ -43,8 +43,8 @@ float4 PS_Font(VS_OUT input) : SV_TARGET
 	}
 	else
 	{
-		color.rgb = float3(0.5f, 1.0f, 0.5f);
-		color.a = 1.0f;
+		color.rgb = float3(0.9f, 0.9f, 0.9f);
+		color.a = 0.8f;
 	}
 
 	return color;

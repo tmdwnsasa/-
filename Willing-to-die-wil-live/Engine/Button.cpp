@@ -8,7 +8,7 @@
 Button::Button() : Component(COMPONENT_TYPE::BUTTON)
 {
 	_buttonType = BUTTON_TYPE::NONE;
-	_merchandise = PLAYER_WEAPON::PISTOL;
+	_merchandise = PLAYER_WEAPON::NONE;
 }
 
 Button::~Button()

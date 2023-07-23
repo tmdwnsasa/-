@@ -33,33 +33,33 @@ void CameraScript::Update()
 void CameraScript::LateUpdate()
 {
 	Vec3 pos = GetTransform()->GetLocalPosition();
-	//if (INPUT->GetButton(KEY_TYPE::Q))
-	//{
-	//	Vec3 rotation = GetTransform()->GetLocalRotation();
-	//	rotation.x += DELTA_TIME * 0.5f;
-	//	GetTransform()->SetLocalRotation(rotation);
-	//}
+	if (INPUT->GetButton(KEY_TYPE::Q))
+	{
+		Vec3 rotation = GetTransform()->GetLocalRotation();
+		rotation.x += DELTA_TIME * 0.5f;
+		GetTransform()->SetLocalRotation(rotation);
+	}
 
-	//if (INPUT->GetButton(KEY_TYPE::E))
-	//{
-	//	Vec3 rotation = GetTransform()->GetLocalRotation();
-	//	rotation.x -= DELTA_TIME * 0.5f;
-	//	GetTransform()->SetLocalRotation(rotation);
-	//}
+	if (INPUT->GetButton(KEY_TYPE::E))
+	{
+		Vec3 rotation = GetTransform()->GetLocalRotation();
+		rotation.x -= DELTA_TIME * 0.5f;
+		GetTransform()->SetLocalRotation(rotation);
+	}
 
-	//if (INPUT->GetButton(KEY_TYPE::Z))
-	//{
-	//	Vec3 rotation = GetTransform()->GetLocalRotation();
-	//	rotation.y += DELTA_TIME * 0.5f;
-	//	GetTransform()->SetLocalRotation(rotation);
-	//}
+	if (INPUT->GetButton(KEY_TYPE::Z))
+	{
+		Vec3 rotation = GetTransform()->GetLocalRotation();
+		rotation.y += DELTA_TIME * 0.5f;
+		GetTransform()->SetLocalRotation(rotation);
+	}
 
-	//if (INPUT->GetButton(KEY_TYPE::C))
-	//{
-	//	Vec3 rotation = GetTransform()->GetLocalRotation();
-	//	rotation.y -= DELTA_TIME * 0.5f;
-	//	GetTransform()->SetLocalRotation(rotation);
-	//}
+	if (INPUT->GetButton(KEY_TYPE::C))
+	{
+		Vec3 rotation = GetTransform()->GetLocalRotation();
+		rotation.y -= DELTA_TIME * 0.5f;
+		GetTransform()->SetLocalRotation(rotation);
+	}
 
 	if (INPUT->GetButtonDown(KEY_TYPE::LBUTTON))
 	{
@@ -130,14 +130,20 @@ void CameraScript::recoil()
 	{
 		_curRecoil -= _downForce;
 		_recoilAmount += _curRecoil;
-		GetTransform()->SetLocalRotation(Vec3(baseRot.x - _curRecoil / 70.f, baseRot.y, baseRot.z));
+		GetTransform()->SetLocalRotation(Vec3(baseRot.x - (_recoilAmount / 70.f), baseRot.y, baseRot.z));
 
 	}
 	else if (_recoilAmount > 0.f)
 	{
-		_recoilAmount -= _downForce;
-		_curRecoil = 0;
-		GetTransform()->SetLocalRotation(Vec3(baseRot.x + _downForce / 30.f, baseRot.y, baseRot.z));
-
+		_curRecoil2 -= _downForce;
+		_recoilAmount -= _curRecoil2;
+		GetTransform()->SetLocalRotation(Vec3(baseRot.x - (_recoilAmount / 70.f), baseRot.y, baseRot.z));
 	}
+	else if (_recoilAmount < 0.f)
+	{
+		_recoilAmount = 0;
+		_curRecoil2 = 0;
+		_curRecoil = 0;
+	}
+	cout << _curRecoil << ", " << _curRecoil2 << endl;
 }

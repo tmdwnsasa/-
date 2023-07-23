@@ -84,6 +84,68 @@ PS_OUT PS_DirLight(VS_OUT input)
     return output;
 }
 
+// [Directional Light]
+// g_int_0 : Light index
+// g_tex_0 : Position RT
+// g_tex_1 : Normal RT
+// g_tex_2 : Shadow RT
+// g_mat_0 : ShadowCamera VP
+// Mesh : Rectangle
+
+VS_OUT VS_SpotLight(VS_IN input)
+{
+    VS_OUT output = (VS_OUT) 0;
+
+    output.pos = float4(input.pos * 2.f, 1.f);
+    output.uv = input.uv;
+
+    return output;
+}
+
+PS_OUT PS_SpotLight(VS_OUT input)
+{
+    PS_OUT output = (PS_OUT) 0;
+
+    float3 viewPos = g_tex_0.Sample(g_sam_0, input.uv).xyz;
+    if (viewPos.z <= 0.f)
+        clip(-1);
+
+    float3 viewNormal = g_tex_1.Sample(g_sam_0, input.uv).xyz;
+
+    LightColor color = CalculateLightColor(g_int_0, viewNormal, viewPos);
+
+    // ±×¸²ÀÚ
+    if (length(color.diffuse) != 0)
+    {
+        matrix shadowCameraVP = g_mat_0;
+
+        float4 worldPos = mul(float4(viewPos.xyz, 1.f), g_matViewInv);
+        float4 shadowClipPos = mul(worldPos, shadowCameraVP);
+        float depth = shadowClipPos.z / shadowClipPos.w;
+
+        // x [-1 ~ 1] -> u [0 ~ 1]
+        // y [1 ~ -1] -> v [0 ~ 1]
+        float2 uv = shadowClipPos.xy / shadowClipPos.w;
+        uv.y = -uv.y;
+        uv = uv * 0.5 + 0.5;
+
+        if (0 < uv.x && uv.x < 1 && 0 < uv.y && uv.y < 1)
+        {
+            float shadowDepth = g_tex_2.Sample(g_sam_0, uv).x;
+            if (shadowDepth > 0 && depth > shadowDepth + 0.00001f)
+            {
+                color.diffuse *= 0.5f;
+                color.specular = (float4) 0.f;
+            }
+        }
+    }
+
+    output.diffuse = color.diffuse + color.ambient;
+    output.specular = color.specular;
+
+    return output;
+}
+
 // [Point Light]
 // g_int_0 : Light index
 // g_tex_0 : Position RT
