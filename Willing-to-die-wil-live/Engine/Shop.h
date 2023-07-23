@@ -18,15 +18,20 @@ public:
 
 	void MakeMerchandise(int count, PLAYER_WEAPON weapon);
 	void ShowSelectedMerchandise();
+	void SetSelectedObject(shared_ptr<GameObject> object) { _selectedObject = object; };
+	shared_ptr<GameObject> GetSelectedObject() { return _selectedObject; };
 	shared_ptr<GameObject> GetSelected() { return _selected; };
+	int GetSelectedNum() { return _selectedNum; };
 
 private:
 	vector<shared_ptr<GameObject>> _shopObject;
 	bool		_shopState = false;
 	int			_shopMerchandise = 4;
 	POINT		_mousePos;
+	int			_selectedNum;
 
 	shared_ptr<GameObject> _selected = NULL;
+	shared_ptr<GameObject> _selectedObject = NULL;
 	bool		_purchase = false;
 
 };	

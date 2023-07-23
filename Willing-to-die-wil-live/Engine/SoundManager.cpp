@@ -35,12 +35,6 @@ void SoundManager::Update()
 	result = system->update();		//재생 업데이트
 	if (result != FMOD_OK) assert(1);
 
-	if (channel)
-	{
-		bool playing = false;
-		result = channel->isPlaying(&playing);  // 곡이 재생 중이라면 playing이 true가 되고 재생이 끝났다면 false가 되어 무한 루프 빠져나오고 프로그램 종료 
-		//if (!playing) assert(1);
-	}
 }
 
 void SoundManager::CreateSound(const std::string& filename, const std::string& soundname, const bool& loop)
@@ -59,19 +53,35 @@ void SoundManager::PlaySound(const std::string& soundname, float volume)
 {
 	result = system->playSound(_SoundMap[soundname], 0, false, &channel);
 	channel->setVolume(volume);
-	_PlayingSoundVector.push_back(soundname);
 }
+
+
 
 void SoundManager::StopSound(const std::string& soundname)
 {
 	result = system->playSound(_SoundMap[soundname], 0, true, &channel);
 }
 
+void SoundManager::PlayLoopSound(const string& soundname, float volume)
+{
+	result = system->playSound(_SoundMap[soundname], 0, false, &_ChannelMap[soundname]);
+	_ChannelMap[soundname]->setPaused(false);
+
+	_ChannelMap[soundname]->setVolume(volume);
+	_PlayingSoundVector.push_back(soundname);
+}
+
+void SoundManager::StopLoopSound(const string& soundname)
+{
+	_ChannelMap[soundname]->setPaused(true);
+	_PlayingSoundVector.erase(remove(_PlayingSoundVector.begin(), _PlayingSoundVector.end(), soundname), _PlayingSoundVector.end());
+}
+
 bool SoundManager::IsPlaying(const std::string& soundname)
 {
-	for (auto sound : _SoundMap)
+	for (auto sound : _PlayingSoundVector)
 	{
-		if (sound.first == soundname)
+		if (sound == soundname)
 		{
 			return true;
 		}

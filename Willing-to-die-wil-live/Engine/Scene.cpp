@@ -43,7 +43,7 @@ void Scene::Awake()
 	ZombieMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Parasite.fbx");
 	StalkerZombieMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\war.fbx");
 	BruserZombieMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\SpZombie.fbx");
-
+	_shopSelectedNum = 1000;
 	//parasite,war,Spzombie
 }
 
@@ -70,6 +70,7 @@ void Scene::Update()
 	//}
 	//MakeEnemy(CurrentWave);
 
+
 	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
 	{
 		if (gameObject->GetName() == L"Gun3")
@@ -92,7 +93,21 @@ void Scene::Update()
 		{
 			if (_shopOpened == true)
 			{
-				if (gameObject->GetShop()->GetPurchase() == true)
+				if (gameObject->GetShop()->GetSelectedObject() != NULL &&
+					_shopSelectedNum != gameObject->GetShop()->GetSelectedNum())
+				{
+
+					for (const shared_ptr<GameObject>& trash : _gameObjects)
+					{
+						if (trash->GetName() == L"SelectedItem")
+						{
+							_trashBin.push_back(trash);
+						}
+					}
+					_shopSelectedNum = gameObject->GetShop()->GetSelectedNum();
+					_gameObjects.push_back(gameObject->GetShop()->GetSelectedObject());
+				}
+				if (gameObject->GetShop()->GetPurchase() == true)	//구매시
 				{
 					for (auto& object : _gameObjects)
 					{
@@ -124,16 +139,24 @@ void Scene::Update()
 				_shopOpened = gameObject->GetShop()->GetShopState();
 				if (_shopOpened == true)
 				{
-					for (auto& gameObject : gameObject->GetShop()->GetShopObjects())
+					for (auto& ShopObject : gameObject->GetShop()->GetShopObjects())
 					{
-						_gameObjects.push_back(gameObject);
+						_gameObjects.push_back(ShopObject);
 					}
 				}
 				else
 				{
-					for (auto& gameObject : gameObject->GetShop()->GetShopObjects())
+					for (auto& trash : gameObject->GetShop()->GetShopObjects())
 					{
-						_trashBin.push_back(gameObject);
+						_trashBin.push_back(trash);
+
+						for (const shared_ptr<GameObject>& trash2 : _gameObjects)
+						{
+							if (trash2->GetName() == L"SelectedItem")
+							{
+								_trashBin.push_back(gameObject->GetShop()->GetSelectedObject());
+							}
+						}
 					}
 				}
 			}
@@ -277,7 +300,7 @@ void Scene::LateUpdate()
 							//Object->GetEnemy()->AnimationCount();
 							DeathCount++;
 							_trashBin.push_back(gameObject);
-							
+
 							//_trashBin.push_back(Object);
 						}
 					}
@@ -305,10 +328,17 @@ void Scene::LateUpdate()
 					shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 					Object->GetMeshRenderer()->SetMesh(GET_SINGLE(Resources)->LoadFontMesh(Object->GetFont()->GetTextVB(to_string(gameObject->GetPlayer()->GetCurrAmmo()))));
 				}
+				if (Object->GetName() == L"MaxBulletText")
+				{
+					shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+					string temp = "/" + to_string(gameObject->GetPlayer()->GetMaxAmmo());
+					Object->GetMeshRenderer()->SetMesh(GET_SINGLE(Resources)->LoadFontMesh(Object->GetFont()->GetTextVB(temp)));
+				}
 				if (Object->GetName() == L"MoneyText")
 				{
 					shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-					Object->GetMeshRenderer()->SetMesh(GET_SINGLE(Resources)->LoadFontMesh(Object->GetFont()->GetTextVB(to_string(gameObject->GetPlayer()->GetMoney()))));
+					string temp = to_string(gameObject->GetPlayer()->GetMoney()) + "$";
+					Object->GetMeshRenderer()->SetMesh(GET_SINGLE(Resources)->LoadFontMesh(Object->GetFont()->GetTextVB(temp)));
 				}
 			}
 		}
@@ -513,9 +543,11 @@ void Scene::SetCameraPosToPlayer()	//플레이어와 카메라에게 서로의 위치를 준다.
 			cameraLook = gameObject->GetTransform()->GetLook();
 			cameraTrasform = gameObject->GetTransform();
 		}
-		if (gameObject->GetName() == L"Light1")
+
+		if (gameObject->GetName() == L"Light1")	//빛 위치 x - 800 z- 500
 		{
-			gameObject->GetTransform()->SetLocalPosition(Vec3(playerPos.x-800.f, 2000.f, playerPos.z-500.f));
+			//gameObject->GetTransform()->SetLocalPosition(Vec3(playerPos.x, 100.f, playerPos.z));
+			//gameObject->GetTransform()->LookAt(cameraLook);
 		}
 	}
 
@@ -524,7 +556,7 @@ void Scene::SetCameraPosToPlayer()	//플레이어와 카메라에게 서로의 위치를 준다.
 	{
 		if (gameObject->GetName() == L"Player")
 		{
-			gameObject->GetPlayer()->SetBulletPos(Vec3(cameraPos.x, cameraPos.y, cameraPos.z-20.f));
+			gameObject->GetPlayer()->SetBulletPos(Vec3(cameraPos.x, cameraPos.y, cameraPos.z - 20.f));
 			gameObject->GetPlayer()->SetBulletLook(cameraLook);
 		}
 		if (gameObject->GetName() == L"Gun")
@@ -541,7 +573,7 @@ void Scene::SetPlayerPosToEnemy()
 	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
 		if (gameObject->GetName() == L"Player")
 			PlayerPos = gameObject->GetTransform()->GetLocalPosition();
-	
+
 	PlayerObPos = PlayerPos;
 
 }
@@ -618,7 +650,7 @@ void Scene::CollisionPlayerToWall()
 		float distanceL = FLT_MAX;
 		float distanceR = FLT_MAX;
 
-		if (gameObject->GetBoxCollider()->Intersects(playerPos, front , OUT distanceF) == true)
+		if (gameObject->GetBoxCollider()->Intersects(playerPos, front, OUT distanceF) == true)
 		{
 			if (distanceF < minDistanceF)
 			{
@@ -664,7 +696,7 @@ void Scene::CollisionPlayerToWall()
 				gameObject->GetPlayer()->collisionFront(false);
 
 			if (minDistanceB < DistanceWall && 0 < DistanceWall)
-			gameObject->GetPlayer()->collisionBack(true);
+				gameObject->GetPlayer()->collisionBack(true);
 			else
 				gameObject->GetPlayer()->collisionBack(false);
 
@@ -682,7 +714,7 @@ void Scene::CollisionPlayerToWall()
 	}
 }
 
-void Scene:: CheckWave()
+void Scene::CheckWave()
 {
 	switch (CurrentWave)
 	{

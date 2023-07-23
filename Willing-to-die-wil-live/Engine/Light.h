@@ -57,7 +57,6 @@ public:
 	void SetLightType(LIGHT_TYPE type);
 	void SetLightRange(float range) { _lightInfo.range = range; }
 	void SetLightAngle(float angle) { _lightInfo.angle = angle; }
-
 	void SetLightIndex(int8 index) { _lightIndex = index; }
 
 private:
@@ -69,4 +68,3 @@ private:
 
 	shared_ptr<GameObject> _shadowCamera;
 };
-

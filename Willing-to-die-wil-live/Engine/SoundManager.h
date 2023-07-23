@@ -13,8 +13,10 @@ public:
 	void Update();
 
 	void CreateSound(const string& filename, const string& soundname, const bool& loop);
-	void PlaySound(const string& sound_name, float volume);
-	void StopSound(const string& sound_name);
+	void PlaySound(const string& soundname, float volume);
+	void StopSound(const string& soundname);
+	void PlayLoopSound(const string& soundname, float volume);
+	void StopLoopSound(const string& soundname);
 	bool IsPlaying(const std::string& sound_name);
 
 private:
@@ -25,9 +27,9 @@ private:
 
 
 	FMOD::Channel* channel;
+	std::map<std::string, FMOD::Channel*> _ChannelMap;
 	void* fextradriverdata;
 
 	FMOD_RESULT       result;
 	unsigned int      version;
 };
-

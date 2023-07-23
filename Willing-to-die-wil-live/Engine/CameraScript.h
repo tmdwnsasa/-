@@ -17,7 +17,8 @@ public:
 	bool GetMouseLock() { return _mouseLock; };
 	void SetShopOpened(bool open) { _shopOpened = open; };
 
-	void SetRecoil(float recoil) { _curRecoil += recoil; };
+	void SetRecoil(float recoil) {
+		_curRecoil += recoil; _curRecoil2 += recoil; };
 	void recoil();
 
 private:
@@ -33,5 +34,6 @@ private:
 
 	float				_recoilAmount = 0.0f;
 	float				_curRecoil = 0.0f;
-	float				_downForce = 1.f;
+	float				_curRecoil2 = 0.0f;
+	float				_downForce = 0.5f;
 };

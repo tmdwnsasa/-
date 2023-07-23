@@ -81,6 +81,7 @@ private:
 	shared_ptr<MeshData>				BruserZombieMesh;
 
 	bool			_shopOpened;
+	int				_shopSelectedNum = 1000;
 
 	bool			_clipcursor = false;
 	const double	py = std::acos(-1);

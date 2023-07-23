@@ -6,7 +6,6 @@ enum class PLAYER_STATE : uint8
 	IDLE,
 	WALK,
 
-
 	DIE,
 	END
 };
@@ -43,7 +42,7 @@ public:
 	virtual ~Player();
 
 public:
-	virtual void Awake() override;
+	virtual void Start() override;
 	virtual void Update() override;
 	void PlayerRotate();
 	void ChangeWeapon(PLAYER_WEAPON weapon);
@@ -63,7 +62,8 @@ public:
 	void SetHP(int hp) { _hp = hp; };
 	void SetCurrAmmo(int currAmmo) { _currAmmo = currAmmo; };
 	void SetMaxAmmo(int maxAmmo) {  _maxAmmo = maxAmmo; };
-
+	
+	void bleeding();
 	void SetRotateLock(bool lock) { _rotateLock = lock; };
 	void SetShopOpened(bool open) { _shopOpened = open; };
 	bool MoneyChange(int amount);
@@ -81,6 +81,9 @@ private:
 	bool			_right = false;
 	bool			_left = false;
 	bool			_jump = false;
+	bool			_isMoving = false;
+	bool			_running = false;
+	int				_stamina = 100;
 
 	// Shop
 	bool			_rotateLock = false;
@@ -102,14 +105,17 @@ private:
 	int				_maxAmmo = 0.f;
 	int				_currAmmo = 0.f;
 	int				_damage = 25.f;
-	int				_pellet = 1;
-	int				_reloadPerAmmo = 15;
+	int				_pellet = 0;
+	int				_reloadPerAmmo = 0;
 	float			_rateOfFire = 0.5f;
 	float			_reloadMaxTime = 3.f;
 	float			_reloadTime = 3.f;
-	int				_price = 500;
+	int				_price = 0;
 	int				_accuracy = 5000;
 	float			_weaponRecoil = 10;
+	bool			_readyToShot = true;
+	bool			_fullauto = false;
+	bool			_clicked = false;
 
 	// Bullet
 	vector<shared_ptr<GameObject>>	bullets;

@@ -14,7 +14,8 @@ Font::~Font()
 
 void Font::BuildFont()
 {
-    mFontData["original"] = LoadFontData("..\\Resources\\Font\\fontdata.txt");
+    mFontData["original"] = LoadFontData("..\\Resources\\Font\\example.txt");
+    mFontData["deathspirit"] = LoadFontData("..\\Resources\\Font\\DeathSpirit.txt");
 
 }
 
@@ -73,7 +74,7 @@ vector<Vertex> Font::GetTextVB(string sentence)
 
 
     float scaleX = 100.0f;
-    float scaleY = 100.0f;
+    float scaleY = 150.0f;
 
     for (size_t i = 0, k = 0; i < numLetters; ++i, k += 4)
     {
@@ -90,21 +91,21 @@ vector<Vertex> Font::GetTextVB(string sentence)
 
             // top left
             vertices[k + 0].pos = DirectX::XMFLOAT3(drawX, drawY, 0.0f);
-            vertices[k + 0].uv = DirectX::XMFLOAT2(mFontData["original"][letter].left, 0.0f);
+            vertices[k + 0].uv = DirectX::XMFLOAT2(mFontData["deathspirit"][letter].left, 0.0f);
 
             // bottom left
             vertices[k + 1].pos = DirectX::XMFLOAT3(drawX, drawY - scaleY, 0.0f);
-            vertices[k + 1].uv = DirectX::XMFLOAT2(mFontData["original"][letter].left, 0.7f);
+            vertices[k + 1].uv = DirectX::XMFLOAT2(mFontData["deathspirit"][letter].left, 1.0f);
 
             // bottom right
-            vertices[k + 2].pos = DirectX::XMFLOAT3(drawX + mFontData["original"][letter].size + scaleX, drawY - scaleY, 0.0f);
-            vertices[k + 2].uv = DirectX::XMFLOAT2(mFontData["original"][letter].right, 0.7f);
+            vertices[k + 2].pos = DirectX::XMFLOAT3(drawX + mFontData["deathspirit"][letter].size + scaleX, drawY - scaleY, 0.0f);
+            vertices[k + 2].uv = DirectX::XMFLOAT2(mFontData["deathspirit"][letter].right, 1.0f);
 
             // top right
-            vertices[k + 3].pos = DirectX::XMFLOAT3(drawX + mFontData["original"][letter].size + scaleX, drawY, 0.0f);
-            vertices[k + 3].uv = DirectX::XMFLOAT2(mFontData["original"][letter].right, 0.0f);
+            vertices[k + 3].pos = DirectX::XMFLOAT3(drawX + mFontData["deathspirit"][letter].size + scaleX, drawY, 0.0f);
+            vertices[k + 3].uv = DirectX::XMFLOAT2(mFontData["deathspirit"][letter].right, 0.0f);
 
-            drawX += mFontData["original"][letter].size + 10.0f + scaleX;
+            drawX += mFontData["deathspirit"][letter].size + 10.0f + scaleX;
         }
     }
     return vertices;

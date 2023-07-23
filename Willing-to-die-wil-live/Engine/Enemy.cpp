@@ -327,6 +327,9 @@ void Enemy::Respone()
 		else if (PlayerPos.z >= -3500)
 			CheckPoint = 4;
 	
+	//Ã¼Å©¿ë 
+	CheckPoint = 1;
+
 	switch (CheckPoint)
 	{
 	case 1:
