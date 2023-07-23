@@ -18,7 +18,7 @@
 //#pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console")
 
 
-StalkerEnemy::StalkerEnemy() : Component(COMPONENT_TYPE::ENEMY)
+StalkerEnemy::StalkerEnemy() : Component(COMPONENT_TYPE::STALKERENEMY)
 {
 
 }
@@ -48,10 +48,16 @@ void StalkerEnemy::Update()
 	Time += DELTA_TIME;
 	if (Time > 0.1)
 	{
-		AstarCall();
+		if (_hp > 0)
+		{
+			AstarCall();
+		}
 		Time = 0;
 	}
-	AstarMove(firstx, firsty, secondx, secondy);
+	if (_hp > 0)
+	{
+		AstarMove(firstx, firsty, secondx, secondy);
+	}
 
 	Animation();
 
@@ -281,7 +287,11 @@ void StalkerEnemy::AnimationCount()
 
 	else if (AnimeCount == 2)
 	{
-
+		DieTime += DELTA_TIME;
+		if (DieTime > 2.2)
+		{
+			GetAnimator()->Stop();
+		}
 	}
 }
 

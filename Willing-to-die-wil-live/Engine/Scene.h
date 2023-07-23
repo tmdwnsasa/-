@@ -48,7 +48,9 @@ public:
 
 	void EnemyAtk();
 	void CheckWave();
-	void MakeEnemy(int Wave);
+	void MakeNormal(int Wave);
+	void MakeStalker(int Wave);
+	void MakeBruser(int Wave);
 
 private:
 	void PushLightData();
@@ -62,12 +64,16 @@ public:
 	Vec3			WallObPos;
 	int				CurrentWave = 1;
 	int				DeathCount = 0;
-	int				EnemyCount = 0;
+	int				EnemyCount = 10;
 	int				Wave1 = 5;
 	int				Wave2 = 10;
 	int				STZCount = 0;
 	int				BrZCount = 0;
 	int				ZCount = 0;
+	int				Total = 0;
+	int				FSTZCount = 0;
+	int				FBrZCount = 0;
+	int				FZCount = 0;
 
 	float			RestTime = 0.0f;
 	float			SponeTime = 0.0f;

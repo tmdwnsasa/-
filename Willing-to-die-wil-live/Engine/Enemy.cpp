@@ -47,17 +47,15 @@ void Enemy::Update()
 	Time += DELTA_TIME;
 	if (Time > 0.1)
 	{
-		AstarCall();
+		if (_hp > 0)
+		{
+			AstarCall();
+		}
 		Time = 0;
 	}
-	AstarMove(firstx, firsty, secondx, secondy);
+	//AstarMove(firstx, firsty, secondx, secondy);
 
-	if (_hp > 0)
-	{
-		//AstarCall();
-	}
 
-	Time = 0;
 	if (_hp > 0)
 	{
 		AstarMove(firstx, firsty, secondx, secondy);

@@ -66,7 +66,6 @@
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Shop.h" />
     <ClInclude Include="SimpleMath.h" />
-    <ClInclude Include="SoundManager.h" />
     <ClInclude Include="SphereCollider.h" />
     <ClInclude Include="StalkerEnemy.h" />
     <ClInclude Include="StructuredBuffer.h" />
@@ -133,7 +132,6 @@
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Shop.cpp" />
     <ClCompile Include="SimpleMath.cpp" />
-    <ClCompile Include="SoundManager.cpp" />
     <ClCompile Include="SphereCollider.cpp" />
     <ClCompile Include="StalkerEnemy.cpp" />
     <ClCompile Include="StructuredBuffer.cpp" />

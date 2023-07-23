@@ -13,7 +13,7 @@
 #include "MeshRenderer.h"
 #include "BoxCollider.h"
 #include "Resources.h"
-#include "SoundManager.h"
+//#include "SoundManager.h"
 #include <iostream>
 //////////////////////////////////////////////////
 // Player
@@ -31,57 +31,56 @@ Player::~Player()
 
 void Player::Awake()
 {
-	ChangeWeapon(PLAYER_WEAPON::PISTOL);
 }
 
 void Player::Update()
 {
 	Vec3 pos = GetTransform()->GetLocalPosition();
 	Vec3 oldPos = pos;
-	bool a = GET_SINGLE(SoundManager)->IsPlaying("Footwalksound");
-	cout << a;
+//	bool a = GET_SINGLE(SoundManager)->IsPlaying("Footwalksound");
+	//cout << a;
 
 	if (INPUT->GetButton(KEY_TYPE::W))
 	{
 		pos += GetTransform()->GetLook() * _speed * DELTA_TIME;
 		
-		if (GET_SINGLE(SoundManager)->IsPlaying("Footwalksound") == false)
-		{
-			GET_SINGLE(SoundManager)->PlaySound("Footwalksound", 0.3f);
-		}
+	//	if (GET_SINGLE(SoundManager)->IsPlaying("Footwalksound") == false)
+	//	{
+		//	GET_SINGLE(SoundManager)->PlaySound("Footwalksound", 0.3f);
+	//	}
 	}
 
 	if (INPUT->GetButton(KEY_TYPE::S))
 	{
 		pos -= GetTransform()->GetLook() * _speed * DELTA_TIME;
-		if (GET_SINGLE(SoundManager)->IsPlaying("Footwalksound") == false)
-		{
-			GET_SINGLE(SoundManager)->PlaySound("Footwalksound", 0.3f);
-		}
+	//	if (GET_SINGLE(SoundManager)->IsPlaying("Footwalksound") == false)
+	//	{
+	//		GET_SINGLE(SoundManager)->PlaySound("Footwalksound", 0.3f);
+	//	}
 	}
 
 	if (INPUT->GetButton(KEY_TYPE::A))
 	{
 		pos -= GetTransform()->GetRight() * _speed * DELTA_TIME;
-		if (GET_SINGLE(SoundManager)->IsPlaying("Footwalksound") == false)
-		{
-			GET_SINGLE(SoundManager)->PlaySound("Footwalksound", 0.3f);
-		}
+		//if (GET_SINGLE(SoundManager)->IsPlaying("Footwalksound") == false)
+		//{
+		//	GET_SINGLE(SoundManager)->PlaySound("Footwalksound", 0.3f);
+		//}
 	}
 
 	if (INPUT->GetButton(KEY_TYPE::D))
 	{
 		pos += GetTransform()->GetRight() * _speed * DELTA_TIME;
-		if (GET_SINGLE(SoundManager)->IsPlaying("Footwalksound") == false)
-		{
-			GET_SINGLE(SoundManager)->PlaySound("Footwalksound", 0.3f);
-		}
+		//if (GET_SINGLE(SoundManager)->IsPlaying("Footwalksound") == false)
+		//{
+		//	GET_SINGLE(SoundManager)->PlaySound("Footwalksound", 0.3f);
+		//}
 	}
 
-	if (INPUT->GetButtonUp(KEY_TYPE::W))
-	{
-		GET_SINGLE(SoundManager)->StopSound("Footwalksound");
-	}
+	//if (INPUT->GetButtonUp(KEY_TYPE::W))
+	//{
+	//	GET_SINGLE(SoundManager)->StopSound("Footwalksound");
+	//}
 
 	//점프 구현 필요
 	if(INPUT->GetButton(KEY_TYPE::Space ))
@@ -138,14 +137,14 @@ void Player::Update()
 		{
 			_reloading = false;
 
-			if(_currWeapon == PLAYER_WEAPON::PISTOL)
-				GET_SINGLE(SoundManager)->PlaySound("Pistolsound", 0.3f);
-			if (_currWeapon == PLAYER_WEAPON::SMG)
-				GET_SINGLE(SoundManager)->PlaySound("Smgsound", 0.25f);
-			if (_currWeapon == PLAYER_WEAPON::SHOTGUN)
-				GET_SINGLE(SoundManager)->PlaySound("Shotgunsound", 0.25f);
-			if (_currWeapon == PLAYER_WEAPON::RIFLE)
-				GET_SINGLE(SoundManager)->PlaySound("Snipersound", 0.20f);
+			//if(_currWeapon == PLAYER_WEAPON::PISTOL)
+			//	GET_SINGLE(SoundManager)->PlaySound("Pistolsound", 0.3f);
+			//if (_currWeapon == PLAYER_WEAPON::SMG)
+			//	GET_SINGLE(SoundManager)->PlaySound("Smgsound", 0.25f);
+			//if (_currWeapon == PLAYER_WEAPON::SHOTGUN)
+			//	GET_SINGLE(SoundManager)->PlaySound("Shotgunsound", 0.25f);
+			//if (_currWeapon == PLAYER_WEAPON::RIFLE)
+			//	GET_SINGLE(SoundManager)->PlaySound("Snipersound", 0.20f);
 
 #pragma region Muzzle Flash
 			{
@@ -195,21 +194,10 @@ void Player::Update()
 				bullet->GetTransform()->SetLocalRotation(Vec3(rot.x + ((float)(RandomInt() - 50) / _accuracy), rot.y + ((float)(RandomInt() - 50) / _accuracy), rot.z));
 				bullet->SetStatic(false);
 
-				shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-				{
-					shared_ptr<Mesh> sphereMesh = GET_SINGLE(Resources)->LoadSphereMesh();
-					meshRenderer->SetMesh(sphereMesh);
-				}
-				{
-					shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"GameObject");
-					material->SetInt(0, 1);
-					meshRenderer->SetMaterial(material);
-				}
 
 				boxCollider->SetCenter(Vec3(0.f, 0.f, 0.f));
 				boxCollider->SetExtents(Vec3(10.f, 10.f, 10.f));
 				bullet->AddComponent(boxCollider);
-				bullet->AddComponent(meshRenderer);
 				bullets.push_back(bullet);
 			}
 			_currAmmo--;
@@ -304,7 +292,7 @@ void Player::ChangeWeapon(PLAYER_WEAPON weapon)
 
 #pragma region Pistol
 		{
-			shared_ptr<MeshData> GunMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\AWP_Dragon_Lore.fbx");
+			shared_ptr<MeshData> GunMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\shotgun.fbx");
 			vector<shared_ptr<GameObject>> gun = GunMesh->Instantiate();
 
 			for (auto& gameObject : gun)
