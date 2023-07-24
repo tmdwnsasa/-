@@ -22,20 +22,75 @@ Gun::~Gun()
 
 void Gun::Update()
 {
-	if (CameraTransform != NULL)
+	if (weapon == PLAYER_WEAPON::PISTOL)
 	{
-		Vec3 Pos = CameraTransform->GetLocalPosition();
-		Vec3 Right = CameraTransform->GetRight();
-		Vec3 Look = CameraTransform->GetLook();
-		Vec3 Up = CameraTransform->GetUp();
+		if (CameraTransform != NULL)
+		{
+			Vec3 Pos = CameraTransform->GetLocalPosition();
+			Vec3 Right = CameraTransform->GetRight();
+			Vec3 Look = CameraTransform->GetLook();
+			Vec3 Up = CameraTransform->GetUp();
 
-		Pos += Right * 30;
-		Pos += Up * -130;
-		Pos += Look * 100;
-		GetTransform()->SetLocalPosition(Pos);
-		GetTransform()->SetLocalScale(Vec3(10.f, 10.f, 10.f));
-		GetTransform()->LookAt(Vec3(Look));
+			Pos += Right * 30;
+			Pos += Up * -60;
+			Pos += Look * 180;
+			GetTransform()->SetLocalPosition(Pos);
+			GetTransform()->SetLocalScale(Vec3(6.f, 6.f, 6.f));
+			GetTransform()->LookAt(Vec3(Look));
+		}
 	}
+	if (weapon == PLAYER_WEAPON::SMG)
+	{
+		if (CameraTransform != NULL)
+		{
+			Vec3 Pos = CameraTransform->GetLocalPosition();
+			Vec3 Right = CameraTransform->GetRight();
+			Vec3 Look = CameraTransform->GetLook();
+			Vec3 Up = CameraTransform->GetUp();
+
+			Pos += Right * 30;
+			Pos += Up * -130;
+			Pos += Look * 100;
+			GetTransform()->SetLocalPosition(Pos);
+			GetTransform()->SetLocalScale(Vec3(10.f, 10.f, 10.f));
+			GetTransform()->LookAt(Vec3(Look));
+		}
+	}
+	if (weapon == PLAYER_WEAPON::SHOTGUN)
+	{
+		if (CameraTransform != NULL)
+		{
+			Vec3 Pos = CameraTransform->GetLocalPosition();
+			Vec3 Right = CameraTransform->GetRight();
+			Vec3 Look = CameraTransform->GetLook();
+			Vec3 Up = CameraTransform->GetUp();
+
+			Pos += Right * 30;
+			Pos += Up * -80;
+			Pos += Look * 100;
+			GetTransform()->SetLocalPosition(Pos);
+			GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+			GetTransform()->LookAt(Vec3(Look));
+		}
+	}
+	if (weapon == PLAYER_WEAPON::SNIPER)
+	{
+		if (CameraTransform != NULL)
+		{
+			Vec3 Pos = CameraTransform->GetLocalPosition();
+			Vec3 Right = CameraTransform->GetRight();
+			Vec3 Look = CameraTransform->GetLook();
+			Vec3 Up = CameraTransform->GetUp();
+
+			Pos += Right * 30;
+			Pos += Up * -130;
+			Pos += Look * 100;
+			GetTransform()->SetLocalPosition(Pos);
+			GetTransform()->SetLocalScale(Vec3(10.f, 10.f, 10.f));
+			GetTransform()->LookAt(Vec3(Look));
+		}
+	}
+
 
 	recoil();
 }

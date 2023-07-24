@@ -423,13 +423,12 @@ void Resources::CreateDefaultShader()
 		{
 			SHADER_TYPE::DEFERRED,
 			RASTERIZER_TYPE::CULL_BACK,
-			DEPTH_STENCIL_TYPE::NO_DEPTH_TEST,
+			DEPTH_STENCIL_TYPE::LESS_EQUAL,
 		};
 
 		shared_ptr<Shader> shader = make_shared<Shader>();
 		shader->CreateGraphicsShader(L"..\\Resources\\Shader\\deferred.fx", info);
 		Add<Shader>(L"GunDeffered", shader);
-		Add<Shader>(L"Gun", shader);
 	}
 
 	// Forward (Forward)
@@ -846,6 +845,18 @@ void Resources::CreateDefaultMaterial()
 	// GameObject
 	{
 		shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Deferred");
+		shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Leather", L"..\\Resources\\Texture\\Leather.jpg");
+		shared_ptr<Texture> texture2 = GET_SINGLE(Resources)->Load<Texture>(L"Leather_Normal", L"..\\Resources\\Texture\\Leather_Normal.jpg");
+		shared_ptr<Material> material = make_shared<Material>();
+		material->SetShader(shader);
+		material->SetTexture(0, texture);
+		material->SetTexture(1, texture2);
+		Add<Material>(L"GameObject", material);
+	}
+
+	// Gun
+	{
+		shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"GunDeffered");
 		shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Leather", L"..\\Resources\\Texture\\Leather.jpg");
 		shared_ptr<Texture> texture2 = GET_SINGLE(Resources)->Load<Texture>(L"Leather_Normal", L"..\\Resources\\Texture\\Leather_Normal.jpg");
 		shared_ptr<Material> material = make_shared<Material>();

@@ -15,7 +15,7 @@ enum class PLAYER_WEAPON : uint8
 	PISTOL,
 	SMG,
 	SHOTGUN,
-	RIFLE,
+	SNIPER,
 	NONE,
 	END
 };
@@ -55,18 +55,22 @@ public:
 	void SetBulletLook(Vec3 Look) { cameraLookForBullet = Look; };
 
 	int GetHP() { return _hp; };
-	int GetCurrAmmo() { return _currAmmo; };
-	int GetMaxAmmo() { return _maxAmmo; };
+	int GetCurrAmmo(PLAYER_WEAPON weapon);
+	int GetMaxAmmo();
+	PLAYER_WEAPON GetCurrWeapon() { return _currWeapon; };
 	int GetMoney() { return _money; };
 	float GetRecoil() { return _weaponRecoil; };
 	void SetHP(int hp) { _hp = hp; };
-	void SetCurrAmmo(int currAmmo) { _currAmmo = currAmmo; };
-	void SetMaxAmmo(int maxAmmo) {  _maxAmmo = maxAmmo; };
+	void MakeMuzzleFlash();
+
+	void AddMaxAmmo(PLAYER_WEAPON weapon);
 	
-	void bleeding();
+	void Bleeding();
+	shared_ptr<GameObject> GetBleeding() { return bleedingUI; };
 	void SetRotateLock(bool lock) { _rotateLock = lock; };
 	void SetShopOpened(bool open) { _shopOpened = open; };
 	bool MoneyChange(int amount);
+	void Reload();
 	void BulletMuzzleFlashErase();
 
 	void collisionFront(bool front) { _front = front; };
@@ -99,12 +103,13 @@ private:
 	bool			_reloading = 0;
 	int				_money = 100000;
 	float			_recoil = 0;
+	shared_ptr<GameObject> bleedingUI;
 
 	// Weapon
 	PLAYER_WEAPON	_currWeapon = PLAYER_WEAPON::NONE;
-	int				_maxAmmo = 0.f;
-	int				_currAmmo = 0.f;
-	int				_damage = 25.f;
+	int				_currMagazine = 0;
+	int				_maxAmmo = 0;
+	int				_damage = 25;
 	int				_pellet = 0;
 	int				_reloadPerAmmo = 0;
 	float			_rateOfFire = 0.5f;
@@ -116,6 +121,17 @@ private:
 	bool			_readyToShot = true;
 	bool			_fullauto = false;
 	bool			_clicked = false;
+	int				_ammoPrice = 0;
+
+	// Ammo
+	int PistolAmmo = 0;
+	int SmgAmmo = 0;
+	int ShotgunAmmo = 0;
+	int SniperAmmo = 0;
+	int	currPistolAmmo = 0;
+	int	currSmgAmmo = 0;
+	int	currShotgunAmmo = 0;
+	int	currSniperAmmo = 0;
 
 	// Bullet
 	vector<shared_ptr<GameObject>>	bullets;

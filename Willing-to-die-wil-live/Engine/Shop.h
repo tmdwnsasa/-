@@ -2,6 +2,7 @@
 #include "Component.h"
 #include "Player.h"
 
+
 class Shop : public Component
 {
 public:
@@ -17,7 +18,7 @@ public:
 	void SetPurchase(bool purchase) { _purchase = purchase; };
 
 	void MakeMerchandise(int count, PLAYER_WEAPON weapon);
-	void ShowSelectedMerchandise();
+	void ShowSelectedMerchandise();		//선택된 상품의 정보를 출력한다.
 	void SetSelectedObject(shared_ptr<GameObject> object) { _selectedObject = object; };
 	shared_ptr<GameObject> GetSelectedObject() { return _selectedObject; };
 	shared_ptr<GameObject> GetSelected() { return _selected; };

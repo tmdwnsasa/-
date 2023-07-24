@@ -18,6 +18,7 @@ void SoundManager::Init()
 
 	//result = system->createSound("singing.wav", FMOD_LOOP_NORMAL, 0, &fsound);
 	CreateSound("..\\Resources\\Sound\\Footsteps.wav", "Footwalksound", true);
+	CreateSound("..\\Resources\\Sound\\BackgroundMusic.wav", "Backgroundsound", true);
 
 	CreateSound("..\\Resources\\Sound\\PistolShot.wav", "Pistolsound", false);
 	CreateSound("..\\Resources\\Sound\\ShotgunShot.wav", "Shotgunsound", false);

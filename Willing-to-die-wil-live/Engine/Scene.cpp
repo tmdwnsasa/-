@@ -86,7 +86,40 @@ void Scene::Update()
 		}
 	}
 
-	//상점열기
+	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
+	{
+		if (gameObject->GetName() == L"Player")
+		{
+			if (gameObject->GetPlayer()->GetHP() >= 30)
+			{
+				for (const shared_ptr<GameObject>& object : _gameObjects)
+				{
+					if (object->GetName() == L"BloodyScreen")
+					{
+						_trashBin.push_back(object);
+					}
+				}
+			}
+
+			if (gameObject->GetPlayer()->GetHP() < 30)
+			{
+				bool isBleeding = false;
+				for (const shared_ptr<GameObject>& object : _gameObjects)
+				{
+					if (object->GetName() == L"BloodyScreen")
+					{
+						isBleeding = true;
+					}
+				}
+				if (isBleeding == false)
+				{
+					_gameObjects.push_back(gameObject->GetPlayer()->GetBleeding());
+				}
+			}
+		}
+	}
+
+	//상점
 	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
 	{
 		if (gameObject->GetName() == L"Shop")
@@ -107,23 +140,31 @@ void Scene::Update()
 					_shopSelectedNum = gameObject->GetShop()->GetSelectedNum();
 					_gameObjects.push_back(gameObject->GetShop()->GetSelectedObject());
 				}
+
 				if (gameObject->GetShop()->GetPurchase() == true)	//구매시
 				{
 					for (auto& object : _gameObjects)
 					{
 						if (object->GetName() == L"Player")
 						{
-							object->GetPlayer()->ChangeWeapon(gameObject->GetShop()->GetSelected()->GetButton()->GetMerchandise());
-							for (auto& makeTrash : _gameObjects)	// 무기를 사면 총을 지우고
+							if (gameObject->GetShop()->GetSelected()->GetButton()->GetMerchandiseType() == MERCHANDISE_TYPE::GUN)
 							{
-								if (makeTrash->GetName() == L"Gun")
+								object->GetPlayer()->ChangeWeapon(gameObject->GetShop()->GetSelected()->GetButton()->GetMerchandise());
+								for (auto& makeTrash : _gameObjects)	// 무기를 사면 총을 지우고
 								{
-									_trashBin.push_back(makeTrash);
+									if (makeTrash->GetName() == L"Gun")
+									{
+										_trashBin.push_back(makeTrash);
+									}
+								}
+								for (auto& gunobject : object->GetPlayer()->GetGun())	//총을 만든다
+								{
+									_gameObjects.push_back(gunobject);
 								}
 							}
-							for (auto& gunobject : object->GetPlayer()->GetGun())	//총을 만든다
+							else if (gameObject->GetShop()->GetSelected()->GetButton()->GetMerchandiseType() == MERCHANDISE_TYPE::BULLET)
 							{
-								_gameObjects.push_back(gunobject);
+								object->GetPlayer()->AddMaxAmmo(gameObject->GetShop()->GetSelected()->GetButton()->GetMerchandise());
 							}
 						}
 					}
@@ -154,7 +195,8 @@ void Scene::Update()
 						{
 							if (trash2->GetName() == L"SelectedItem")
 							{
-								_trashBin.push_back(gameObject->GetShop()->GetSelectedObject());
+								_trashBin.push_back(trash2);
+								_shopSelectedNum = 1000;
 							}
 						}
 					}
@@ -173,7 +215,7 @@ void Scene::Update()
 		}
 	}
 
-	// 총알 생성
+	// 총알 생성, 총구 화염 생성
 	int temp = 0;
 	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
 	{
@@ -326,12 +368,12 @@ void Scene::LateUpdate()
 				if (Object->GetName() == L"BulletText")
 				{
 					shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-					Object->GetMeshRenderer()->SetMesh(GET_SINGLE(Resources)->LoadFontMesh(Object->GetFont()->GetTextVB(to_string(gameObject->GetPlayer()->GetCurrAmmo()))));
+					Object->GetMeshRenderer()->SetMesh(GET_SINGLE(Resources)->LoadFontMesh(Object->GetFont()->GetTextVB(to_string(gameObject->GetPlayer()->GetCurrAmmo(gameObject->GetPlayer()->GetCurrWeapon())))));
 				}
 				if (Object->GetName() == L"MaxBulletText")
 				{
 					shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-					string temp = "/" + to_string(gameObject->GetPlayer()->GetMaxAmmo());
+					string temp = "/ " + to_string(gameObject->GetPlayer()->GetMaxAmmo());
 					Object->GetMeshRenderer()->SetMesh(GET_SINGLE(Resources)->LoadFontMesh(Object->GetFont()->GetTextVB(temp)));
 				}
 				if (Object->GetName() == L"MoneyText")

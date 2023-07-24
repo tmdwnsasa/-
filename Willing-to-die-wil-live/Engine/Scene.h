@@ -49,6 +49,7 @@ public:
 	void EnemyAtk();
 	void CheckWave();
 	void MakeEnemy(int Wave);
+	void MakePlayerBleed();
 
 private:
 	void PushLightData();

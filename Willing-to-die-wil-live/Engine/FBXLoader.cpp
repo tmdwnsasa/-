@@ -326,14 +326,7 @@ void FBXLoader::CreateMaterials()
 			shared_ptr<Material> material = make_shared<Material>();
 			wstring key = _meshes[i].materials[j].name;
 			material->SetName(key);
-			if(_meshes[i].materials[j].name == L"Awp_DL.001")
-				material->SetShader(GET_SINGLE(Resources)->Get<Shader>(L"GunDeffered"));
-			else if (_meshes[i].materials[j].name == L"Awp_DL_scope.001")
-				material->SetShader(GET_SINGLE(Resources)->Get<Shader>(L"GunDeffered"));
-			else if(_meshes[i].materials[j].name == L"Awp_DL.001")
-				material->SetShader(GET_SINGLE(Resources)->Get<Shader>(L"Deferred"));
-			else
-				material->SetShader(GET_SINGLE(Resources)->Get<Shader>(L"Deferred"));
+			material->SetShader(GET_SINGLE(Resources)->Get<Shader>(L"Deferred"));
 			{
 				wstring diffuseName = _meshes[i].materials[j].diffuseTexName.c_str();
 				wstring filename = fs::path(diffuseName).filename();

@@ -24,10 +24,10 @@ bool Button::CheckPress(POINT mousePos)
 	Pos.y += INPUT->GetOldMousePos().y;	
 	Vec3 Scale = GetTransform()->GetLocalScale();
 
-	if (mousePos.x >= Pos.x - Scale.x / 2 &&
-		mousePos.x <= Pos.x + Scale.x / 2 &&
-		mousePos.y >= Pos.y - Scale.y / 2 &&
-		mousePos.y <= Pos.y + Scale.y / 2)
+	if (mousePos.x >= Pos.x - Scale.x /2 &&
+		mousePos.x <= Pos.x + Scale.x /2 &&
+		mousePos.y >= Pos.y - Scale.y /1.2 &&
+		mousePos.y <= Pos.y + Scale.y /3)
 	{
 		return true;
 	}

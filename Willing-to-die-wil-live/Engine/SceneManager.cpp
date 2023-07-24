@@ -271,27 +271,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 	}
 #pragma endregion
 
-#pragma region BloodyScreen
-	{
-		shared_ptr<GameObject> obj = make_shared<GameObject>();
-		obj->SetName(L"BloodyScreen");
-		obj->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
-		obj->AddComponent(make_shared<Transform>());
-		obj->GetTransform()->SetLocalScale(Vec3(GEngine->GetWindow().width, GEngine->GetWindow().height, 1000.f));
-		obj->GetTransform()->SetLocalPosition(Vec3(0, 0, 900.f));
-		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 
-		shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-		meshRenderer->SetMesh(mesh);
-
-		{
-			shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"BloodyScreen");
-			meshRenderer->SetMaterial(material);
-			obj->AddComponent(meshRenderer);
-			//scene->AddGameObject(obj);
-		}
-	}
-#pragma endregion
 
 #pragma region Text_HP
 	{
@@ -332,7 +312,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		obj->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
 		obj->AddComponent(make_shared<Transform>());
 		obj->GetTransform()->SetLocalScale(Vec3(10.f, 10.f, 10.f));
-		obj->GetTransform()->SetLocalPosition(Vec3((GEngine->GetWindow().width / 2) - 120, -(GEngine->GetWindow().height / 2) + 100, 900.f));
+		obj->GetTransform()->SetLocalPosition(Vec3((GEngine->GetWindow().width / 2) - 160, -(GEngine->GetWindow().height / 2) + 100, 900.f));
 		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 
 		shared_ptr<Font> font = make_shared<Font>();
@@ -363,7 +343,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		obj->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
 		obj->AddComponent(make_shared<Transform>());
 		obj->GetTransform()->SetLocalScale(Vec3(10.f, 10.f, 10.f));
-		obj->GetTransform()->SetLocalPosition(Vec3((GEngine->GetWindow().width / 2) - 70, -(GEngine->GetWindow().height / 2) + 100, 900.f));
+		obj->GetTransform()->SetLocalPosition(Vec3((GEngine->GetWindow().width / 2) - 120, -(GEngine->GetWindow().height / 2) + 100, 900.f));
 		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 
 		shared_ptr<Font> font = make_shared<Font>();
@@ -394,7 +374,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		obj->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
 		obj->AddComponent(make_shared<Transform>());
 		obj->GetTransform()->SetLocalScale(Vec3(10.f, 10.f, 10.f));
-		obj->GetTransform()->SetLocalPosition(Vec3(-(GEngine->GetWindow().width / 2) + 100, (GEngine->GetWindow().height / 2)-50, 800.f));
+		obj->GetTransform()->SetLocalPosition(Vec3(-(GEngine->GetWindow().width / 2) + 100, (GEngine->GetWindow().height / 2)-50, 10.f));
 		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 
 		shared_ptr<Font> font = make_shared<Font>();
