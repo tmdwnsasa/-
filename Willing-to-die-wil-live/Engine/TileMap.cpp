@@ -24,43 +24,117 @@ void TileMap::CreateTile(Vector2& outStart, Vector2& outEnd,int Checker)
 	Enemy e;
 	StalkerEnemy Se;
 	BruserEnemy Be;
+
+
 	if (Checker == 1)
 	{
 		int(*tileMapArray)[kHeight] = e.CreateMap();
+		for (int y = 0; y < kHeight; ++y)
+		{
+			for (int x = 0; x < kWidth; ++x)
+			{
+				TileNode* curNode = &m_tileNode[y][x];
+				int tileAttribute = tileMapArray[y][x];
+
+				curNode->tileAttribute = (TileAttribute::T)tileAttribute;
+				curNode->index = y * kWidth + x;
+				curNode->pos.x = x;
+				curNode->pos.y = y;
+
+				if (curNode->tileAttribute == TileAttribute::Start)
+				{
+					outStart.x = x;
+					outStart.y = y;
+				}
+				else if (curNode->tileAttribute == TileAttribute::End)
+				{
+					outEnd.x = x;
+					outEnd.y = y;
+				}
+			}
+		}
 	}
 	else if (Checker == 2)
 	{
 		int(*tileMapArray)[kHeight] = Se.CreateMap();
+		for (int y = 0; y < kHeight; ++y)
+		{
+			for (int x = 0; x < kWidth; ++x)
+			{
+				TileNode* curNode = &m_tileNode[y][x];
+				int tileAttribute = tileMapArray[y][x];
+
+				curNode->tileAttribute = (TileAttribute::T)tileAttribute;
+				curNode->index = y * kWidth + x;
+				curNode->pos.x = x;
+				curNode->pos.y = y;
+
+				if (curNode->tileAttribute == TileAttribute::Start)
+				{
+					outStart.x = x;
+					outStart.y = y;
+				}
+				else if (curNode->tileAttribute == TileAttribute::End)
+				{
+					outEnd.x = x;
+					outEnd.y = y;
+				}
+			}
+		}
 	}
 	else if (Checker == 3)
 	{
 		int(*tileMapArray)[kHeight] = Be.CreateMap();
-	}
-
-	for (int y = 0; y < kHeight; ++y)
-	{
-		for (int x = 0; x < kWidth; ++x)
+		for (int y = 0; y < kHeight; ++y)
 		{
-			TileNode* curNode = &m_tileNode[y][x];
-			int tileAttribute = tileMapArray[y][x];
-
-			curNode->tileAttribute = (TileAttribute::T)tileAttribute;
-			curNode->index = y * kWidth + x;
-			curNode->pos.x = x;
-			curNode->pos.y = y;
-
-			if (curNode->tileAttribute == TileAttribute::Start)
+			for (int x = 0; x < kWidth; ++x)
 			{
-				outStart.x = x;
-				outStart.y = y;
-			}
-			else if (curNode->tileAttribute == TileAttribute::End)
-			{
-				outEnd.x = x;
-				outEnd.y = y;
+				TileNode* curNode = &m_tileNode[y][x];
+				int tileAttribute = tileMapArray[y][x];
+
+				curNode->tileAttribute = (TileAttribute::T)tileAttribute;
+				curNode->index = y * kWidth + x;
+				curNode->pos.x = x;
+				curNode->pos.y = y;
+
+				if (curNode->tileAttribute == TileAttribute::Start)
+				{
+					outStart.x = x;
+					outStart.y = y;
+				}
+				else if (curNode->tileAttribute == TileAttribute::End)
+				{
+					outEnd.x = x;
+					outEnd.y = y;
+				}
 			}
 		}
 	}
+
+	//for (int y = 0; y < kHeight; ++y)
+	//{
+	//	for (int x = 0; x < kWidth; ++x)
+	//	{
+	//		TileNode* curNode = &m_tileNode[y][x];
+	//		int tileAttribute = tileMapArray[y][x];
+
+	//		curNode->tileAttribute = (TileAttribute::T)tileAttribute;
+	//		curNode->index = y * kWidth + x;
+	//		curNode->pos.x = x;
+	//		curNode->pos.y = y;
+
+	//		if (curNode->tileAttribute == TileAttribute::Start)
+	//		{
+	//			outStart.x = x;
+	//			outStart.y = y;
+	//		}
+	//		else if (curNode->tileAttribute == TileAttribute::End)
+	//		{
+	//			outEnd.x = x;
+	//			outEnd.y = y;
+	//		}
+	//	}
+	//}
 }
 
 

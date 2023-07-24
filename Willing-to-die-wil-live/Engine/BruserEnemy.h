@@ -223,6 +223,7 @@ public:
 	const float scale = 300.0f;
 
 	float Time = 0.0f;
+	float DieTime = 0.0f;
 	int firstx = 0;
 	int firsty = 0;
 	int secondx = 0;
@@ -241,5 +242,5 @@ public:
 
 	bool ResponeCheck = false;
 private:
-	float		_speed = 150.f;
+	float		_speed = 50.0f;
 };

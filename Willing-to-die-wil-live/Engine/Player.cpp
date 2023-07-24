@@ -38,7 +38,6 @@ void Player::Start()
 
 void Player::Update()
 {
-
 	Vec3 pos = GetTransform()->GetLocalPosition();
 	Vec3 oldPos = pos;
 	_isMoving = false;
@@ -362,7 +361,7 @@ void Player::ChangeWeapon(PLAYER_WEAPON weapon)
 
 #pragma region SMG
 		{
-			shared_ptr<MeshData> GunMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Rifle.fbx");
+			shared_ptr<MeshData> GunMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\m4a1_s.fbx");
 			vector<shared_ptr<GameObject>> gun = GunMesh->Instantiate();
 
 			for (auto& gameObject : gun)
@@ -657,8 +656,8 @@ void Player::MakeMuzzleFlash()
 	}
 	if (PLAYER_WEAPON::SMG == _currWeapon)
 	{
-		MuzzleFlashFixedPos += Vec3(0, 70, 0);
-		MuzzleFlashFixedPos += gunObject[0]->GetTransform()->GetLook() * 30;
+		MuzzleFlashFixedPos += Vec3(0, 20, 0);
+		MuzzleFlashFixedPos += gunObject[0]->GetTransform()->GetLook() * 200;
 	}
 	if (PLAYER_WEAPON::SHOTGUN == _currWeapon)
 	{

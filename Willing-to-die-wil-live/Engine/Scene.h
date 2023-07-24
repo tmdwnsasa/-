@@ -48,7 +48,9 @@ public:
 
 	void EnemyAtk();
 	void CheckWave();
-	void MakeEnemy(int Wave);
+	void MakeNormal(int Wave);
+	void MakeStalker(int Wave);
+	void MakeBruser(int Wave);
 	void MakePlayerBleed();
 
 private:
@@ -61,17 +63,30 @@ public:
 	const vector<shared_ptr<GameObject>>& GetGameObjects() { return _gameObjects; }
 	Vec3			PlayerObPos;
 	Vec3			WallObPos;
+	Vec3			PlayerPosition;
+	Vec3			EnemyPosition;
+	Vec3			BrEnemyPosition;
+	Vec3			StEnemyPosition;
 	int				CurrentWave = 1;
 	int				DeathCount = 0;
-	int				EnemyCount = 0;
+	int				EnemyCount = 10;
 	int				Wave1 = 5;
 	int				Wave2 = 10;
 	int				STZCount = 0;
 	int				BrZCount = 0;
 	int				ZCount = 0;
+	int				Total = 0;
+	int				FSTZCount = 0;
+	int				FBrZCount = 0;
+	int				FZCount = 0;
 
+	float			RestTime = 0.0f;
+	float			SponeTime = 0.0f;
+	bool			IsRest = false;
+	float			Distance = 0;
 
-
+	int				PlayerHp = 0;
+	float			Time = 0;
 private:
 	vector<shared_ptr<GameObject>>		_gameObjects;
 	vector<shared_ptr<class Camera>>	_cameras;

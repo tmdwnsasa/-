@@ -48,11 +48,11 @@ void Gun::Update()
 			Vec3 Look = CameraTransform->GetLook();
 			Vec3 Up = CameraTransform->GetUp();
 
-			Pos += Right * 30;
-			Pos += Up * -130;
-			Pos += Look * 100;
+			Pos += Right * 10;
+			Pos += Up * -20;
+			Pos += Look * 80;
 			GetTransform()->SetLocalPosition(Pos);
-			GetTransform()->SetLocalScale(Vec3(10.f, 10.f, 10.f));
+			GetTransform()->SetLocalScale(Vec3(0.5f, 0.5f, 0.5f));
 			GetTransform()->LookAt(Vec3(Look));
 		}
 	}

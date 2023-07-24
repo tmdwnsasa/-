@@ -141,10 +141,10 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 #pragma endregion
 	//shared_ptr<MeshData> ZombieMesh2 = make_shared<MeshData>();
 	//ZombieMesh2->Save(L"..\\Resources\\FBX\\tes.fbx");
-	shared_ptr<MeshData> ZombieMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\tes.fbx");
-	//shared_ptr<MeshData> TZombieMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\StalkerZombie2.fbx");
-	//shared_ptr<MeshData> TTZombieMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Zombie_Run.fbx");
-	GET_SINGLE(SoundManager)->PlayLoopSound("Backgroundsound", 0.2f);
+	//shared_ptr<MeshData> ZombieMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\tes.fbx");
+	//shared_ptr<MeshData> TZombieMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\test.fbx");
+	//shared_ptr<MeshData> TTZombieMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\testt.fbx");
+	//
 #pragma region ComputeShader
 	{
 		shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"ComputeShader");
@@ -463,33 +463,33 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 	{
 		//shared_ptr<MeshData> ZombieMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\tes.fbx");
 
-		vector<shared_ptr<GameObject>> gameObjects1 = ZombieMesh->Instantiate();
+		//vector<shared_ptr<GameObject>> gameObjects1 = ZombieMesh->Instantiate();
 		//vector<shared_ptr<GameObject>> gameObjects2 = TZombieMesh->Instantiate();
 		//vector<shared_ptr<GameObject>> gameObjects3 = TTZombieMesh->Instantiate();
 
-		for (int i = 0; i < 1; i++)
-		{
-			for (auto& gameObject : gameObjects1)
-			{
+		//for (int i = 0; i < 1; i++)
+		//{
+		//	for (auto& gameObject : gameObjects1)
+		//	{
 
-				shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
-				boxCollider->SetCenter(Vec3(0.f, 150.f, 0.f));
-				boxCollider->SetExtents(Vec3(200.f, 300.f, 200.f));
+		//		shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
+		//		boxCollider->SetCenter(Vec3(0.f, 150.f, 0.f));
+		//		boxCollider->SetExtents(Vec3(200.f, 300.f, 200.f));
 
-				gameObject->SetName(L"Enemy");
-				gameObject->SetCheckFrustum(false);
-				gameObject->SetStatic(false);
-				gameObject->GetTransform()->SetLocalPosition(Vec3(3700.f, -100.f, -3600.f + (100.f * i)));
-				gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
-				gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
-				gameObject->AddComponent(boxCollider);
-				gameObject->AddComponent(make_shared<Enemy>());
-				gameObject->GetMeshRenderer()->GetMaterial()->SetInt(1, 1);
-				scene->AddGameObject(gameObject);
-			}
-		}
+		//		gameObject->SetName(L"Enemy");
+		//		gameObject->SetCheckFrustum(false);
+		//		gameObject->SetStatic(false);
+		//		gameObject->GetTransform()->SetLocalPosition(Vec3(3500.f + (i * 100), -100.f, -900.f));
+		//		gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+		//		gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
+		//		gameObject->AddComponent(boxCollider);
+		//		gameObject->AddComponent(make_shared<Enemy>());
+		//		gameObject->GetMeshRenderer()->GetMaterial()->SetInt(1, 1);
+		//		scene->AddGameObject(gameObject);
+		//	}
+		//}
 
-		
+		//
 		//for (int i = 0; i < 1; i++)
 		//{
 		//	for (auto& gameObject : gameObjects3)

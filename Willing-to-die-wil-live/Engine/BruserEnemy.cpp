@@ -18,7 +18,7 @@
 //#pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console")
 
 
-BruserEnemy::BruserEnemy() : Component(COMPONENT_TYPE::ENEMY)
+BruserEnemy::BruserEnemy() : Component(COMPONENT_TYPE::BRUSERENEMY)
 {
 
 }
@@ -43,17 +43,23 @@ void BruserEnemy::Update()
 	SetPlayerPos();
 	if (!ResponeCheck)
 	{
-		Respone();
+		//Respone();
 	}
 	Time += DELTA_TIME;
 	if (Time > 0.1)
 	{
-		AstarCall();
+		if (_hp > 0)
+		{
+			AstarCall();
+		}
 		Time = 0;
 	}
-	AstarMove(firstx, firsty, secondx, secondy);
+	if (_hp > 0)
+	{
+		AstarMove(firstx, firsty, secondx, secondy);
+	}
 
-	Animation();
+//	Animation();
 
 	if (_hp <= 0)
 	{
@@ -87,15 +93,12 @@ void BruserEnemy::AstarCall()
 		firstx = nodeList.front()->pos.x;
 		firsty = nodeList.front()->pos.y;
 
-
 		list<TileNode*>::iterator iter = nodeList.begin();
 
 		advance(iter, 1);
 		secondx = (*iter)->pos.x;
 		secondy = (*iter)->pos.y;
-
 	}
-
 }
 
 void BruserEnemy::AstarMove(int x, int y, int z, int w)
@@ -238,7 +241,7 @@ void BruserEnemy::Animation()
 		int32 count = GetAnimator()->GetAnimCount();
 		int32 currentIndex = GetAnimator()->GetCurrentClipIndex();
 
-		int32 index = (currentIndex + 1) % count;
+		int32 index = (currentIndex + 2) % count;
 		GetAnimator()->Play(index);
 		AnimeCount++;
 	}
@@ -281,7 +284,11 @@ void BruserEnemy::AnimationCount()
 
 	else if (AnimeCount == 2)
 	{
-
+		DieTime += DELTA_TIME;
+		if (DieTime > 2.2)
+		{
+			GetAnimator()->Stop();
+		}
 	}
 }
 

@@ -205,8 +205,11 @@ public:
 	int(*CreateMap())[Height];
 	void SetWallPos();
 	void Animation();
-	void AnimationCount();
+	void DeathAnimation();
+	void AttackAnimation();
 	void LostHp();
+	bool GetAttack() { return Attack; };
+	void SetAttack(bool _attack) { Attack = _attack; };
 	int CurHp() { return _hp; };
 	
 	void Respone();
@@ -223,18 +226,24 @@ public:
 
 	float Time = 0.0f;
 	float DieTime = 0.0f;
+	float AttackTime = 3.0f;
+	float AttackDelay = 0;
+	float Moving = 2.0f;
+	bool Attack = true;
+	bool Dead = false;
 	int firstx = 0;
 	int firsty = 0;
 	int secondx = 0;
 	int secondy = 0;
 	int AnimeCount = 0;
 	int EnemyCount = 0;
+	float _distance = 0;
  
 	int _hp = 100;
 
 	int CheckPoint = 0;
 
-	Vec3 ResponeArea1 = Vec3(3700, -100, -3500);
+	Vec3 ResponeArea1 = Vec3(3700, -100, -3600);
 	Vec3 ResponeArea2 = Vec3(0, -100, 0);
 	Vec3 ResponeArea3 = Vec3(0, -100, 0);
 	Vec3 ResponeArea4 = Vec3(3600, -100,-3600);

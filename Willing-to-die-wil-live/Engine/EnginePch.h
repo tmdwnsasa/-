@@ -2,6 +2,7 @@
 
 // std::byte 사용하지 않음
 #define _HAS_STD_BYTE 0
+#define _SILENCE_STDEXT_HASH_DEPRECATION_WARNINGS 1
 
 // 각종 include
 #include <windows.h>

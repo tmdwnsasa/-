@@ -182,13 +182,13 @@ shared_ptr<Enemy> GameObject::GetEnemy()
 
 shared_ptr<StalkerEnemy> GameObject::GetStalkerEnemy()
 {
-	shared_ptr<Component> component = GetFixedComponent(COMPONENT_TYPE::StalkerEnemy);
+	shared_ptr<Component> component = GetFixedComponent(COMPONENT_TYPE::STALKERENEMY);
 	return static_pointer_cast<StalkerEnemy>(component);
 }
 
 shared_ptr<BruserEnemy> GameObject::GetBruserEnemy()
 {
-	shared_ptr<Component> component = GetFixedComponent(COMPONENT_TYPE::BruserEnemy);
+	shared_ptr<Component> component = GetFixedComponent(COMPONENT_TYPE::BRUSERENEMY);
 	return static_pointer_cast<BruserEnemy>(component);
 }
 

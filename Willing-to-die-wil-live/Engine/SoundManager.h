@@ -25,7 +25,6 @@ private:
 	std::map<std::string, FMOD::Sound*> _SoundMap;
 	std::vector<std::string> _PlayingSoundVector;
 
-
 	FMOD::Channel* channel;
 	std::map<std::string, FMOD::Channel*> _ChannelMap;
 	void* fextradriverdata;
