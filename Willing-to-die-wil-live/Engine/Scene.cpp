@@ -57,7 +57,8 @@ void Scene::Start()
 	{
 		gameObject->Start();
 	}
-	GET_SINGLE(SoundManager)->PlaySound("Pistolsound", 0.3f);
+	GET_SINGLE(SoundManager)->Init();
+	GET_SINGLE(SoundManager)->PlayLoopSound("Backgroundsound", 0.4f);
 }
 
 void Scene::Update()
