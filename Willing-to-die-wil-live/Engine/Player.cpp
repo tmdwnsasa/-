@@ -782,6 +782,6 @@ void MuzzleFlash::Update()
 
 	if (_currLifeTime <= 0.f)
 	{
-		//_currState = MUZZLEFLASH_STATE::DEAD;
+		_currState = MUZZLEFLASH_STATE::DEAD;
 	}
 }

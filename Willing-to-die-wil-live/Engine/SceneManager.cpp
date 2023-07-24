@@ -25,6 +25,7 @@
 #include "Shop.h"
 #include "Gun.h"
 #include "FBXLoader.h"
+#include "SoundManager.h"
 
 #include <iostream>
 
@@ -143,7 +144,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 	shared_ptr<MeshData> ZombieMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\tes.fbx");
 	//shared_ptr<MeshData> TZombieMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\StalkerZombie2.fbx");
 	//shared_ptr<MeshData> TTZombieMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Zombie_Run.fbx");
-	
+	GET_SINGLE(SoundManager)->PlayLoopSound("Backgroundsound", 0.2f);
 #pragma region ComputeShader
 	{
 		shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"ComputeShader");
@@ -428,7 +429,7 @@ shared_ptr<Scene> SceneManager::LoadTestScene()
 		light->AddComponent(make_shared<Transform>());
 		light->GetTransform()->SetLocalPosition(Vec3(5000.f, 1200, -1500.f));
 		light->AddComponent(make_shared<Light>());
-		light->GetLight()->SetLightDirection(Vec3(0.0f, -1.0f, 0.0f));
+		light->GetLight()->SetLightDirection(Vec3(0.3f, -1.0f, 0.3f));
 		light->GetLight()->SetLightType(LIGHT_TYPE::DIRECTIONAL_LIGHT);
 		light->GetLight()->SetDiffuse(Vec3(1.f, 1.f, 1.f));
 		light->GetLight()->SetAmbient(Vec3(0.1f, 0.1f, 0.1f));

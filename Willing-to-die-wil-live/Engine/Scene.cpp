@@ -588,6 +588,7 @@ void Scene::SetCameraPosToPlayer()	//플레이어와 카메라에게 서로의 위치를 준다.
 
 		if (gameObject->GetName() == L"Light1")	//빛 위치 x - 800 z- 500
 		{
+			gameObject->GetTransform()->SetLocalPosition(Vec3(playerPos.x-800.f, 2000.f, playerPos.z-500.f));
 			//gameObject->GetTransform()->SetLocalPosition(Vec3(playerPos.x, 100.f, playerPos.z));
 			//gameObject->GetTransform()->LookAt(cameraLook);
 		}
