@@ -242,5 +242,5 @@ public:
 
 	bool ResponeCheck = false;
 private:
-	float		_speed = 15.0f;
+	float		_speed = 50.0f;
 };

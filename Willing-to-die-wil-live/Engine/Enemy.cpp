@@ -30,42 +30,77 @@ Enemy::~Enemy()
 
 void Enemy::Update()
 {
-	Vec3 pos = GetTransform()->GetLocalPosition();
 
-	//pos += GetTransform()->GetLook() * _speed * 10 * DELTA_TIME;
-	//pos += GetTransform()->GetRight() * _speed * DELTA_TIME;
+		Vec3 pos = GetTransform()->GetLocalPosition();
+
+		//pos += GetTransform()->GetLook() * _speed * 10 * DELTA_TIME;
+		//pos += GetTransform()->GetRight() * _speed * DELTA_TIME;
 
 
-	//GetTransform()->SetLocalPosition(pos);
+		//GetTransform()->SetLocalPosition(pos);
 
-	SetEnemyPosition(pos);
-	SetPlayerPos();
-	if (!ResponeCheck)
-	{
-		Respone();
-	}
-	Time += DELTA_TIME;
-	if (Time > 0.1)
-	{
+		SetEnemyPosition(pos);
+		SetPlayerPos();
+
+		shared_ptr<Scene> scene = GET_SINGLE(SceneManager)->GetActiveScene();
+		Vec3 PlayerPos = scene->GetPlayerPosToEnemy();
+
+		if (!ResponeCheck)
+		{
+			//Respone();
+		}
+		Time += DELTA_TIME;
+		if (Time > 1.1)
+		{
+			if (_hp > 0)
+			{
+				AstarCall();
+			}
+			Time = 0;
+		}
+		//AstarMove(firstx, firsty, secondx, secondy);
+
+
 		if (_hp > 0)
 		{
-			AstarCall();
+			if (_distance >= 300)
+			{
+				Moving += DELTA_TIME;
+				if (Moving > 2.0)
+				{
+					AstarMove(firstx, firsty, secondx, secondy);
+				}
+			}
 		}
-		Time = 0;
-	}
-	//AstarMove(firstx, firsty, secondx, secondy);
-
-
-	if (_hp > 0)
-	{
-		AstarMove(firstx, firsty, secondx, secondy);
-	}
-	Animation();
-
-	if (_hp <= 0)
-	{
-		AnimationCount();
-	}
+		if (Dead == false)
+		{
+			if (_distance >= 300)
+			{
+				if (Attack == false)
+				{
+					AttackDelay += DELTA_TIME;
+					if (AttackDelay > 2.0)
+					{
+						AnimeCount = 0;
+						SetAttack(true);
+					}
+				}
+			}
+		}
+		Animation();
+		_distance = fabs(round(pos.x - PlayerPos.x)) + fabs(round(pos.z - PlayerPos.z));
+		if (Dead == false)
+		{
+			if (_distance < 300)
+			{
+				//cout << _distance << endl;
+				AttackAnimation();
+			}
+		}
+		if (_hp <= 0)
+		{
+			DeathAnimation();
+		}
 }
 
 
@@ -82,9 +117,6 @@ void Enemy::AstarCall()
 	//printf("\n\n");
 	auto nodeList = pathFinder.DoFindPath(startPos, endPos);
 	//tileMap.Display(nodeList);
-
-
-	Vec3 EPos = GetEnemyPosition();
 
 	//std::cout <<EPos.x <<"ZÁÂÇ¥ :    "<< EPos.z << std::endl;
 
@@ -219,6 +251,8 @@ void Enemy::SetPlayerPos()
 
 	Vec3 EPos = GetEnemyPosition();
 
+	
+
 	if (EPos.z > 0)
 		EPos.z = 0;
 
@@ -242,11 +276,12 @@ void Enemy::Animation()
 	if (AnimeCount == 0)
 	{
 		int32 count = GetAnimator()->GetAnimCount();
-		int32 currentIndex = GetAnimator()->GetCurrentClipIndex();
+		//int32 currentIndex = GetAnimator()->GetCurrentClipIndex();
 
-		int32 index = (currentIndex + 1) % count;
+		int32 index = 1 % count;
 		GetAnimator()->Play(index);
 		AnimeCount++;
+		Attack = true;
 	}
 	if (INPUT->GetButtonDown(KEY_TYPE::KEY_1))
 	{
@@ -272,26 +307,46 @@ void Enemy::Animation()
 	}
 }
 
-void Enemy::AnimationCount()
+void Enemy::DeathAnimation()
 {
-	if (AnimeCount == 1)
+	if (Dead == false)
 	{
 		int32 count = GetAnimator()->GetAnimCount();
 		int32 currentIndex = GetAnimator()->GetCurrentClipIndex();
 
-		int32 index = (currentIndex + 1) % count;
+		int32 index = 3 % count;
 		GetAnimator()->Play(index);
-		std::cout << index << std::endl;
-		AnimeCount++;
+		Dead = true;
 	}
 
-	else if (AnimeCount == 2)
+	else if (Dead==true)
 	{
 		DieTime += DELTA_TIME;
-		if (DieTime > 2.2)
+		if (DieTime > 2.5)
 		{
 			GetAnimator()->Stop();
 		}
+	}
+}
+
+void Enemy::AttackAnimation()
+{
+	if (Attack == true)
+	{
+		AttackTime = 3.0f;
+	}
+	AttackTime += DELTA_TIME;
+	if (AttackTime > 3)
+	{
+		int32 count = GetAnimator()->GetAnimCount();
+		int32 currentIndex = GetAnimator()->GetCurrentClipIndex();
+		int32 index = 2 % count;
+		GetAnimator()->Play(index);
+		AttackTime = 0;
+		Attack = false;
+		AttackDelay = 0;
+		Moving = 0;
+		SetAttack(false);
 	}
 }
 

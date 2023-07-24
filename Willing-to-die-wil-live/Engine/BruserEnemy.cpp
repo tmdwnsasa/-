@@ -43,7 +43,7 @@ void BruserEnemy::Update()
 	SetPlayerPos();
 	if (!ResponeCheck)
 	{
-		Respone();
+		//Respone();
 	}
 	Time += DELTA_TIME;
 	if (Time > 0.1)
@@ -59,7 +59,7 @@ void BruserEnemy::Update()
 		AstarMove(firstx, firsty, secondx, secondy);
 	}
 
-	//Animation();
+//	Animation();
 
 	if (_hp <= 0)
 	{

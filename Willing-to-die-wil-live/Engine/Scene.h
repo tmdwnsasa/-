@@ -62,6 +62,10 @@ public:
 	const vector<shared_ptr<GameObject>>& GetGameObjects() { return _gameObjects; }
 	Vec3			PlayerObPos;
 	Vec3			WallObPos;
+	Vec3			PlayerPosition;
+	Vec3			EnemyPosition;
+	Vec3			BrEnemyPosition;
+	Vec3			StEnemyPosition;
 	int				CurrentWave = 1;
 	int				DeathCount = 0;
 	int				EnemyCount = 10;
@@ -78,8 +82,10 @@ public:
 	float			RestTime = 0.0f;
 	float			SponeTime = 0.0f;
 	bool			IsRest = false;
+	float			Distance = 0;
 
-
+	int				PlayerHp = 0;
+	float			Time = 0;
 private:
 	vector<shared_ptr<GameObject>>		_gameObjects;
 	vector<shared_ptr<class Camera>>	_cameras;

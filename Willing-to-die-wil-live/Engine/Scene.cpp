@@ -41,16 +41,13 @@ void Scene::Awake()
 		gameObject->Awake();
 	}
 
-	ZombieMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Parasite.fbx");
-	StalkerZombieMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\war.fbx");
-	BruserZombieMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\SpZombie.fbx");
 	_shopSelectedNum = 1000;
 	//parasite,war,Spzombie
-	ZombieMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\tes.fbx");
+	ZombieMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Normal.fbx");
 	StalkerZombieMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Zombie Run.fbx");
-	BruserZombieMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\StalkerZombie2.fbx");
+	BruserZombieMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\m4a1_s.fbx");
 
-	//parasite,war,Spzombie,Zombie Run ZY,StalkerZombie2,
+	//parasite,war,Spzombie,Zombie Run ZY,StalkerZombie2,M39_EMR,
 }
 
 void Scene::Start()
@@ -81,7 +78,7 @@ void Scene::Update()
 	{
 		SponeTime += 1 * DELTA_TIME;
 
-		if (SponeTime >= 10)
+		if (SponeTime >= 3)
 		{
 			//적 종류를 구별해서 제작필요
 			if (FZCount != ZCount)
@@ -95,6 +92,8 @@ void Scene::Update()
 			if (FBrZCount != BrZCount)
 			{
 				MakeBruser(CurrentWave);
+				cout << BrZCount << endl;
+				cout << "-------------------" << FBrZCount << endl;
 			}
 			SponeTime = 0.0f;
 		}
@@ -336,15 +335,11 @@ void Scene::LateUpdate()
 						EnemyHp = Object->GetEnemy()->CurHp();
 						_trashBin.push_back(gameObject);
 
-						//cout << EnemyHp << endl;
 						if (EnemyHp <= 0)
 						{
 							Object->GetBoxCollider()->SetOnOff(false);
-							//Object->GetEnemy()->AnimationCount();
 							DeathCount++;
 							_trashBin.push_back(gameObject);
-
-							//_trashBin.push_back(Object);
 						}
 					}
 				}
@@ -358,15 +353,11 @@ void Scene::LateUpdate()
 						EnemyHp = Object->GetBruserEnemy()->CurHp();
 						_trashBin.push_back(gameObject);
 
-						//cout << EnemyHp << endl;
 						if (EnemyHp <= 0)
 						{
 							Object->GetBoxCollider()->SetOnOff(false);
-							//Object->GetEnemy()->AnimationCount();
 							DeathCount++;
 							_trashBin.push_back(gameObject);
-
-							//_trashBin.push_back(Object);
 						}
 					}
 				}
@@ -380,32 +371,30 @@ void Scene::LateUpdate()
 						EnemyHp = Object->GetStalkerEnemy()->CurHp();
 						_trashBin.push_back(gameObject);
 
-						//cout << EnemyHp << endl;
 						if (EnemyHp <= 0)
 						{
 							Object->GetBoxCollider()->SetOnOff(false);
-							//Object->GetEnemy()->AnimationCount();
 							DeathCount++;
 							_trashBin.push_back(gameObject);
-
-							//_trashBin.push_back(Object);
 						}
 					}
 				}
 			}
 		}
-
-		//wave 변경
-		if (DeathCount == EnemyCount)
-		{
-			//Wave 끝
-			CurrentWave++;
-			IsRest = true;
-			DeathCount = 0;
-		}
+		
 		//체력, 총알, 돈 출력
 		if (gameObject->GetName() == L"Player")
 		{
+			//wave 변경
+			if (DeathCount == EnemyCount)
+			{
+				//Wave 끝
+				CurrentWave++;
+				IsRest = true;
+				DeathCount = 0;
+				gameObject->GetPlayer()->MoneyChange(1000);
+			}
+
 			for (const shared_ptr<GameObject>& Object : _gameObjects)
 			{
 				if (Object->GetName() == L"HealthText")
@@ -430,7 +419,44 @@ void Scene::LateUpdate()
 					string temp = to_string(gameObject->GetPlayer()->GetMoney()) + "$";
 					Object->GetMeshRenderer()->SetMesh(GET_SINGLE(Resources)->LoadFontMesh(Object->GetFont()->GetTextVB(temp)));
 				}
+
+				// 적 <-> 플레이어 충돌체크
+				if (Object->GetName() == L"Enemy")
+				{
+					EnemyPosition = Object->GetTransform()->GetLocalPosition();
+					PlayerPosition = gameObject->GetTransform()->GetLocalPosition();
+					if (Object->GetEnemy()->GetAttack() == false)
+					{
+						Distance = fabs(round(EnemyPosition.x - PlayerPosition.x)) + fabs(round(EnemyPosition.z - PlayerPosition.z));
+						if (Distance < 500)
+						{
+							Time += DELTA_TIME;
+							if (Time >2)
+							{
+								PlayerHp = gameObject->GetPlayer()->GetHP();
+								PlayerHp -= 10;
+								gameObject->GetPlayer()->SetHP(PlayerHp);
+								Time = 0;
+							}
+						}
+					}
+					else if (Object->GetEnemy()->GetAttack() != false)
+					{
+						Time = 0;
+					}
+				}
+
+				else if (Object->GetName() == L"BrEnemy")
+				{
+			
+				}
+
+				else if (Object->GetName() == L"STEnemy")
+				{
+					
+				}
 			}
+
 		}
 		gameObject->LateUpdate();
 	}
@@ -809,7 +835,7 @@ void Scene::CheckWave()
 	switch (CurrentWave)
 	{
 	case 1:
-		ZCount = 0;
+		ZCount = 1;
 		STZCount = 0;
 		BrZCount = 1;
 		EnemyCount = ZCount + STZCount + BrZCount;
@@ -840,7 +866,7 @@ void Scene::MakeNormal(int Wave)
 
 		gameObject->SetName(L"Enemy");
 		gameObject->SetCheckFrustum(false);
-		gameObject->GetTransform()->SetLocalPosition(Vec3(3700.f , -100.f, -3600.f));
+		gameObject->GetTransform()->SetLocalPosition(Vec3(3500.f , -100.f, -3000.f));
 		gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 		gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
 		gameObject->AddComponent(boxCollider);
@@ -855,7 +881,7 @@ void Scene::MakeNormal(int Wave)
 
 void Scene::MakeStalker(int wave)
 {
-	
+
 
 	vector<shared_ptr<GameObject>> gameObjects = StalkerZombieMesh->Instantiate();
 
@@ -869,17 +895,17 @@ void Scene::MakeStalker(int wave)
 
 		gameObject->SetName(L"STEnemy");
 		gameObject->SetCheckFrustum(false);
-		gameObject->GetTransform()->SetLocalPosition(Vec3(1200.f , -100.f, -900.f));
+		gameObject->GetTransform()->SetLocalPosition(Vec3(1200.f, -100.f, -900.f));
 		gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 		gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
 		gameObject->AddComponent(boxCollider);
 		gameObject->AddComponent(make_shared<StalkerEnemy>());
-		//gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 1);
+		gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 1);
 		AddGameObject(gameObject);
 		FSTZCount++;
 	}
-	
 }
+	
 
 void Scene::MakeBruser(int wave)
 {
@@ -889,21 +915,19 @@ void Scene::MakeBruser(int wave)
 
 	for (auto& gameObject : gameObjects)
 	{
-
 		shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
 		boxCollider->SetCenter(Vec3(0.f, 0.f, 0.f));
 		boxCollider->SetExtents(Vec3(150.f, 300.f, 150.f));
 
 		gameObject->SetName(L"BrEnemy");
 		gameObject->SetCheckFrustum(false);
-		gameObject->GetTransform()->SetLocalPosition(Vec3(1200.f , -100.f, -900.f));
+		gameObject->GetTransform()->SetLocalPosition(Vec3(2600.f , -100.f, -2300.f));
 		gameObject->GetTransform()->SetLocalScale(Vec3(1.1f, 1.1f, 1.1f));
 		gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
-		//gameObject->AddComponent(boxCollider);
+		gameObject->AddComponent(boxCollider);
 		gameObject->AddComponent(make_shared<BruserEnemy>());
 		//gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 1);    -y
 		AddGameObject(gameObject);
-		FBrZCount++;
 	}
-	
+	FBrZCount++;
 }

@@ -145,5 +145,4 @@ void CameraScript::recoil()
 		_curRecoil2 = 0;
 		_curRecoil = 0;
 	}
-	cout << _curRecoil << ", " << _curRecoil2 << endl;
 }

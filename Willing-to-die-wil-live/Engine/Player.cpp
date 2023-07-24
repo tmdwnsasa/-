@@ -44,59 +44,59 @@ void Player::Update()
 	{
 		pos += GetTransform()->GetLook() * _speed * DELTA_TIME;
 		
-		if (GET_SINGLE(SoundManager)->IsPlaying("Footwalksound") == false)
-		{
-			GET_SINGLE(SoundManager)->PlayLoopSound("Footwalksound", 0.4f);
-		}
+		//if (GET_SINGLE(SoundManager)->IsPlaying("Footwalksound") == false)
+		//{
+		//	GET_SINGLE(SoundManager)->PlayLoopSound("Footwalksound", 0.4f);
+		//}
 		_isMoving = true;
 	}
 
 	if (INPUT->GetButton(KEY_TYPE::S))
 	{
 		pos -= GetTransform()->GetLook() * _speed * DELTA_TIME;
-		if (GET_SINGLE(SoundManager)->IsPlaying("Footwalksound") == false)
-		{
-			GET_SINGLE(SoundManager)->PlayLoopSound("Footwalksound", 0.4f);
-		}
+		//if (GET_SINGLE(SoundManager)->IsPlaying("Footwalksound") == false)
+		//{
+		//	GET_SINGLE(SoundManager)->PlayLoopSound("Footwalksound", 0.4f);
+		//}
 		_isMoving = true;
 	}
 
 	if (INPUT->GetButton(KEY_TYPE::A))
 	{
 		pos -= GetTransform()->GetRight() * _speed * DELTA_TIME;
-		if (GET_SINGLE(SoundManager)->IsPlaying("Footwalksound") == false)
-		{
-			GET_SINGLE(SoundManager)->PlayLoopSound("Footwalksound", 0.4f);
-		}
+		//if (GET_SINGLE(SoundManager)->IsPlaying("Footwalksound") == false)
+		//{
+		//	GET_SINGLE(SoundManager)->PlayLoopSound("Footwalksound", 0.4f);
+		//}
 		_isMoving = true;
 	}
 
 	if (INPUT->GetButton(KEY_TYPE::D))
 	{
 		pos += GetTransform()->GetRight() * _speed * DELTA_TIME;
-		if (GET_SINGLE(SoundManager)->IsPlaying("Footwalksound") == false)
-		{
-			GET_SINGLE(SoundManager)->PlayLoopSound("Footwalksound", 0.4f);
-		}
+		//if (GET_SINGLE(SoundManager)->IsPlaying("Footwalksound") == false)
+		//{
+		//	GET_SINGLE(SoundManager)->PlayLoopSound("Footwalksound", 0.4f);
+		//}
 		_isMoving = true;
 	}
 
-	if (INPUT->GetButtonUp(KEY_TYPE::W) && _isMoving == false)
-	{
-		GET_SINGLE(SoundManager)->StopLoopSound("Footwalksound");
-	}
-	if (INPUT->GetButtonUp(KEY_TYPE::A) && _isMoving == false)
-	{
-		GET_SINGLE(SoundManager)->StopLoopSound("Footwalksound");
-	}	
-	if (INPUT->GetButtonUp(KEY_TYPE::S) && _isMoving == false)
-	{
-		GET_SINGLE(SoundManager)->StopLoopSound("Footwalksound");
-	}
-	if (INPUT->GetButtonUp(KEY_TYPE::D) && _isMoving == false)
-	{
-		GET_SINGLE(SoundManager)->StopLoopSound("Footwalksound");
-	}
+	//if (INPUT->GetButtonUp(KEY_TYPE::W) && _isMoving == false)
+	//{
+	//	GET_SINGLE(SoundManager)->StopLoopSound("Footwalksound");
+	//}
+	//if (INPUT->GetButtonUp(KEY_TYPE::A) && _isMoving == false)
+	//{
+	//	GET_SINGLE(SoundManager)->StopLoopSound("Footwalksound");
+	//}	
+	//if (INPUT->GetButtonUp(KEY_TYPE::S) && _isMoving == false)
+	//{
+	//	GET_SINGLE(SoundManager)->StopLoopSound("Footwalksound");
+	//}
+	//if (INPUT->GetButtonUp(KEY_TYPE::D) && _isMoving == false)
+	//{
+	//	GET_SINGLE(SoundManager)->StopLoopSound("Footwalksound");
+	//}
 
 	//점프 구현 필요
 	if (INPUT->GetButton(KEY_TYPE::SPACE))
@@ -179,15 +179,15 @@ void Player::Update()
 		{
 			_reloading = false;
 
-			if(_currWeapon == PLAYER_WEAPON::PISTOL)
-				GET_SINGLE(SoundManager)->PlaySound("Pistolsound", 0.3f);
-			if (_currWeapon == PLAYER_WEAPON::SMG)
-				GET_SINGLE(SoundManager)->PlaySound("Smgsound", 0.25f);
-			if (_currWeapon == PLAYER_WEAPON::SHOTGUN)
-				GET_SINGLE(SoundManager)->PlaySound("Shotgunsound", 0.25f);
-			if (_currWeapon == PLAYER_WEAPON::RIFLE)
-				GET_SINGLE(SoundManager)->PlaySound("Snipersound", 0.20f);
-
+//			if(_currWeapon == PLAYER_WEAPON::PISTOL)
+//				GET_SINGLE(SoundManager)->PlaySound("Pistolsound", 0.3f);
+//			if (_currWeapon == PLAYER_WEAPON::SMG)
+//				GET_SINGLE(SoundManager)->PlaySound("Smgsound", 0.25f);
+//			if (_currWeapon == PLAYER_WEAPON::SHOTGUN)
+//				GET_SINGLE(SoundManager)->PlaySound("Shotgunsound", 0.25f);
+//			if (_currWeapon == PLAYER_WEAPON::RIFLE)
+//				GET_SINGLE(SoundManager)->PlaySound("Snipersound", 0.20f);
+//
 #pragma region Muzzle Flash
 			{
 				shared_ptr<GameObject> muzzleflash = make_shared<GameObject>();
@@ -218,7 +218,10 @@ void Player::Update()
 				muzzleFlashObject.push_back(muzzleflash);
 			}
 
-#pragma endregion bullet
+#pragma endregion 
+
+#pragma region bullet
+
 			for (int i = 0; i < _pellet; i++)
 			{
 				shared_ptr<GameObject> bullet = make_shared<GameObject>();
@@ -251,7 +254,7 @@ void Player::Update()
 				boxCollider->SetExtents(Vec3(10.f, 10.f, 10.f));
 				bullet->AddComponent(boxCollider);
 				//bullet->AddComponent(meshRenderer);
-				//bullets.push_back(bullet);
+				bullets.push_back(bullet);
 			}
 			_currAmmo--;
 		}
@@ -383,7 +386,7 @@ void Player::ChangeWeapon(PLAYER_WEAPON weapon)
 
 #pragma region SMG
 		{
-			shared_ptr<MeshData> GunMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\M4A1.fbx");
+			shared_ptr<MeshData> GunMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\m4a1_s.fbx");
 			vector<shared_ptr<GameObject>> gun = GunMesh->Instantiate();
 
 			for (auto& gameObject : gun)
@@ -417,7 +420,7 @@ void Player::ChangeWeapon(PLAYER_WEAPON weapon)
 
 #pragma region Shotgun
 		{
-			shared_ptr<MeshData> GunMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\shotgun.fbx");
+			shared_ptr<MeshData> GunMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\ShotgunFix.fbx");
 			vector<shared_ptr<GameObject>> gun = GunMesh->Instantiate();
 
 			for (auto& gameObject : gun)
