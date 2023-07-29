@@ -13,10 +13,13 @@
 #include "MeshRenderer.h"
 #include "BoxCollider.h"
 #include "Resources.h"
-//#include "SoundManager.h"
+#include "SoundManager.h"
 #include "SceneManager.h"
 #include <iostream>
 
+//cout 출력용 코드
+#pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console")
+ 
 //////////////////////////////////////////////////
 // Player
 //////////////////////////////////////////////////
@@ -41,64 +44,65 @@ void Player::Update()
 	Vec3 pos = GetTransform()->GetLocalPosition();
 	Vec3 oldPos = pos;
 	_isMoving = false;
+	_curRateOfFire -= DELTA_TIME;
 
 	if (INPUT->GetButton(KEY_TYPE::W))
 	{
 		pos += GetTransform()->GetLook() * _speed * DELTA_TIME;
 		
-		//if (GET_SINGLE(SoundManager)->IsPlaying("Footwalksound") == false)
-		//{
-		//	GET_SINGLE(SoundManager)->PlayLoopSound("Footwalksound", 0.4f);
-		//}
+		if (GET_SINGLE(SoundManager)->IsPlaying("Footwalksound") == false)
+		{
+			GET_SINGLE(SoundManager)->PlayLoopSound("Footwalksound", 0.4f);
+		}
 		_isMoving = true;
 	}
 
 	if (INPUT->GetButton(KEY_TYPE::S))
 	{
 		pos -= GetTransform()->GetLook() * _speed * DELTA_TIME;
-		//if (GET_SINGLE(SoundManager)->IsPlaying("Footwalksound") == false)
-		//{
-		//	GET_SINGLE(SoundManager)->PlayLoopSound("Footwalksound", 0.4f);
-		//}
+		if (GET_SINGLE(SoundManager)->IsPlaying("Footwalksound") == false)
+		{
+			GET_SINGLE(SoundManager)->PlayLoopSound("Footwalksound", 0.4f);
+		}
 		_isMoving = true;
 	}
 
 	if (INPUT->GetButton(KEY_TYPE::A))
 	{
 		pos -= GetTransform()->GetRight() * _speed * DELTA_TIME;
-		//if (GET_SINGLE(SoundManager)->IsPlaying("Footwalksound") == false)
-		//{
-		//	GET_SINGLE(SoundManager)->PlayLoopSound("Footwalksound", 0.4f);
-		//}
+		if (GET_SINGLE(SoundManager)->IsPlaying("Footwalksound") == false)
+		{
+			GET_SINGLE(SoundManager)->PlayLoopSound("Footwalksound", 0.4f);
+		}
 		_isMoving = true;
 	}
 
 	if (INPUT->GetButton(KEY_TYPE::D))
 	{
 		pos += GetTransform()->GetRight() * _speed * DELTA_TIME;
-		//if (GET_SINGLE(SoundManager)->IsPlaying("Footwalksound") == false)
-		//{
-		//	GET_SINGLE(SoundManager)->PlayLoopSound("Footwalksound", 0.4f);
-		//}
+		if (GET_SINGLE(SoundManager)->IsPlaying("Footwalksound") == false)
+		{
+			GET_SINGLE(SoundManager)->PlayLoopSound("Footwalksound", 0.4f);
+		}
 		_isMoving = true;
 	}
 
-	//if (INPUT->GetButtonUp(KEY_TYPE::W) && _isMoving == false)
-	//{
-	//	GET_SINGLE(SoundManager)->StopLoopSound("Footwalksound");
-	//}
-	//if (INPUT->GetButtonUp(KEY_TYPE::A) && _isMoving == false)
-	//{
-	//	GET_SINGLE(SoundManager)->StopLoopSound("Footwalksound");
-	//}	
-	//if (INPUT->GetButtonUp(KEY_TYPE::S) && _isMoving == false)
-	//{
-	//	GET_SINGLE(SoundManager)->StopLoopSound("Footwalksound");
-	//}
-	//if (INPUT->GetButtonUp(KEY_TYPE::D) && _isMoving == false)
-	//{
-	//	GET_SINGLE(SoundManager)->StopLoopSound("Footwalksound");
-	//}
+	if (INPUT->GetButtonUp(KEY_TYPE::W) && _isMoving == false)
+	{
+		GET_SINGLE(SoundManager)->StopLoopSound("Footwalksound");
+	}
+	if (INPUT->GetButtonUp(KEY_TYPE::A) && _isMoving == false)
+	{
+		GET_SINGLE(SoundManager)->StopLoopSound("Footwalksound");
+	}	
+	if (INPUT->GetButtonUp(KEY_TYPE::S) && _isMoving == false)
+	{
+		GET_SINGLE(SoundManager)->StopLoopSound("Footwalksound");
+	}
+	if (INPUT->GetButtonUp(KEY_TYPE::D) && _isMoving == false)
+	{
+		GET_SINGLE(SoundManager)->StopLoopSound("Footwalksound");
+	}
 
 	//점프 구현 필요
 	if (INPUT->GetButton(KEY_TYPE::SPACE))
@@ -116,19 +120,19 @@ void Player::Update()
 		_running = true;
 		if (_stamina > 0.f)
 		{
-			_speed += 1000;
-			_stamina -= DELTA_TIME;
+			_speed = 5000;
+			_stamina -= DELTA_TIME * 40;
 		}
 		else
 		{
-			_speed = 5000.0f;
+			_speed = 2500.0f;
 		}
 	}
 
 	if (INPUT->GetButtonUp(KEY_TYPE::SHIFT))
 	{
 		_running = false;
-		_speed = 5000;
+		_speed = 2500;
 		_stamina -= DELTA_TIME;
 	}
 
@@ -175,59 +179,37 @@ void Player::Update()
 		_rotateLock = true;
 	}
 
-	if (INPUT->GetButtonDown(KEY_TYPE::LBUTTON))
+	if (INPUT->GetButton(KEY_TYPE::LBUTTON))
 	{
-		if (GetCurrAmmo(_currWeapon) > 0 && _rotateLock == false && _shopOpened == false && _currWeapon != PLAYER_WEAPON::NONE)
+		if (GetCurrAmmo(_currWeapon) > 0 &&
+			_rotateLock == false &&
+			_shopOpened == false &&
+			_currWeapon != PLAYER_WEAPON::NONE &&
+			_curRateOfFire <= 0 &&
+			_isShot == false)
 		{
 			_reloading = false;
+			_isShooting = true;
+			_curRateOfFire = _rateOfFire;
 
-			//if(_currWeapon == PLAYER_WEAPON::PISTOL)
-			//	GET_SINGLE(SoundManager)->PlaySound("Pistolsound", 0.3f);
-			//if (_currWeapon == PLAYER_WEAPON::SMG)
-			//	GET_SINGLE(SoundManager)->PlaySound("Smgsound", 0.25f);
-			//if (_currWeapon == PLAYER_WEAPON::SHOTGUN)
-			//	GET_SINGLE(SoundManager)->PlaySound("Shotgunsound", 0.25f);
-			//if (_currWeapon == PLAYER_WEAPON::SNIPER)
-			//	GET_SINGLE(SoundManager)->PlaySound("Snipersound", 0.20f);
-			Vec3 coutpos = gunObject[0]->GetTransform()->GetLocalPosition();
-			MakeMuzzleFlash();
-
-
-#pragma endregion bullet
-			for (int i = 0; i < _pellet; i++)
+			if (_fullauto == false)
 			{
-				shared_ptr<GameObject> bullet = make_shared<GameObject>();
+				_isShot = true;
+			}
 
-				bullet->SetName(L"Bullet");
-				bullet->AddComponent(make_shared<Transform>());
-				bullet->AddComponent(make_shared<Bullet>());
-				bullet->SetCheckFrustum(false);
-				shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
+			if(_currWeapon == PLAYER_WEAPON::PISTOL)
+				GET_SINGLE(SoundManager)->PlaySound("Pistolsound", 0.3f);
+			if (_currWeapon == PLAYER_WEAPON::SMG)
+				GET_SINGLE(SoundManager)->PlaySound("Smgsound", 0.25f);
+			if (_currWeapon == PLAYER_WEAPON::SHOTGUN)
+				GET_SINGLE(SoundManager)->PlaySound("Shotgunsound", 0.25f);
+			if (_currWeapon == PLAYER_WEAPON::SNIPER)
+				GET_SINGLE(SoundManager)->PlaySound("Snipersound", 0.20f);
 
-				bullet->GetTransform()->SetLocalPosition(Vec3(GetTransform()->GetLocalPosition().x, GetTransform()->GetLocalPosition().y, GetTransform()->GetLocalPosition().z-11));
-				bullet->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
-				bullet->GetTransform()->LookAt(cameraLookForBullet);
-				Vec3 rot = bullet->GetTransform()->GetLocalRotation();
-				bullet->GetTransform()->SetLocalRotation(Vec3(rot.x + ((float)(RandomInt() - 50) / _accuracy), rot.y + ((float)(RandomInt() - 50) / _accuracy), rot.z));
-				bullet->SetStatic(false);
+			MakeBullet();
+			MakeMuzzleFlash();
+			cout << "make" << endl;
 
-				//shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-				//{
-				//	shared_ptr<Mesh> sphereMesh = GET_SINGLE(Resources)->LoadSphereMesh();
-				//	meshRenderer->SetMesh(sphereMesh);
-				//}
-				//{
-				//	shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"GameObject");
-				//	material->SetInt(0, 1);
-				//	meshRenderer->SetMaterial(material);
-				//}
-
-				boxCollider->SetCenter(Vec3(0.f, 0.f, 0.f));
-				boxCollider->SetExtents(Vec3(10.f, 10.f, 10.f));
-				bullet->AddComponent(boxCollider);
-				//bullet->AddComponent(meshRenderer);
-				bullets.push_back(bullet);
-			}	
 			if (_currWeapon == PLAYER_WEAPON::PISTOL)
 			{
 				currPistolAmmo--;
@@ -244,12 +226,15 @@ void Player::Update()
 			{
 				currSniperAmmo--;
 			}
+
+			if (GetCurrAmmo(_currWeapon) <= 0)
+			{
+				_reloading = true;
+				_reloadTime = _reloadMaxTime;
+			}
 		}
-		else
-		{
-			_reloading = true;
-			_reloadTime = _reloadMaxTime;
-		}
+		
+
 
 		if (_rotateLock == true)
 		{
@@ -258,11 +243,21 @@ void Player::Update()
 		}
 	}
 
+	if (INPUT->GetButtonUp(KEY_TYPE::LBUTTON))
+	{
+		_isShooting = false;
+		_isShot = false;
+	}
+
 	Reload();
 
-	if (_running == false)
+	if (_running == false && _stamina < 100)		//스태미너 회복
 	{
-		_stamina += DELTA_TIME;
+		_stamina += DELTA_TIME * 20;
+		if (_stamina >= 100)
+		{
+			_stamina = 100;
+		}
 	}
 
 	if (_front == true)
@@ -304,7 +299,7 @@ void Player::PlayerRotate()
 	GetTransform()->SetLocalRotation(rotation);
 }
 
-void Player::ChangeWeapon(PLAYER_WEAPON weapon)
+void Player::ChangeWeapon(PLAYER_WEAPON weapon)		
 {
 	_currWeapon = weapon;
 	gunObject.clear();
@@ -348,7 +343,7 @@ void Player::ChangeWeapon(PLAYER_WEAPON weapon)
 		_damage = 25.f;
 		_pellet = 1;
 		_maxAmmo = 25;
-		_rateOfFire = 0.5f;
+		_rateOfFire = 0.15f;
 		_reloadMaxTime = 2.5f;
 		_reloadPerAmmo = _maxAmmo;
 		_price = 1000;
@@ -383,7 +378,7 @@ void Player::ChangeWeapon(PLAYER_WEAPON weapon)
 		_damage = 25.f;
 		_pellet = 8;
 		_maxAmmo = 6;
-		_rateOfFire = 0.5f;
+		_rateOfFire = 1.5f;
 		_reloadMaxTime = 0.5f;
 		_reloadPerAmmo = 1;
 		_price = 2000;
@@ -418,7 +413,7 @@ void Player::ChangeWeapon(PLAYER_WEAPON weapon)
 		_damage = 50.f;
 		_pellet = 1;
 		_maxAmmo = 20;
-		_rateOfFire = 0.5f;
+		_rateOfFire = 1.5f;
 		_reloadMaxTime = 2.5f;
 		_reloadPerAmmo = _maxAmmo;
 		_price = 2500;
@@ -635,7 +630,6 @@ int Player::GetMaxAmmo()
 	}
 }
 
-
 void Player::MakeMuzzleFlash()
 {
 	shared_ptr<GameObject> muzzleflash = make_shared<GameObject>();
@@ -649,23 +643,23 @@ void Player::MakeMuzzleFlash()
 	Vec3 MuzzleFlashFixedPos = gunObject[0]->GetTransform()->GetLocalPosition();
 	if (PLAYER_WEAPON::PISTOL == _currWeapon)
 	{
-		MuzzleFlashFixedPos += Vec3(0, 60, 0);
-		MuzzleFlashFixedPos += gunObject[0]->GetTransform()->GetLook() * 20;
+		MuzzleFlashFixedPos += Vec3(0, 40, 0);
+		MuzzleFlashFixedPos += gunObject[0]->GetTransform()->GetLook() * 30;
 	}
 	if (PLAYER_WEAPON::SMG == _currWeapon)
 	{
-		MuzzleFlashFixedPos += Vec3(0, 20, 0);
-		MuzzleFlashFixedPos += gunObject[0]->GetTransform()->GetLook() * 200;
+		MuzzleFlashFixedPos += Vec3(0, 10, 0);
+		MuzzleFlashFixedPos += gunObject[0]->GetTransform()->GetLook() * 350;
 	}
 	if (PLAYER_WEAPON::SHOTGUN == _currWeapon)
 	{
-		MuzzleFlashFixedPos += Vec3(0, 70, 0);
-		MuzzleFlashFixedPos += gunObject[0]->GetTransform()->GetLook() * 30;
+		MuzzleFlashFixedPos += Vec3(0, 80, 0);
+		MuzzleFlashFixedPos += gunObject[0]->GetTransform()->GetLook() * 350;
 	}
 	if (PLAYER_WEAPON::SNIPER == _currWeapon)
 	{
 		MuzzleFlashFixedPos += Vec3(0, 140, 0);
-		MuzzleFlashFixedPos += gunObject[0]->GetTransform()->GetLook() * 50;
+		MuzzleFlashFixedPos += gunObject[0]->GetTransform()->GetLook() * 45;
 	}
 	muzzleflash->GetTransform()->SetLocalPosition(MuzzleFlashFixedPos);
 
@@ -684,8 +678,44 @@ void Player::MakeMuzzleFlash()
 	muzzleflash->AddComponent(meshRenderer);
 
 	muzzleFlashObject.push_back(muzzleflash);
-	///////////
-	Vec3 coutpos = gunObject[0]->GetTransform()->GetLocalPosition();
+}
+
+void Player::MakeBullet()
+{
+	for (int i = 0; i < _pellet; i++)
+	{
+		shared_ptr<GameObject> bullet = make_shared<GameObject>();
+
+		bullet->SetName(L"Bullet");
+		bullet->AddComponent(make_shared<Transform>());
+		bullet->AddComponent(make_shared<Bullet>());
+		bullet->SetCheckFrustum(false);
+		shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
+
+		bullet->GetTransform()->SetLocalPosition(Vec3(GetTransform()->GetLocalPosition().x, GetTransform()->GetLocalPosition().y, GetTransform()->GetLocalPosition().z - 11));
+		bullet->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+		bullet->GetTransform()->LookAt(cameraLookForBullet);
+		Vec3 rot = bullet->GetTransform()->GetLocalRotation();
+		bullet->GetTransform()->SetLocalRotation(Vec3(rot.x + ((float)(RandomInt() - 50) / _accuracy), rot.y + ((float)(RandomInt() - 50) / _accuracy), rot.z));
+		bullet->SetStatic(false);
+
+		//shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+		//{
+		//	shared_ptr<Mesh> sphereMesh = GET_SINGLE(Resources)->LoadSphereMesh();
+		//	meshRenderer->SetMesh(sphereMesh);
+		//}
+		//{
+		//	shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"GameObject");
+		//	material->SetInt(0, 1);
+		//	meshRenderer->SetMaterial(material);
+		//}
+
+		boxCollider->SetCenter(Vec3(0.f, 0.f, 0.f));
+		boxCollider->SetExtents(Vec3(10.f, 10.f, 10.f));
+		bullet->AddComponent(boxCollider);
+		//bullet->AddComponent(meshRenderer);
+		bullets.push_back(bullet);
+	}
 }
 
 void Player::AddMaxAmmo(PLAYER_WEAPON weapon)
@@ -724,12 +754,10 @@ void Player::Bleeding()
 		shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
 		meshRenderer->SetMesh(mesh);
 
-		{
-			shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"BloodyScreen");
-			meshRenderer->SetMaterial(material);
-			obj->AddComponent(meshRenderer);
-			bleedingUI = obj;
-		}
+		shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"BloodyScreen");
+		meshRenderer->SetMaterial(material);
+		obj->AddComponent(meshRenderer);
+		bleedingUI = obj;
 	}
 #pragma endregion
 }

@@ -24,6 +24,7 @@ enum class COMPONENT_TYPE : uint8
 	BUTTON,
 	GUN,
 	MUZZLEFLASH,
+	MAINMENU,
 	// ...
 	MONO_BEHAVIOUR,
 	END,

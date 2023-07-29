@@ -64,7 +64,12 @@ cbuffer MATERIAL_PARAMS : register(b2)
     row_major float4x4 g_mat_3;
 };
 
-Texture2D g_tex_0 : register(t0);
+cbuffer COLOR_PARAMS : register(b3)
+{
+    
+}
+
+    Texture2D g_tex_0 : register(t0);
 Texture2D g_tex_1 : register(t1);
 Texture2D g_tex_2 : register(t2);
 Texture2D g_tex_3 : register(t3);

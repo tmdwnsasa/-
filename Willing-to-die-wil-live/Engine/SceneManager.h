@@ -31,8 +31,10 @@ public:
 public:
 	shared_ptr<Scene> GetActiveScene() { return _activeScene; }
 private:
-	shared_ptr<Scene> LoadTestScene();
 	void MakeWall(bool horizontal, int value, float xchange, float ychange, shared_ptr<Scene>& scene);
+	shared_ptr<Scene> LoadMainScene();
+	shared_ptr<Scene> LoadGameScene();
+	wstring SceneName;
 
 private:
 	shared_ptr<Scene> _activeScene;

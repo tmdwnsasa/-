@@ -24,6 +24,7 @@ class Gun;
 class StalkerEnemy;
 class BruserEnemy;
 class MuzzleFlash;
+class MainMenu;
 
 class GameObject : public Object, public enable_shared_from_this<GameObject>
 {
@@ -60,6 +61,7 @@ public:
 	shared_ptr<Button> GetButton();
 	shared_ptr<Gun> GetGun();
 	shared_ptr<MuzzleFlash> GetMuzzleFlash();
+	shared_ptr<MainMenu> GetMainMenu();
 
 	void AddComponent(shared_ptr<Component> component);
 

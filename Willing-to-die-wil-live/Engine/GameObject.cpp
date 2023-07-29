@@ -19,6 +19,7 @@
 #include "Shop.h"
 #include "Button.h"
 #include "Gun.h"
+#include "MainMenu.h"
 
 GameObject::GameObject() : Object(OBJECT_TYPE::GAMEOBJECT)
 {
@@ -226,6 +227,12 @@ shared_ptr<MuzzleFlash> GameObject::GetMuzzleFlash()
 {
 	shared_ptr<Component> component = GetFixedComponent(COMPONENT_TYPE::MUZZLEFLASH);
 	return static_pointer_cast<MuzzleFlash>(component);
+}
+
+shared_ptr<MainMenu> GameObject::GetMainMenu()
+{
+	shared_ptr<Component> component = GetFixedComponent(COMPONENT_TYPE::MAINMENU);
+	return static_pointer_cast<MainMenu>(component);
 }
 
 void GameObject::AddComponent(shared_ptr<Component> component)

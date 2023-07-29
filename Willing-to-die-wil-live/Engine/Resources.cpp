@@ -372,7 +372,7 @@ void Resources::CreateDefaultShader()
 		ShaderInfo info =
 		{
 			SHADER_TYPE::FORWARD,
-			RASTERIZER_TYPE::CULL_NONE,
+			RASTERIZER_TYPE::CULL_BACK,
 			DEPTH_STENCIL_TYPE::LESS_EQUAL
 		};
 		shared_ptr<Shader> shader = make_shared<Shader>();

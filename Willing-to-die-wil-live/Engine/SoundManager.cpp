@@ -56,8 +56,6 @@ void SoundManager::PlaySound(const std::string& soundname, float volume)
 	channel->setVolume(volume);
 }
 
-
-
 void SoundManager::StopSound(const std::string& soundname)
 {
 	result = system->playSound(_SoundMap[soundname], 0, true, &channel);

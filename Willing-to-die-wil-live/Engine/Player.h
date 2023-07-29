@@ -31,6 +31,7 @@ enum class BULLET_STATE : uint8
 enum class MUZZLEFLASH_STATE : uint8
 {
 	LIVE,
+	SHOOT,
 	DEAD,
 	END
 };
@@ -58,10 +59,12 @@ public:
 	int GetCurrAmmo(PLAYER_WEAPON weapon);
 	int GetMaxAmmo();
 	PLAYER_WEAPON GetCurrWeapon() { return _currWeapon; };
+	float GetCurrStamina() { return _stamina; };
 	int GetMoney() { return _money; };
 	float GetRecoil() { return _weaponRecoil; };
 	void SetHP(int hp) { _hp = hp; };
 	void MakeMuzzleFlash();
+	void MakeBullet();
 
 	void AddMaxAmmo(PLAYER_WEAPON weapon);
 	
@@ -87,20 +90,22 @@ private:
 	bool			_jump = false;
 	bool			_isMoving = false;
 	bool			_running = false;
-	int				_stamina = 100;
+	float			_stamina = 100;
 
 	// Shop
 	bool			_rotateLock = false;
 	bool			_shopOpened = false;
 	
 	// Status
-	float			_speed = 5000.0f;
+	float			_speed = 2500.0f;
 	POINT			_mousePos = {};
 	POINT			_oldMousePos = {};
 	float			_cxdelta = 0.f;
 	int				_hp = 100;
 	int				_Magazine = 0;
-	bool			_reloading = 0;
+	bool			_reloading = false;
+	float			_curRateOfFire = 0.f;
+	bool			_isShot = false;
 	int				_money = 100000;
 	float			_recoil = 0;
 	shared_ptr<GameObject> bleedingUI;
@@ -120,7 +125,7 @@ private:
 	float			_weaponRecoil = 10;
 	bool			_readyToShot = true;
 	bool			_fullauto = false;
-	bool			_clicked = false;
+	bool			_isShooting = false;
 	int				_ammoPrice = 0;
 
 	// Ammo
