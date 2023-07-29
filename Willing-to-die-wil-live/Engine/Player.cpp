@@ -17,6 +17,9 @@
 #include "SceneManager.h"
 #include <iostream>
 
+//cout 출력용 코드
+#pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console")
+ 
 //////////////////////////////////////////////////
 // Player
 //////////////////////////////////////////////////
@@ -41,6 +44,7 @@ void Player::Update()
 	Vec3 pos = GetTransform()->GetLocalPosition();
 	Vec3 oldPos = pos;
 	_isMoving = false;
+	_curRateOfFire -= DELTA_TIME;
 
 	if (INPUT->GetButton(KEY_TYPE::W))
 	{
@@ -116,19 +120,19 @@ void Player::Update()
 		_running = true;
 		if (_stamina > 0.f)
 		{
-			_speed += 1000;
-			_stamina -= DELTA_TIME;
+			_speed = 5000;
+			_stamina -= DELTA_TIME * 40;
 		}
 		else
 		{
-			_speed = 5000.0f;
+			_speed = 2500.0f;
 		}
 	}
 
 	if (INPUT->GetButtonUp(KEY_TYPE::SHIFT))
 	{
 		_running = false;
-		_speed = 5000;
+		_speed = 2500;
 		_stamina -= DELTA_TIME;
 	}
 
@@ -175,11 +179,23 @@ void Player::Update()
 		_rotateLock = true;
 	}
 
-	if (INPUT->GetButtonDown(KEY_TYPE::LBUTTON))
+	if (INPUT->GetButton(KEY_TYPE::LBUTTON))
 	{
-		if (GetCurrAmmo(_currWeapon) > 0 && _rotateLock == false && _shopOpened == false && _currWeapon != PLAYER_WEAPON::NONE)
+		if (GetCurrAmmo(_currWeapon) > 0 &&
+			_rotateLock == false &&
+			_shopOpened == false &&
+			_currWeapon != PLAYER_WEAPON::NONE&&
+			_curRateOfFire <= 0&&
+			_isShot == false)
 		{
 			_reloading = false;
+			_isShooting = true;
+			_curRateOfFire = _rateOfFire;
+
+			if (_fullauto == false)
+			{
+				_isShot = true;
+			}
 
 			if(_currWeapon == PLAYER_WEAPON::PISTOL)
 				GET_SINGLE(SoundManager)->PlaySound("Pistolsound", 0.3f);
@@ -189,47 +205,10 @@ void Player::Update()
 				GET_SINGLE(SoundManager)->PlaySound("Shotgunsound", 0.25f);
 			if (_currWeapon == PLAYER_WEAPON::SNIPER)
 				GET_SINGLE(SoundManager)->PlaySound("Snipersound", 0.20f);
-			Vec3 coutpos = gunObject[0]->GetTransform()->GetLocalPosition();
-			cout << coutpos.x << ", " << coutpos.y << ", " << coutpos.z << ", " << endl;
 
+			MakeBullet();
 			MakeMuzzleFlash();
 
-
-#pragma endregion bullet
-			for (int i = 0; i < _pellet; i++)
-			{
-				shared_ptr<GameObject> bullet = make_shared<GameObject>();
-
-				bullet->SetName(L"Bullet");
-				bullet->AddComponent(make_shared<Transform>());
-				bullet->AddComponent(make_shared<Bullet>());
-				bullet->SetCheckFrustum(false);
-				shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
-
-				bullet->GetTransform()->SetLocalPosition(Vec3(GetTransform()->GetLocalPosition().x, GetTransform()->GetLocalPosition().y, GetTransform()->GetLocalPosition().z-11));
-				bullet->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
-				bullet->GetTransform()->LookAt(cameraLookForBullet);
-				Vec3 rot = bullet->GetTransform()->GetLocalRotation();
-				bullet->GetTransform()->SetLocalRotation(Vec3(rot.x + ((float)(RandomInt() - 50) / _accuracy), rot.y + ((float)(RandomInt() - 50) / _accuracy), rot.z));
-				bullet->SetStatic(false);
-
-				//shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-				//{
-				//	shared_ptr<Mesh> sphereMesh = GET_SINGLE(Resources)->LoadSphereMesh();
-				//	meshRenderer->SetMesh(sphereMesh);
-				//}
-				//{
-				//	shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"GameObject");
-				//	material->SetInt(0, 1);
-				//	meshRenderer->SetMaterial(material);
-				//}
-
-				boxCollider->SetCenter(Vec3(0.f, 0.f, 0.f));
-				boxCollider->SetExtents(Vec3(10.f, 10.f, 10.f));
-				bullet->AddComponent(boxCollider);
-				//bullet->AddComponent(meshRenderer);
-				bullets.push_back(bullet);
-			}	
 			if (_currWeapon == PLAYER_WEAPON::PISTOL)
 			{
 				currPistolAmmo--;
@@ -246,12 +225,15 @@ void Player::Update()
 			{
 				currSniperAmmo--;
 			}
+
+			if (GetCurrAmmo(_currWeapon) <= 0)
+			{
+				_reloading = true;
+				_reloadTime = _reloadMaxTime;
+			}
 		}
-		else
-		{
-			_reloading = true;
-			_reloadTime = _reloadMaxTime;
-		}
+		
+
 
 		if (_rotateLock == true)
 		{
@@ -260,11 +242,21 @@ void Player::Update()
 		}
 	}
 
+	if (INPUT->GetButtonUp(KEY_TYPE::LBUTTON))
+	{
+		_isShooting = false;
+		_isShot = false;
+	}
+
 	Reload();
 
-	if (_running == false)
+	if (_running == false && _stamina < 100)		//스태미너 회복
 	{
-		_stamina += DELTA_TIME;
+		_stamina += DELTA_TIME * 20;
+		if (_stamina >= 100)
+		{
+			_stamina = 100;
+		}
 	}
 
 	if (_front == true)
@@ -350,7 +342,7 @@ void Player::ChangeWeapon(PLAYER_WEAPON weapon)
 		_damage = 25.f;
 		_pellet = 1;
 		_maxAmmo = 25;
-		_rateOfFire = 0.5f;
+		_rateOfFire = 0.15f;
 		_reloadMaxTime = 2.5f;
 		_reloadPerAmmo = _maxAmmo;
 		_price = 1000;
@@ -385,7 +377,7 @@ void Player::ChangeWeapon(PLAYER_WEAPON weapon)
 		_damage = 25.f;
 		_pellet = 8;
 		_maxAmmo = 6;
-		_rateOfFire = 0.5f;
+		_rateOfFire = 1.5f;
 		_reloadMaxTime = 0.5f;
 		_reloadPerAmmo = 1;
 		_price = 2000;
@@ -420,7 +412,7 @@ void Player::ChangeWeapon(PLAYER_WEAPON weapon)
 		_damage = 50.f;
 		_pellet = 1;
 		_maxAmmo = 20;
-		_rateOfFire = 0.5f;
+		_rateOfFire = 1.5f;
 		_reloadMaxTime = 2.5f;
 		_reloadPerAmmo = _maxAmmo;
 		_price = 2500;
@@ -637,7 +629,6 @@ int Player::GetMaxAmmo()
 	}
 }
 
-
 void Player::MakeMuzzleFlash()
 {
 	shared_ptr<GameObject> muzzleflash = make_shared<GameObject>();
@@ -689,6 +680,44 @@ void Player::MakeMuzzleFlash()
 	///////////
 	Vec3 coutpos = gunObject[0]->GetTransform()->GetLocalPosition();
 	cout << coutpos.x << ", " << coutpos.y << ", " << coutpos.z << ", " << endl;
+}
+
+void Player::MakeBullet()
+{
+	for (int i = 0; i < _pellet; i++)
+	{
+		shared_ptr<GameObject> bullet = make_shared<GameObject>();
+
+		bullet->SetName(L"Bullet");
+		bullet->AddComponent(make_shared<Transform>());
+		bullet->AddComponent(make_shared<Bullet>());
+		bullet->SetCheckFrustum(false);
+		shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>();
+
+		bullet->GetTransform()->SetLocalPosition(Vec3(GetTransform()->GetLocalPosition().x, GetTransform()->GetLocalPosition().y, GetTransform()->GetLocalPosition().z - 11));
+		bullet->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+		bullet->GetTransform()->LookAt(cameraLookForBullet);
+		Vec3 rot = bullet->GetTransform()->GetLocalRotation();
+		bullet->GetTransform()->SetLocalRotation(Vec3(rot.x + ((float)(RandomInt() - 50) / _accuracy), rot.y + ((float)(RandomInt() - 50) / _accuracy), rot.z));
+		bullet->SetStatic(false);
+
+		//shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+		//{
+		//	shared_ptr<Mesh> sphereMesh = GET_SINGLE(Resources)->LoadSphereMesh();
+		//	meshRenderer->SetMesh(sphereMesh);
+		//}
+		//{
+		//	shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"GameObject");
+		//	material->SetInt(0, 1);
+		//	meshRenderer->SetMaterial(material);
+		//}
+
+		boxCollider->SetCenter(Vec3(0.f, 0.f, 0.f));
+		boxCollider->SetExtents(Vec3(10.f, 10.f, 10.f));
+		bullet->AddComponent(boxCollider);
+		//bullet->AddComponent(meshRenderer);
+		bullets.push_back(bullet);
+	}
 }
 
 void Player::AddMaxAmmo(PLAYER_WEAPON weapon)

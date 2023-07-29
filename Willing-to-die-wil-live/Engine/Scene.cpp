@@ -26,10 +26,9 @@
 #include "Button.h"
 #include "Gun.h"
 #include "SoundManager.h"
+#include "MainMenu.h"
 #include <iostream>
 
-//cout 출력용 코드
-//#pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console")
 
 
 void Scene::Awake()
@@ -42,12 +41,13 @@ void Scene::Awake()
 	}
 
 	_shopSelectedNum = 1000;
-	//parasite,war,Spzombie
-	ZombieMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Normal.fbx");
-	StalkerZombieMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Zombie Run.fbx");
-	BruserZombieMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\StalkerZombie2.fbx");
-	shared_ptr<MeshData> GunMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\m4a1_s.fbx");
+	_menuOpened = false;
 
+	thread t1 = thread(&Scene::LoadAllFBX, this);
+	t1.detach();
+
+	//parasite,war,Spzombie
+	
 	//parasite,war,Spzombie,Zombie Run ZY,StalkerZombie2,M39_EMR,
 }
 
@@ -57,7 +57,6 @@ void Scene::Start()
 	{
 		gameObject->Start();
 	}
-	GET_SINGLE(SoundManager)->Init();
 	GET_SINGLE(SoundManager)->PlayLoopSound("Backgroundsound", 0.4f);
 }
 
@@ -74,6 +73,37 @@ void Scene::Update()
 	//		z = gameObject->GetTransform()->GetLocalPosition().z;
 	//	}
 	//}
+
+	GetAllFBX();
+
+	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
+	{
+		if (gameObject->GetName() == L"Menu")
+		{
+			if (gameObject->GetMainMenu()->GetMenuState() == _menuOpened)
+			{
+				break;
+			}
+			else
+			{
+				_menuOpened = gameObject->GetMainMenu()->GetMenuState();
+				if (_menuOpened == true)
+				{
+					for (auto object : gameObject->GetMainMenu()->GetMenuObjects())
+					{
+						_gameObjects.push_back(object);
+					}
+				}
+				else if (_menuOpened == false)
+				{
+					for (auto& trash : gameObject->GetMainMenu()->GetMenuObjects())
+					{
+						_trashBin.push_back(trash);
+					}
+				}
+			}
+		}
+	}
 
 	CheckWave();
 
@@ -352,6 +382,7 @@ void Scene::Update()
 	}*/
 
 	CollisionPlayerToWall();
+	CollisionPlayerToEnemy();
 
 	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
 	{
@@ -426,7 +457,7 @@ void Scene::LateUpdate()
 				}
 			}
 		}
-		
+
 		//체력, 총알, 돈 출력
 		if (gameObject->GetName() == L"Player")
 		{
@@ -464,6 +495,12 @@ void Scene::LateUpdate()
 					string temp = to_string(gameObject->GetPlayer()->GetMoney()) + "$";
 					Object->GetMeshRenderer()->SetMesh(GET_SINGLE(Resources)->LoadFontMesh(Object->GetFont()->GetTextVB(temp)));
 				}
+				if (Object->GetName() == L"StaminaText")
+				{
+					shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+					string temp = to_string((int)(gameObject->GetPlayer()->GetCurrStamina()));
+					Object->GetMeshRenderer()->SetMesh(GET_SINGLE(Resources)->LoadFontMesh(Object->GetFont()->GetTextVB(temp)));
+				}
 
 				// 적 <-> 플레이어 충돌체크
 				if (Object->GetName() == L"Enemy")
@@ -476,7 +513,7 @@ void Scene::LateUpdate()
 						if (Distance < 500)
 						{
 							Time += DELTA_TIME;
-							if (Time >2)
+							if (Time > 2)
 							{
 								PlayerHp = gameObject->GetPlayer()->GetHP();
 								PlayerHp -= 10;
@@ -493,12 +530,12 @@ void Scene::LateUpdate()
 
 				else if (Object->GetName() == L"BrEnemy")
 				{
-			
+
 				}
 
 				else if (Object->GetName() == L"STEnemy")
 				{
-					
+
 				}
 			}
 
@@ -707,7 +744,7 @@ void Scene::SetCameraPosToPlayer()	//플레이어와 카메라에게 서로의 위치를 준다.
 
 		if (gameObject->GetName() == L"Light1")	//빛 위치 x - 800 z- 500
 		{
-			gameObject->GetTransform()->SetLocalPosition(Vec3(playerPos.x-800.f, 2000.f, playerPos.z-500.f));
+			gameObject->GetTransform()->SetLocalPosition(Vec3(playerPos.x - 800.f, 2000.f, playerPos.z - 500.f));
 			//gameObject->GetTransform()->SetLocalPosition(Vec3(playerPos.x, 100.f, playerPos.z));
 			//gameObject->GetTransform()->LookAt(cameraLook);
 		}
@@ -876,6 +913,104 @@ void Scene::CollisionPlayerToWall()
 	}
 }
 
+void Scene::CollisionPlayerToEnemy()
+{
+	Vec4 playerPos;
+	Transform transform;
+	Vec4 front;
+	Vec4 right;
+
+	float minDistanceF = FLT_MAX;
+	float minDistanceB = FLT_MAX;
+	float minDistanceL = FLT_MAX;
+	float minDistanceR = FLT_MAX;
+
+	shared_ptr<GameObject> picked;
+	for (auto& gameObject : _gameObjects)
+	{
+		if (gameObject->GetName() == L"Player")
+		{
+			Vec3 Pos = gameObject->GetTransform()->GetLocalPosition();
+			Vec3 Look = gameObject->GetTransform()->GetLook();
+			Vec3 Right = gameObject->GetTransform()->GetRight();
+			playerPos = Vec4(Pos.x, Pos.y, Pos.z, 1.f);
+			front = Vec4(transform.GetLook().x, transform.GetLook().y, transform.GetLook().z, 0.0f);
+			right = Vec4(transform.GetRight().x, transform.GetRight().y, transform.GetRight().z, 0.0f);
+		}
+
+	}
+
+	for (auto& gameObject : _gameObjects)
+	{
+		if (gameObject->GetBoxCollider() == nullptr)
+			continue;
+
+		if (gameObject->GetName() != L"Enemy" &&
+			gameObject->GetName() != L"STEnemy" &&
+			gameObject->GetName() != L"BrEnemy")
+			continue;
+
+		float distanceF = FLT_MAX;
+		float distanceB = FLT_MAX;
+		float distanceL = FLT_MAX;
+		float distanceR = FLT_MAX;
+
+		if (gameObject->GetBoxCollider()->Intersects(playerPos, front, OUT distanceF) == true)
+		{
+			if (distanceF < minDistanceF)
+			{
+				minDistanceF = distanceF;
+				picked = gameObject;
+			}
+		}
+
+		if (gameObject->GetBoxCollider()->Intersects(playerPos, -front, OUT distanceB) == true)
+		{
+			if (distanceB < minDistanceB)
+			{
+				minDistanceB = distanceB;
+				picked = gameObject;
+			}
+		}
+
+		if (gameObject->GetBoxCollider()->Intersects(playerPos, right, OUT distanceR) == true)
+		{
+			if (distanceR < minDistanceR)
+			{
+				minDistanceR = distanceR;
+				picked = gameObject;
+			}
+		}
+
+		if (gameObject->GetBoxCollider()->Intersects(playerPos, -right, OUT distanceL) == true)
+		{
+			if (distanceL < minDistanceL)
+			{
+				minDistanceL = distanceL;
+				picked = gameObject;
+			}
+		}
+	}
+	for (auto& gameObject : _gameObjects)
+	{
+		if (gameObject->GetName() == L"Player")
+		{
+			if (minDistanceF < DistanceEnemy && 0 < DistanceEnemy)
+				gameObject->GetPlayer()->collisionFront(true);
+
+			if (minDistanceB < DistanceEnemy && 0 < DistanceEnemy)
+				gameObject->GetPlayer()->collisionBack(true);
+
+			if (minDistanceR < DistanceEnemy && 0 < DistanceEnemy)
+				gameObject->GetPlayer()->collisionRight(true);
+
+			if (minDistanceL < DistanceEnemy && 0 < DistanceEnemy)
+				gameObject->GetPlayer()->collisionLeft(true);
+
+		}
+	}
+}
+
 void Scene::CheckWave()
 {
 	switch (CurrentWave)
@@ -883,7 +1018,7 @@ void Scene::CheckWave()
 	case 1:
 		ZCount = 1;
 		STZCount = 0;
-		BrZCount = 1;
+		BrZCount = 0;
 		EnemyCount = ZCount + STZCount + BrZCount;
 		break;
 	case 2:
@@ -900,7 +1035,7 @@ void Scene::CheckWave()
 
 void Scene::MakeNormal(int Wave)
 {
-	
+
 	vector<shared_ptr<GameObject>> gameObjects = ZombieMesh->Instantiate();
 
 
@@ -912,15 +1047,18 @@ void Scene::MakeNormal(int Wave)
 
 		gameObject->SetName(L"Enemy");
 		gameObject->SetCheckFrustum(false);
-		gameObject->GetTransform()->SetLocalPosition(Vec3(3500.f , -100.f, -3000.f));
+		gameObject->GetTransform()->SetLocalPosition(Vec3(3500.f, -100.f, -3000.f));
 		gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 		gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
+
 		gameObject->AddComponent(boxCollider);
+		shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Translucent");
+		gameObject->GetMeshRenderer()->GetMaterial()->SetShader(shader);
 		gameObject->AddComponent(make_shared<Enemy>());
 		//gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 1);
 		AddGameObject(gameObject);
-		FZCount++;
 	}
+	FZCount++;
 
 }
 
@@ -948,10 +1086,10 @@ void Scene::MakeStalker(int wave)
 		gameObject->AddComponent(make_shared<StalkerEnemy>());
 		gameObject->GetMeshRenderer()->GetMaterial()->SetInt(0, 1);
 		AddGameObject(gameObject);
-		FSTZCount++;
 	}
+	FSTZCount++;
 }
-	
+
 
 void Scene::MakeBruser(int wave)
 {
@@ -967,7 +1105,7 @@ void Scene::MakeBruser(int wave)
 
 		gameObject->SetName(L"BrEnemy");
 		gameObject->SetCheckFrustum(false);
-		gameObject->GetTransform()->SetLocalPosition(Vec3(2600.f , -100.f, -2300.f));
+		gameObject->GetTransform()->SetLocalPosition(Vec3(2600.f, -100.f, -2300.f));
 		gameObject->GetTransform()->SetLocalScale(Vec3(1.1f, 1.1f, 1.1f));
 		gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
 		gameObject->AddComponent(boxCollider);
@@ -976,4 +1114,50 @@ void Scene::MakeBruser(int wave)
 		AddGameObject(gameObject);
 	}
 	FBrZCount++;
+}
+
+
+void Scene::LoadAllFBX()
+{
+	GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Normal.fbx");
+	loadingResource++;
+	cout << 1 << endl;
+	GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Zombie Run.fbx");
+	loadingResource++;
+	cout << 2 << endl;
+	GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\StalkerZombie2.fbx");
+	loadingResource++;
+	cout << 3 << endl;
+	GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\m4a1_s.fbx");
+	loadingResource++;
+	cout << 4 << endl;
+	return;
+}
+
+void Scene::GetAllFBX()
+{
+	if (loadingResource == 1 && loadedResource < 1)
+	{
+		ZombieMesh = GET_SINGLE(Resources)->Get<MeshData>(L"..\\Resources\\FBX\\Normal.fbx");
+		loadedResource++;
+		cout << 1111 << endl;
+	}
+	if (loadingResource == 2 && loadedResource < 2)
+	{
+		StalkerZombieMesh = GET_SINGLE(Resources)->Get<MeshData>(L"..\\Resources\\FBX\\Zombie Run.fbx");
+		loadedResource++;
+		cout << 2222 << endl;
+	}
+	if (loadingResource == 3 && loadedResource < 3)
+	{
+		BruserZombieMesh = GET_SINGLE(Resources)->Get<MeshData>(L"..\\Resources\\FBX\\StalkerZombie2.fbx");
+		loadedResource++;
+		cout << 3333 << endl;
+	}
+	if (loadingResource == 4 && loadedResource < 4)
+	{
+		shared_ptr<MeshData> GunMesh = GET_SINGLE(Resources)->Get<MeshData>(L"..\\Resources\\FBX\\m4a1_s.fbx");
+		loadedResource++;
+		cout << 4444 << endl;
+	}
 }
