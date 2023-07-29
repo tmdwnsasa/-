@@ -13,7 +13,7 @@
 #include "MeshRenderer.h"
 #include "BoxCollider.h"
 #include "Resources.h"
-#include "SoundManager.h"
+//#include "SoundManager.h"
 #include "SceneManager.h"
 #include <iostream>
 
@@ -46,59 +46,59 @@ void Player::Update()
 	{
 		pos += GetTransform()->GetLook() * _speed * DELTA_TIME;
 		
-		if (GET_SINGLE(SoundManager)->IsPlaying("Footwalksound") == false)
-		{
-			GET_SINGLE(SoundManager)->PlayLoopSound("Footwalksound", 0.4f);
-		}
+		//if (GET_SINGLE(SoundManager)->IsPlaying("Footwalksound") == false)
+		//{
+		//	GET_SINGLE(SoundManager)->PlayLoopSound("Footwalksound", 0.4f);
+		//}
 		_isMoving = true;
 	}
 
 	if (INPUT->GetButton(KEY_TYPE::S))
 	{
 		pos -= GetTransform()->GetLook() * _speed * DELTA_TIME;
-		if (GET_SINGLE(SoundManager)->IsPlaying("Footwalksound") == false)
-		{
-			GET_SINGLE(SoundManager)->PlayLoopSound("Footwalksound", 0.4f);
-		}
+		//if (GET_SINGLE(SoundManager)->IsPlaying("Footwalksound") == false)
+		//{
+		//	GET_SINGLE(SoundManager)->PlayLoopSound("Footwalksound", 0.4f);
+		//}
 		_isMoving = true;
 	}
 
 	if (INPUT->GetButton(KEY_TYPE::A))
 	{
 		pos -= GetTransform()->GetRight() * _speed * DELTA_TIME;
-		if (GET_SINGLE(SoundManager)->IsPlaying("Footwalksound") == false)
-		{
-			GET_SINGLE(SoundManager)->PlayLoopSound("Footwalksound", 0.4f);
-		}
+		//if (GET_SINGLE(SoundManager)->IsPlaying("Footwalksound") == false)
+		//{
+		//	GET_SINGLE(SoundManager)->PlayLoopSound("Footwalksound", 0.4f);
+		//}
 		_isMoving = true;
 	}
 
 	if (INPUT->GetButton(KEY_TYPE::D))
 	{
 		pos += GetTransform()->GetRight() * _speed * DELTA_TIME;
-		if (GET_SINGLE(SoundManager)->IsPlaying("Footwalksound") == false)
-		{
-			GET_SINGLE(SoundManager)->PlayLoopSound("Footwalksound", 0.4f);
-		}
+		//if (GET_SINGLE(SoundManager)->IsPlaying("Footwalksound") == false)
+		//{
+		//	GET_SINGLE(SoundManager)->PlayLoopSound("Footwalksound", 0.4f);
+		//}
 		_isMoving = true;
 	}
 
-	if (INPUT->GetButtonUp(KEY_TYPE::W) && _isMoving == false)
-	{
-		GET_SINGLE(SoundManager)->StopLoopSound("Footwalksound");
-	}
-	if (INPUT->GetButtonUp(KEY_TYPE::A) && _isMoving == false)
-	{
-		GET_SINGLE(SoundManager)->StopLoopSound("Footwalksound");
-	}	
-	if (INPUT->GetButtonUp(KEY_TYPE::S) && _isMoving == false)
-	{
-		GET_SINGLE(SoundManager)->StopLoopSound("Footwalksound");
-	}
-	if (INPUT->GetButtonUp(KEY_TYPE::D) && _isMoving == false)
-	{
-		GET_SINGLE(SoundManager)->StopLoopSound("Footwalksound");
-	}
+	//if (INPUT->GetButtonUp(KEY_TYPE::W) && _isMoving == false)
+	//{
+	//	GET_SINGLE(SoundManager)->StopLoopSound("Footwalksound");
+	//}
+	//if (INPUT->GetButtonUp(KEY_TYPE::A) && _isMoving == false)
+	//{
+	//	GET_SINGLE(SoundManager)->StopLoopSound("Footwalksound");
+	//}	
+	//if (INPUT->GetButtonUp(KEY_TYPE::S) && _isMoving == false)
+	//{
+	//	GET_SINGLE(SoundManager)->StopLoopSound("Footwalksound");
+	//}
+	//if (INPUT->GetButtonUp(KEY_TYPE::D) && _isMoving == false)
+	//{
+	//	GET_SINGLE(SoundManager)->StopLoopSound("Footwalksound");
+	//}
 
 	//점프 구현 필요
 	if (INPUT->GetButton(KEY_TYPE::SPACE))
@@ -181,17 +181,15 @@ void Player::Update()
 		{
 			_reloading = false;
 
-			if(_currWeapon == PLAYER_WEAPON::PISTOL)
-				GET_SINGLE(SoundManager)->PlaySound("Pistolsound", 0.3f);
-			if (_currWeapon == PLAYER_WEAPON::SMG)
-				GET_SINGLE(SoundManager)->PlaySound("Smgsound", 0.25f);
-			if (_currWeapon == PLAYER_WEAPON::SHOTGUN)
-				GET_SINGLE(SoundManager)->PlaySound("Shotgunsound", 0.25f);
-			if (_currWeapon == PLAYER_WEAPON::SNIPER)
-				GET_SINGLE(SoundManager)->PlaySound("Snipersound", 0.20f);
+			//if(_currWeapon == PLAYER_WEAPON::PISTOL)
+			//	GET_SINGLE(SoundManager)->PlaySound("Pistolsound", 0.3f);
+			//if (_currWeapon == PLAYER_WEAPON::SMG)
+			//	GET_SINGLE(SoundManager)->PlaySound("Smgsound", 0.25f);
+			//if (_currWeapon == PLAYER_WEAPON::SHOTGUN)
+			//	GET_SINGLE(SoundManager)->PlaySound("Shotgunsound", 0.25f);
+			//if (_currWeapon == PLAYER_WEAPON::SNIPER)
+			//	GET_SINGLE(SoundManager)->PlaySound("Snipersound", 0.20f);
 			Vec3 coutpos = gunObject[0]->GetTransform()->GetLocalPosition();
-			cout << coutpos.x << ", " << coutpos.y << ", " << coutpos.z << ", " << endl;
-
 			MakeMuzzleFlash();
 
 
@@ -688,7 +686,6 @@ void Player::MakeMuzzleFlash()
 	muzzleFlashObject.push_back(muzzleflash);
 	///////////
 	Vec3 coutpos = gunObject[0]->GetTransform()->GetLocalPosition();
-	cout << coutpos.x << ", " << coutpos.y << ", " << coutpos.z << ", " << endl;
 }
 
 void Player::AddMaxAmmo(PLAYER_WEAPON weapon)

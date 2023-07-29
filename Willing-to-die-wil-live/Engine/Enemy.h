@@ -8,12 +8,10 @@ enum class ENEMY_STATE : uint8
 {
 	IDLE,
 	WALK,
-
-
+	Attack,
 	DIE,
 	END
 };
-
 
 static const int Width = 100;
 static const int Height = 100;
@@ -210,10 +208,15 @@ public:
 	void LostHp();
 	bool GetAttack() { return Attack; };
 	void SetAttack(bool _attack) { Attack = _attack; };
+	void LookPlayer();
 	int CurHp() { return _hp; };
+
 	
 	void Respone();
 
+	void SetState(ENEMY_STATE state) { _currentState = state; };
+	ENEMY_STATE GetState() { return _currentState; };
+	ENEMY_STATE _currentState = ENEMY_STATE::WALK;
 	Vec3 EnemyPos;
 
 	const double py = std::acos(-1);

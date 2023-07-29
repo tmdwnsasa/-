@@ -9,8 +9,9 @@ enum class BruserENEMY_STATE : uint8
 {
 	IDLE,
 	WALK,
-
-
+	RUN,
+	BURSERKER,
+	ATTACK,
 	DIE,
 	END
 };
@@ -205,14 +206,24 @@ public:
 	void SetPlayerPos();
 	int(*CreateMap())[BrHeight];
 	void SetWallPos();
-	void Animation();
-	void AnimationCount();
+	void WalkAnimation();
+	void DeathAnimation();
+	void AttackAnimation();
+	void BurserkAnimation();
+	void RunAnimation();
 	void LostHp();
 	int CurHp() { return _hp; };
 
+	bool GetAttack() { return Attack; };
+	void SetAttack(bool _attack) { Attack = _attack; };
+
 	void Respone();
+	void LookPlayer();
+	void SetState(BruserENEMY_STATE state) { _currentState = state; };
+	BruserENEMY_STATE GetState() { return _currentState; };
 
 	Vec3 EnemyPos;
+
 
 	const double py = std::acos(-1);
 	double Latepy = 0.0f;
@@ -221,16 +232,27 @@ public:
 	const float baseX = 1000.0f;
 	const float baseZ = 1500.0f;
 	const float scale = 300.0f;
+	float _distance = 0;
 
 	float Time = 0.0f;
 	float DieTime = 0.0f;
+	float BuffTime = 0.0f;
 	int firstx = 0;
 	int firsty = 0;
 	int secondx = 0;
 	int secondy = 0;
 	int AnimeCount = 0;
 	int EnemyCount = 0;
+	float AttackDelay = 0.0f;
+	float AttackTime = 0.0f;
+	float Moving = 2.0f;
 
+	bool BurserkerMode = true;
+	bool Run_State = false;
+	bool Dead = false;
+	bool Attack = true;
+	bool Walk_State = true;
+	bool Awake = true;
 	int _hp = 100;
 
 	int CheckPoint = 0;
@@ -241,6 +263,7 @@ public:
 	Vec3 ResponeArea4 = Vec3(3600, -100, -3600);
 
 	bool ResponeCheck = false;
+	BruserENEMY_STATE _currentState = BruserENEMY_STATE::WALK;
 private:
 	float		_speed = 50.0f;
 };

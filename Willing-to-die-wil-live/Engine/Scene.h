@@ -82,11 +82,14 @@ public:
 
 	float			RestTime = 0.0f;
 	float			SponeTime = 0.0f;
-	bool			IsRest = false;
+	float			WaveTime = 0;
+	float			StartCheckTime = 0.0f;
+	bool			IsRest = true; // false가 적 생성
 	float			Distance = 0;
 
 	int				PlayerHp = 0;
 	float			Time = 0;
+	float			MaxTime = 10.0f;
 private:
 	vector<shared_ptr<GameObject>>		_gameObjects;
 	vector<shared_ptr<class Camera>>	_cameras;

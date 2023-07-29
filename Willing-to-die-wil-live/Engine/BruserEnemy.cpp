@@ -30,11 +30,46 @@ BruserEnemy::~BruserEnemy()
 
 void BruserEnemy::Update()
 {
-	Vec3 pos = GetTransform()->GetLocalPosition();
 
 	//pos += GetTransform()->GetLook() * _speed * 10 * DELTA_TIME;
 	//pos += GetTransform()->GetRight() * _speed * DELTA_TIME;
+	Vec3 pos = GetTransform()->GetLocalPosition();
 
+	shared_ptr<Scene> scene = GET_SINGLE(SceneManager)->GetActiveScene();
+	Vec3 PlayerPos = scene->GetPlayerPosToEnemy();
+
+	_distance = sqrt(pow(pos.x - PlayerPos.x, 2) + pow(pos.z - PlayerPos.z, 2));
+
+	switch (_currentState)
+	{
+	case BruserENEMY_STATE::IDLE:
+		break;
+	case BruserENEMY_STATE::WALK:
+		WalkAnimation();
+		break;
+	case BruserENEMY_STATE::RUN:
+		RunAnimation();
+		break;
+	case BruserENEMY_STATE::BURSERKER:
+		BurserkAnimation();
+		break;
+	case BruserENEMY_STATE::ATTACK:
+		AttackAnimation();
+		break;
+	case BruserENEMY_STATE::DIE:
+		DeathAnimation();
+		break;
+	case BruserENEMY_STATE::END:
+		break;
+	default:
+		break;
+	}
+
+	//1 공격
+	//2 광포고하
+	//3 죽음
+	//4 달리기
+	//5 걷기
 
 	//GetTransform()->SetLocalPosition(pos);
 
@@ -56,14 +91,53 @@ void BruserEnemy::Update()
 	}
 	if (_hp > 0)
 	{
-		AstarMove(firstx, firsty, secondx, secondy);
+		if (_distance >= 300)
+		{
+			Moving += DELTA_TIME;
+			if (Moving > 2.0)
+			{
+				if (Awake)
+				{
+					AstarMove(firstx, firsty, secondx, secondy);
+				}
+			}
+		}
 	}
 
-//	Animation();
+	if (Dead == false)
+	{
+		if (_distance >= 300)
+		{
+			if (Attack == false)
+			{
+				AttackDelay += DELTA_TIME;
+				if (AttackDelay > 2.0)
+				{
+					SetAttack(true);
+					if (BurserkerMode == true)
+					{
+						SetState(BruserENEMY_STATE::WALK);
+					}
+					else
+					{
+						SetState(BruserENEMY_STATE::RUN);
+					}
+				}
+			}
+		}
+	}
+
+	if (Dead == false)
+	{
+		if (_distance < 300)
+		{
+			SetState(BruserENEMY_STATE::ATTACK);
+		}
+	}
 
 	if (_hp <= 0)
 	{
-		AnimationCount();
+		SetState(BruserENEMY_STATE::DIE);
 	}
 
 }
@@ -234,55 +308,31 @@ void BruserEnemy::SetPlayerPos()
 	int w = x + y;
 }
 
-void BruserEnemy::Animation()
+void BruserEnemy::WalkAnimation()
 {
-	if (AnimeCount == 0)
+	if (Walk_State == true)
 	{
 		int32 count = GetAnimator()->GetAnimCount();
 		int32 currentIndex = GetAnimator()->GetCurrentClipIndex();
 
-		int32 index = (currentIndex + 2) % count;
+		int32 index = 4 % count;
 		GetAnimator()->Play(index);
-		AnimeCount++;
-	}
-	if (INPUT->GetButtonDown(KEY_TYPE::KEY_1))
-	{
-		int32 count = GetAnimator()->GetAnimCount();
-		int32 currentIndex = GetAnimator()->GetCurrentClipIndex();
-
-		int32 index = (currentIndex + 1) % count;
-		GetAnimator()->Play(index);
-	}
-
-	if (INPUT->GetButtonDown(KEY_TYPE::KEY_2))
-	{
-		int32 count = GetAnimator()->GetAnimCount();
-		int32 currentIndex = GetAnimator()->GetCurrentClipIndex();
-
-		int32 index = (currentIndex - 1 + count) % count;
-		GetAnimator()->Play(index);
-	}
-
-	if (INPUT->GetButtonDown(KEY_TYPE::KEY_5))
-	{
-		GetAnimator()->Stop();
+		Walk_State = false;
 	}
 }
 
-void BruserEnemy::AnimationCount()
+void BruserEnemy::DeathAnimation()
 {
-	if (AnimeCount == 1)
+	if (Dead==false)
 	{
 		int32 count = GetAnimator()->GetAnimCount();
-		int32 currentIndex = GetAnimator()->GetCurrentClipIndex();
-
-		int32 index = (currentIndex + 1) % count;
+		
+		int32 index = 2 % count;
 		GetAnimator()->Play(index);
-		std::cout << index << std::endl;
-		AnimeCount++;
+		Dead = true;
 	}
 
-	else if (AnimeCount == 2)
+	else if (Dead==true)
 	{
 		DieTime += DELTA_TIME;
 		if (DieTime > 2.2)
@@ -292,6 +342,87 @@ void BruserEnemy::AnimationCount()
 	}
 }
 
+void BruserEnemy::RunAnimation()
+{
+	if (Run_State == false)
+	{
+		int32 count = GetAnimator()->GetAnimCount();
+		int32 index = 3 % count;
+		GetAnimator()->Play(index);
+		Run_State = true;
+	}
+}
+
+void BruserEnemy::BurserkAnimation()
+{
+	if (BurserkerMode==true)
+	{
+		int32 count = GetAnimator()->GetAnimCount();
+
+		int32 index = 1 % count;
+		GetAnimator()->Play(index);
+		BurserkerMode = false;
+		Awake = false;
+	}
+
+	else if (BurserkerMode == false)
+	{
+		BuffTime += DELTA_TIME;
+		if (BuffTime > 2.5)
+		{
+			Awake = true;
+			SetState(BruserENEMY_STATE::RUN);
+		}
+	}
+}
+
+void BruserEnemy::AttackAnimation()
+{
+	if (Attack == true)
+	{
+		AttackTime = 3.0f;
+	}
+	AttackTime += DELTA_TIME;
+	if (AttackTime > 3)
+	{
+		int32 count = GetAnimator()->GetAnimCount();
+		int32 index = 0 % count;
+		GetAnimator()->Play(index);
+		AttackTime = 0;
+		Attack = false;
+		Run_State = false;
+		Walk_State = true;
+		AttackDelay = 0;
+		Moving = 0;
+		SetAttack(false);
+		LookPlayer();
+	}
+}
+
+void BruserEnemy::LookPlayer()
+{
+	shared_ptr<Scene> scene = GET_SINGLE(SceneManager)->GetActiveScene();
+	Vec3 PlayerPos = scene->GetPlayerPosToEnemy();
+	Vec3 EPos = GetEnemyPosition();
+	int x = round(EPos.x - PlayerPos.x);
+	int z = round(EPos.z - PlayerPos.z);
+	float dis = round(sqrt(pow(EPos.x - PlayerPos.x, 2) + pow(EPos.z - PlayerPos.z, 2)));
+	float ros = std::acos(z / dis);
+	if (x < 0)
+	{
+		GetTransform()->SetLocalRotation(Vec3(0, ros, 0));
+	}
+	else if (x > 0)
+	{
+		GetTransform()->SetLocalRotation(Vec3(0, -ros, 0));
+	}
+	//세타값은 동일 양 음 설정 필요
+	//float radian = ros * 180 / py;
+	//cout << "x :" << x << endl;
+	//cout << " Z : " << z << endl;
+	//cout << "dis : " << dis << endl;
+	//cout << radian << endl;
+}
 
 
 int(*BruserEnemy::CreateMap())[BrHeight]
@@ -302,6 +433,7 @@ int(*BruserEnemy::CreateMap())[BrHeight]
 void BruserEnemy::LostHp()
 {
 	_hp -= 30;
+	SetState(BruserENEMY_STATE::BURSERKER);
 }
 
 

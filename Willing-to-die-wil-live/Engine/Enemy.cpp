@@ -33,17 +33,30 @@ void Enemy::Update()
 
 		Vec3 pos = GetTransform()->GetLocalPosition();
 
-		//pos += GetTransform()->GetLook() * _speed * 10 * DELTA_TIME;
-		//pos += GetTransform()->GetRight() * _speed * DELTA_TIME;
+		shared_ptr<Scene> scene = GET_SINGLE(SceneManager)->GetActiveScene();
+		Vec3 PlayerPos = scene->GetPlayerPosToEnemy();
 
-
-		//GetTransform()->SetLocalPosition(pos);
+		switch (_currentState)
+		{
+		case ENEMY_STATE::IDLE:
+			break;
+		case ENEMY_STATE::WALK:
+			Animation();
+			break;
+		case ENEMY_STATE::Attack:
+			AttackAnimation();
+			break;
+		case ENEMY_STATE::DIE:
+			DeathAnimation();
+			break;
+		case ENEMY_STATE::END:
+			break;
+		default:
+			break;
+		}
 
 		SetEnemyPosition(pos);
 		SetPlayerPos();
-
-		shared_ptr<Scene> scene = GET_SINGLE(SceneManager)->GetActiveScene();
-		Vec3 PlayerPos = scene->GetPlayerPosToEnemy();
 
 		if (!ResponeCheck)
 		{
@@ -83,23 +96,23 @@ void Enemy::Update()
 					{
 						AnimeCount = 0;
 						SetAttack(true);
+						SetState(ENEMY_STATE::WALK);
 					}
 				}
 			}
 		}
-		Animation();
-		_distance = fabs(round(pos.x - PlayerPos.x)) + fabs(round(pos.z - PlayerPos.z));
+
+		_distance = sqrt(pow(pos.x - PlayerPos.x, 2) + pow(pos.z - PlayerPos.z, 2));
 		if (Dead == false)
 		{
 			if (_distance < 300)
 			{
-				//cout << _distance << endl;
-				AttackAnimation();
+				SetState(ENEMY_STATE::Attack);
 			}
 		}
 		if (_hp <= 0)
 		{
-			DeathAnimation();
+			SetState(ENEMY_STATE::DIE);
 		}
 }
 
@@ -192,29 +205,40 @@ void Enemy::AstarMove(int x, int y, int z, int w)
 	if (x == 1 && y == -1)
 	{
 		GetTransform()->SetLocalRotation(Vec3(0, -py * 0.75, 0));
-		
+	
 		pos += GetTransform()->GetLook() * _speed * DELTA_TIME; // 보는 방향기준 왼쪽
 		//pos -= GetTransform()->GetRight() * _speed * 10; // 보는 방향기준 왼쪽
 	}
 	if (x == 0 && y == -1)
 	{
 		GetTransform()->SetLocalRotation(Vec3(0, -py, 0));
-		
+	
 		pos += GetTransform()->GetLook() * _speed * DELTA_TIME;
 	}
 
 	if (x == 0 && y == 1)
 	{
 		GetTransform()->SetLocalRotation(Vec3(0, 0, 0));
-	
 		pos += GetTransform()->GetLook() * _speed * DELTA_TIME;
 	}
-	double rotpos = GetTransform()->GetLocalRotation().y;
+
 	GetTransform()->SetLocalPosition(pos);
 
 }
 
+void Enemy::LookPlayer()
+{
 
+	shared_ptr<Scene> scene = GET_SINGLE(SceneManager)->GetActiveScene();
+	Vec3 PlayerPos = scene->GetPlayerPosToEnemy();
+	Vec3 EPos = GetEnemyPosition();
+	int x = round(EPos.x - PlayerPos.x);
+	int z = round(EPos.z - PlayerPos.z);
+	float dis = round(sqrt(pow(EPos.x - PlayerPos.x, 2) + pow(EPos.z - PlayerPos.z, 2)));
+	float ros = std::acos(z / dis);
+	GetTransform()->SetLocalRotation(Vec3(0, (py+ros), 0));
+	cout << ros << endl;
+}
 
 void Enemy::SetPlayerPos()
 {
@@ -347,6 +371,7 @@ void Enemy::AttackAnimation()
 		AttackDelay = 0;
 		Moving = 0;
 		SetAttack(false);
+		LookPlayer();
 	}
 }
 
