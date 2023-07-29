@@ -85,18 +85,19 @@ public:
 	int				FBrZCount = 0;
 	int				FZCount = 0;
 
-	float			RestTime = 0.0f;
 	float			SponeTime = 0.0f;
-	bool			IsRest = true;
 
 	int loadedResource = 0;
 	int loadingResource = 0;
 	
+	float			WaveTime = 0;
+	float			StartCheckTime = 0.0f;
+	bool			IsRest = true; // false가 적 생성
 	float			Distance = 0;
 
 	int				PlayerHp = 0;
 	float			Time = 0;
-
+	float			MaxTime = 50.0f;
 private:
 	vector<shared_ptr<GameObject>>		_gameObjects;
 	vector<shared_ptr<class Camera>>	_cameras;
@@ -116,4 +117,3 @@ private:
 
 	bool			_mouseLock = false;
 };
-

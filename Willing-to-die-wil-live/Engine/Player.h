@@ -31,6 +31,7 @@ enum class BULLET_STATE : uint8
 enum class MUZZLEFLASH_STATE : uint8
 {
 	LIVE,
+	SHOOT,
 	DEAD,
 	END
 };

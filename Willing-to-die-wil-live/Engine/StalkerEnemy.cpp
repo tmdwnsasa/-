@@ -37,13 +37,14 @@ void StalkerEnemy::Update()
 
 
 	//GetTransform()->SetLocalPosition(pos);
+	// 1 °ø°Ý 2 Á×À½ 3 °È±â
 
 	SetEnemyPosition(pos);
 
 	SetPlayerPos();
 	if (!ResponeCheck)
 	{
-		Respone();
+		//Respone();
 	}
 	Time += DELTA_TIME;
 	if (Time > 0.1)
@@ -67,6 +68,7 @@ void StalkerEnemy::Update()
 	}
 
 }
+
 
 
 void StalkerEnemy::AstarCall()
@@ -242,33 +244,10 @@ void StalkerEnemy::Animation()
 	if (AnimeCount == 0)
 	{
 		int32 count = GetAnimator()->GetAnimCount();
-		int32 currentIndex = GetAnimator()->GetCurrentClipIndex();
-
-		int32 index = (currentIndex + 1) % count;
+		
+		int32 index = 2 % count;
 		GetAnimator()->Play(index);
 		AnimeCount++;
-	}
-	if (INPUT->GetButtonDown(KEY_TYPE::KEY_1))
-	{
-		int32 count = GetAnimator()->GetAnimCount();
-		int32 currentIndex = GetAnimator()->GetCurrentClipIndex();
-
-		int32 index = (currentIndex + 1) % count;
-		GetAnimator()->Play(index);
-	}
-
-	if (INPUT->GetButtonDown(KEY_TYPE::KEY_2))
-	{
-		int32 count = GetAnimator()->GetAnimCount();
-		int32 currentIndex = GetAnimator()->GetCurrentClipIndex();
-
-		int32 index = (currentIndex - 1 + count) % count;
-		GetAnimator()->Play(index);
-	}
-
-	if (INPUT->GetButtonDown(KEY_TYPE::KEY_5))
-	{
-		GetAnimator()->Stop();
 	}
 }
 
@@ -277,11 +256,9 @@ void StalkerEnemy::AnimationCount()
 	if (AnimeCount == 1)
 	{
 		int32 count = GetAnimator()->GetAnimCount();
-		int32 currentIndex = GetAnimator()->GetCurrentClipIndex();
-
-		int32 index = (currentIndex + 1) % count;
+		
+		int32 index =1 % count;
 		GetAnimator()->Play(index);
-		std::cout << index << std::endl;
 		AnimeCount++;
 	}
 

@@ -184,8 +184,8 @@ void Player::Update()
 		if (GetCurrAmmo(_currWeapon) > 0 &&
 			_rotateLock == false &&
 			_shopOpened == false &&
-			_currWeapon != PLAYER_WEAPON::NONE&&
-			_curRateOfFire <= 0&&
+			_currWeapon != PLAYER_WEAPON::NONE &&
+			_curRateOfFire <= 0 &&
 			_isShot == false)
 		{
 			_reloading = false;
@@ -208,6 +208,7 @@ void Player::Update()
 
 			MakeBullet();
 			MakeMuzzleFlash();
+			cout << "make" << endl;
 
 			if (_currWeapon == PLAYER_WEAPON::PISTOL)
 			{
@@ -298,7 +299,7 @@ void Player::PlayerRotate()
 	GetTransform()->SetLocalRotation(rotation);
 }
 
-void Player::ChangeWeapon(PLAYER_WEAPON weapon)
+void Player::ChangeWeapon(PLAYER_WEAPON weapon)		
 {
 	_currWeapon = weapon;
 	gunObject.clear();
@@ -642,23 +643,23 @@ void Player::MakeMuzzleFlash()
 	Vec3 MuzzleFlashFixedPos = gunObject[0]->GetTransform()->GetLocalPosition();
 	if (PLAYER_WEAPON::PISTOL == _currWeapon)
 	{
-		MuzzleFlashFixedPos += Vec3(0, 60, 0);
-		MuzzleFlashFixedPos += gunObject[0]->GetTransform()->GetLook() * 20;
+		MuzzleFlashFixedPos += Vec3(0, 40, 0);
+		MuzzleFlashFixedPos += gunObject[0]->GetTransform()->GetLook() * 30;
 	}
 	if (PLAYER_WEAPON::SMG == _currWeapon)
 	{
-		MuzzleFlashFixedPos += Vec3(0, 20, 0);
-		MuzzleFlashFixedPos += gunObject[0]->GetTransform()->GetLook() * 200;
+		MuzzleFlashFixedPos += Vec3(0, 10, 0);
+		MuzzleFlashFixedPos += gunObject[0]->GetTransform()->GetLook() * 350;
 	}
 	if (PLAYER_WEAPON::SHOTGUN == _currWeapon)
 	{
-		MuzzleFlashFixedPos += Vec3(0, 70, 0);
-		MuzzleFlashFixedPos += gunObject[0]->GetTransform()->GetLook() * 30;
+		MuzzleFlashFixedPos += Vec3(0, 80, 0);
+		MuzzleFlashFixedPos += gunObject[0]->GetTransform()->GetLook() * 350;
 	}
 	if (PLAYER_WEAPON::SNIPER == _currWeapon)
 	{
 		MuzzleFlashFixedPos += Vec3(0, 140, 0);
-		MuzzleFlashFixedPos += gunObject[0]->GetTransform()->GetLook() * 50;
+		MuzzleFlashFixedPos += gunObject[0]->GetTransform()->GetLook() * 45;
 	}
 	muzzleflash->GetTransform()->SetLocalPosition(MuzzleFlashFixedPos);
 
@@ -677,9 +678,6 @@ void Player::MakeMuzzleFlash()
 	muzzleflash->AddComponent(meshRenderer);
 
 	muzzleFlashObject.push_back(muzzleflash);
-	///////////
-	Vec3 coutpos = gunObject[0]->GetTransform()->GetLocalPosition();
-	cout << coutpos.x << ", " << coutpos.y << ", " << coutpos.z << ", " << endl;
 }
 
 void Player::MakeBullet()
@@ -756,12 +754,10 @@ void Player::Bleeding()
 		shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
 		meshRenderer->SetMesh(mesh);
 
-		{
-			shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"BloodyScreen");
-			meshRenderer->SetMaterial(material);
-			obj->AddComponent(meshRenderer);
-			bleedingUI = obj;
-		}
+		shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"BloodyScreen");
+		meshRenderer->SetMaterial(material);
+		obj->AddComponent(meshRenderer);
+		bleedingUI = obj;
 	}
 #pragma endregion
 }
