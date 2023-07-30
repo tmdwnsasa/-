@@ -520,7 +520,7 @@ void Resources::CreateDefaultShader()
 		{
 			SHADER_TYPE::FORWARD,
 			RASTERIZER_TYPE::CULL_NONE,
-			DEPTH_STENCIL_TYPE::LESS_EQUAL,
+			DEPTH_STENCIL_TYPE::NO_DEPTH_TEST_NO_WRITE,
 			BLEND_TYPE::ALPHA_BLEND,
 		};
 
@@ -665,7 +665,7 @@ void Resources::CreateDefaultShader()
 		Add<Shader>(L"ComputeShader", shader);
 	}
 
-	// Particle
+	// Particle(blood)
 	{
 		ShaderInfo info =
 		{
@@ -688,6 +688,31 @@ void Resources::CreateDefaultShader()
 		shared_ptr<Shader> shader = make_shared<Shader>();
 		shader->CreateGraphicsShader(L"..\\Resources\\Shader\\particle.fx", info, arg);
 		Add<Shader>(L"Particle", shader);
+	}
+
+	// Particle(Smoke)
+	{
+		ShaderInfo info =
+		{
+			SHADER_TYPE::PARTICLE,
+			RASTERIZER_TYPE::CULL_BACK,
+			DEPTH_STENCIL_TYPE::LESS_NO_WRITE,
+			BLEND_TYPE::ALPHA_BLEND,
+			D3D_PRIMITIVE_TOPOLOGY_POINTLIST
+		};
+
+		ShaderArg arg =
+		{
+			"VS_Main",
+			"",
+			"",
+			"GS_Main",
+			"PS_Main"
+		};
+
+		shared_ptr<Shader> shader = make_shared<Shader>();
+		shader->CreateGraphicsShader(L"..\\Resources\\Shader\\particle.fx", info, arg);
+		Add<Shader>(L"Particle2", shader);
 	}
 
 	// ComputeParticle
@@ -831,6 +856,14 @@ void Resources::CreateDefaultMaterial()
 		shared_ptr<Material> material = make_shared<Material>();
 		material->SetShader(shader);
 		Add<Material>(L"Particle", material);
+	}
+
+	// Particle(Smoke)
+	{
+		shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Particle2");
+		shared_ptr<Material> material = make_shared<Material>();
+		material->SetShader(shader);
+		Add<Material>(L"Particle2", material);
 	}
 
 	// ComputeParticle

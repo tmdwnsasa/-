@@ -47,10 +47,6 @@ void Camera::SortGameObject()
 
 	for (auto& gameObject : gameObjects)
 	{
-		if (gameObject->GetName() == L"Bullet")
-		{
-			int i = 0;
-		}
 		if (gameObject->GetMeshRenderer() == nullptr && gameObject->GetParticleSystem() == nullptr)
 			continue;
 

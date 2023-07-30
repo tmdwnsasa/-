@@ -69,7 +69,7 @@ vector<Vertex> Font::GetTextVB(string sentence)
     }
 
     vector<Vertex> vertices(numLetters * 4);
-    float drawX = -40.0f;
+    float drawX = 0.0f;
     float drawY = -0.5f;
 
 

@@ -53,6 +53,8 @@ public:
 	void MakeStalker(int Wave);
 	void MakeBruser(int Wave);
 
+	void MakeParticle(string name, Vec3 pos);
+
 private:
 	void PushLightData();
 	int  DistanceWall = 70;
@@ -97,7 +99,7 @@ public:
 
 	int				PlayerHp = 0;
 	float			Time = 0;
-	float			MaxTime = 50.0f;
+	float			MaxTime = 10.0f;
 private:
 	vector<shared_ptr<GameObject>>		_gameObjects;
 	vector<shared_ptr<class Camera>>	_cameras;

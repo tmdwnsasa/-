@@ -340,9 +340,9 @@ void Player::ChangeWeapon(PLAYER_WEAPON weapon)
 
 	if (_currWeapon == PLAYER_WEAPON::SMG)
 	{
-		_damage = 25.f;
+		_damage = 20.f;
 		_pellet = 1;
-		_maxAmmo = 25;
+		_maxAmmo = 30;
 		_rateOfFire = 0.15f;
 		_reloadMaxTime = 2.5f;
 		_reloadPerAmmo = _maxAmmo;
@@ -410,10 +410,10 @@ void Player::ChangeWeapon(PLAYER_WEAPON weapon)
 
 	if (_currWeapon == PLAYER_WEAPON::SNIPER)	
 	{
-		_damage = 50.f;
+		_damage = 200.f;
 		_pellet = 1;
 		_maxAmmo = 20;
-		_rateOfFire = 1.5f;
+		_rateOfFire = 1.0f;
 		_reloadMaxTime = 2.5f;
 		_reloadPerAmmo = _maxAmmo;
 		_price = 2500;

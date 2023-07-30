@@ -69,7 +69,7 @@ cbuffer COLOR_PARAMS : register(b3)
     
 }
 
-    Texture2D g_tex_0 : register(t0);
+Texture2D g_tex_0 : register(t0);
 Texture2D g_tex_1 : register(t1);
 Texture2D g_tex_2 : register(t2);
 Texture2D g_tex_3 : register(t3);

@@ -162,7 +162,7 @@ private:
 	float			_lifeTime = 5.f;
 	float			_currLifeTime = 5.f;
 	BULLET_STATE	_currState = BULLET_STATE::LIVE;
-	float			_speed = 1000.0f;
+	float			_speed = 1500.0f;
 };
 
 class MuzzleFlash : public Component

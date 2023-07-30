@@ -1,12 +1,13 @@
 #include "pch.h"
+#include "Engine.h"
 #include "Scene.h"
+#include "ConstantBuffer.h"
+#include "SoundManager.h"
+#include "Resources.h"
+
 #include "GameObject.h"
 #include "Camera.h"
-#include "Engine.h"
-#include "ConstantBuffer.h"
 #include "Light.h"
-#include "Engine.h"
-#include "Resources.h"
 #include "Transform.h"
 #include "CameraScript.h"
 #include "MeshRenderer.h"
@@ -15,18 +16,21 @@
 #include "Timer.h"
 #include "Astar.h"
 #include "TileMap.h"
+#include "Input.h"
+#include "BoxCollider.h"
+
+#include "MainMenu.h"
+#include "Font.h"
+#include "Shop.h"
+#include "Button.h"
+
+#include "Gun.h"
+#include "ParticleSystem.h"
 #include "Enemy.h"
 #include "StalkerEnemy.h"
 #include "BruserEnemy.h"
 #include "Player.h"
-#include "Input.h"
-#include "BoxCollider.h"
-#include "Font.h"
-#include "Shop.h"
-#include "Button.h"
-#include "Gun.h"
-#include "SoundManager.h"
-#include "MainMenu.h"
+
 #include <iostream>
 
 
@@ -76,7 +80,18 @@ void Scene::Update()
 	//}
 
 	GetAllFBX();
+	
 
+	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
+	{
+		if (gameObject->GetName() == L"Player")
+		{
+			Vec3 pos = gameObject->GetTransform()->GetLocalPosition();
+			cout << pos.x << ", " << pos.y << ", " << pos.z << endl;
+		}
+	}
+
+		//메뉴
 	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
 	{
 		if (gameObject->GetName() == L"Menu")
@@ -145,23 +160,8 @@ void Scene::Update()
 			}
 		}
 	}
-
-
-	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
-	{
-		if (gameObject->GetName() == L"Gun3")
-		{
-			//cout << gameObject->GetTransform()->GetLocalPosition().x << ", " << gameObject->GetTransform()->GetLocalPosition().y << "," << gameObject->GetTransform()->GetLocalPosition().z << endl;
-			for (const shared_ptr<GameObject>& object : _gameObjects)
-			{
-				if (object->GetName() == L"Player")
-				{
-					gameObject->GetTransform()->SetLocalPosition(object->GetTransform()->GetLocalPosition());
-				}
-			}
-		}
-	}
-
+	
+	//피나는 화면 
 	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
 	{
 		if (gameObject->GetName() == L"Player")
@@ -291,7 +291,7 @@ void Scene::Update()
 		}
 	}
 
-	// 총알 생성, 총구 화염 생성
+	// 총알 생성, 총구 화염 생성 및 삭제
 	int temp = 0;
 	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
 	{
@@ -343,6 +343,18 @@ void Scene::Update()
 		}
 	}
 
+	//파티클 삭제
+	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
+	{
+		if (gameObject->GetName() == L"BloodParticle")
+		{
+			if (gameObject->GetParticleSystem()->GetEraseState() == true)
+			{
+				_trashBin.push_back(gameObject);
+			}
+		}
+	}
+
 	SetPlayerPosToEnemy();
 
 	CollisionPlayerToWall();
@@ -373,6 +385,11 @@ void Scene::LateUpdate()
 						gameObject->GetBullet()->SetState(BULLET_STATE::DEAD);
 						Object->GetEnemy()->LostHp();
 						EnemyHp = Object->GetEnemy()->CurHp();
+						//파티클
+						Vec3 particlePos = Object->GetTransform()->GetLocalPosition();
+						particlePos += Object->GetTransform()->GetLook() * 80.f;
+						MakeParticle("Blood", Vec3(particlePos.x, particlePos.y + 100, particlePos.z));
+						
 						_trashBin.push_back(gameObject);
 
 						if (EnemyHp <= 0)
@@ -391,6 +408,11 @@ void Scene::LateUpdate()
 						gameObject->GetBullet()->SetState(BULLET_STATE::DEAD);
 						Object->GetBruserEnemy()->LostHp();
 						EnemyHp = Object->GetBruserEnemy()->CurHp();
+						//파티클
+						Vec3 particlePos = Object->GetTransform()->GetLocalPosition();
+						particlePos += Object->GetTransform()->GetLook() * 80.f;
+						MakeParticle("Blood", Vec3(particlePos.x, particlePos.y + 100, particlePos.z));
+
 						_trashBin.push_back(gameObject);
 
 						if (EnemyHp <= 0)
@@ -409,6 +431,11 @@ void Scene::LateUpdate()
 						gameObject->GetBullet()->SetState(BULLET_STATE::DEAD);
 						Object->GetStalkerEnemy()->LostHp();
 						EnemyHp = Object->GetStalkerEnemy()->CurHp();
+						//파티클
+						Vec3 particlePos = Object->GetTransform()->GetLocalPosition();
+						particlePos += Object->GetTransform()->GetLook() * 80.f;
+						MakeParticle("Blood", Vec3(particlePos.x, particlePos.y + 100, particlePos.z));
+
 						_trashBin.push_back(gameObject);
 
 						if (EnemyHp <= 0)
@@ -1057,9 +1084,9 @@ void Scene::CheckWave()
 	switch (CurrentWave)
 	{
 	case 1:
-		ZCount = 0;
+		ZCount = 3;
 		STZCount = 0;
-		BrZCount = 1;
+		BrZCount = 0;
 		EnemyCount = ZCount + STZCount + BrZCount;
 		break;
 	case 2:
@@ -1173,16 +1200,12 @@ void Scene::LoadAllFBX()
 {
 	GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Normal.fbx");
 	loadingResource++;
-	cout << 1 << endl;
 	GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\StalkerZombie2.fbx");
 	loadingResource++;
-	cout << 2 << endl;
 	GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\bURSERKER.fbx");
 	loadingResource++;
-	cout << 3 << endl;
 	GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\m4a1_s.fbx");
 	loadingResource++;
-	cout << 4 << endl;
 	return;
 }
 
@@ -1192,24 +1215,45 @@ void Scene::GetAllFBX()
 	{
 		ZombieMesh = GET_SINGLE(Resources)->Get<MeshData>(L"..\\Resources\\FBX\\Normal.fbx");
 		loadedResource++;
-		cout << 1111 << endl;
 	}
 	if (loadingResource == 2 && loadedResource < 2)
 	{
 		StalkerZombieMesh = GET_SINGLE(Resources)->Get<MeshData>(L"..\\Resources\\FBX\\StalkerZombie2.fbx");
 		loadedResource++;
-		cout << 2222 << endl;
 	}
 	if (loadingResource == 3 && loadedResource < 3)
 	{
 		BruserZombieMesh = GET_SINGLE(Resources)->Get<MeshData>(L"..\\Resources\\FBX\\bURSERKER.fbx");
 		loadedResource++;
-		cout << 3333 << endl;
 	}
 	if (loadingResource == 4 && loadedResource < 4)
 	{
 		shared_ptr<MeshData> GunMesh = GET_SINGLE(Resources)->Get<MeshData>(L"..\\Resources\\FBX\\m4a1_s.fbx");
 		loadedResource++;
-		cout << 4444 << endl;
+	}
+}
+
+void Scene::MakeParticle(string name, Vec3 pos)
+{
+	if (name == "Blood")
+	{
+		shared_ptr<GameObject> particle = make_shared<GameObject>();
+		particle->SetName(L"BloodParticle");
+		particle->AddComponent(make_shared<Transform>());
+		particle->AddComponent(make_shared<ParticleSystem>("Blood"));
+		particle->SetCheckFrustum(false);
+		particle->GetTransform()->SetLocalPosition(pos);
+		_gameObjects.push_back(particle);
+	}
+
+	if (name == "Smoke")
+	{
+		shared_ptr<GameObject> particle = make_shared<GameObject>();
+		particle->SetName(L"SmokeParticle");
+		particle->AddComponent(make_shared<Transform>());
+		particle->AddComponent(make_shared<ParticleSystem>("Smoke"));
+		particle->SetCheckFrustum(false);
+		particle->GetTransform()->SetLocalPosition(pos);
+		_gameObjects.push_back(particle);
 	}
 }

@@ -25,11 +25,22 @@ class ParticleSystem : public Component
 {
 public:
 	ParticleSystem();
+	ParticleSystem(string name);
 	virtual ~ParticleSystem();
 
 public:
+	virtual void Awake();
+	virtual void Start();
+	virtual void Update();
+	virtual void LateUpdate();
 	virtual void FinalUpdate();
 	void Render();
+
+	bool GetEraseState() { return _erase; };
+
+	void Parameter();
+	void OnOff(bool state);
+	void SetOnOff(bool state) { _state = state; };
 
 public:
 	virtual void Load(const wstring& path) override { }
@@ -44,13 +55,17 @@ private:
 	shared_ptr<Material>		_material;
 	shared_ptr<Mesh>			_mesh;
 
+	string				particleName;
+
+	bool				_state = true;
+	bool				_erase = false;
 	float				_createInterval = 0.005f;
 	float				_accTime = 0.f;
 
 	float				_minLifeTime = 0.5f;
-	float				_maxLifeTime = 1.f;
-	float				_minSpeed = 100;
-	float				_maxSpeed = 50;
-	float				_startScale = 10.f;
-	float				_endScale = 5.f;
+	float				_maxLifeTime = 2.f;
+	float				_minSpeed = 60;
+	float				_maxSpeed = 30;
+	float				_startScale = 20.f;
+	float				_endScale = 10.f;
 };

@@ -355,10 +355,6 @@ void FBXLoader::CreateMaterials()
 			}
 
 			GET_SINGLE(Resources)->Add<Material>(material->GetName(), material);
-
-			
-
-			
 		}
 	}
 }

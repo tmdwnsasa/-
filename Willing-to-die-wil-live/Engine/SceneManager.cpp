@@ -284,7 +284,30 @@ shared_ptr<Scene> SceneManager::LoadGameScene()
 	}
 #pragma endregion
 
+#pragma region ParticleSystem
+	{
+		shared_ptr<GameObject> particle = make_shared<GameObject>();
+		particle->SetName(L"SmokeParticle");
+		particle->AddComponent(make_shared<Transform>());
+		particle->AddComponent(make_shared<ParticleSystem>("Smoke"));
+		particle->SetCheckFrustum(false);
+		particle->GetTransform()->SetLocalPosition(Vec3(3700.f, 0.f, -3600.f));
+		scene->AddGameObject(particle);
+	}
+#pragma endregion
 
+#pragma region ParticleSystem2
+	for(int i=0; i<3; i++)
+	{
+		shared_ptr<GameObject> particle = make_shared<GameObject>();
+		particle->SetName(L"BloodParticle");
+		particle->AddComponent(make_shared<Transform>());
+		particle->AddComponent(make_shared<ParticleSystem>("Blood"));
+		particle->SetCheckFrustum(false);
+		particle->GetTransform()->SetLocalPosition(Vec3(3700.f, 0.f, -3400.f + (100.f * i)));
+		scene->AddGameObject(particle);
+	}
+#pragma endregion
 
 #pragma region Text_HP
 	{
@@ -759,18 +782,19 @@ void SceneManager::MakeWall(bool horizontal, int value, float xchange, float ych
 {
 	for (int i = 0; i < value; i++)
 	{
+		float gapAmount = 0.01;
 		shared_ptr<GameObject> obj = make_shared<GameObject>();
 		obj->AddComponent(make_shared<Transform>());
 		obj->SetName(L"Wall");
 		obj->GetTransform()->SetLocalScale(Vec3(scale, scale, 50.f));
 		if (horizontal == false)	//세로
 		{
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + posScale * xchange, 0.f, baseZ + posScale * (ychange + 0.5f + i)));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX + posScale * xchange + (i* gapAmount), 0.f, baseZ + posScale * (ychange + 0.5f + i) + (i * gapAmount)));
 			obj->GetTransform()->SetLocalRotation(Vec3(0.0f, py * 0.5, 0.0f));
 		}
 		else						//가로
 		{
-			obj->GetTransform()->SetLocalPosition(Vec3(baseX + posScale * (xchange + 0.5f + i), 0.f, baseZ + posScale * (ychange)));
+			obj->GetTransform()->SetLocalPosition(Vec3(baseX + posScale * (xchange + 0.5f + i) + (i * gapAmount), 0.f, baseZ + posScale * (ychange)+(i * gapAmount)));
 		}
 		obj->SetCheckFrustum(false);
 		obj->SetStatic(false);

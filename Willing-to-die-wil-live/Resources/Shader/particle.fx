@@ -126,6 +126,7 @@ RWStructuredBuffer<ComputeShared> g_shared : register(u1);
 // g_int_0  : Particle Max Count
 // g_int_1  : AddCount
 // g_vec4_0 : MinLifeTime / MaxLifeTime / MinSpeed / MaxSpeed
+// g_int_3  : Gravity
 [numthreads(1024, 1, 1)]
 void CS_Main(int3 threadIndex : SV_DispatchThreadID)
 {
@@ -135,6 +136,7 @@ void CS_Main(int3 threadIndex : SV_DispatchThreadID)
     int maxCount = g_int_0;
     int addCount = g_int_1;
     int frameNumber = g_int_2;
+    int gravity = g_int_3;
     float deltaTime = g_vec2_1.x;
     float accTime = g_vec2_1.y;
     float minLifeTime = g_vec4_0.x;
@@ -185,11 +187,20 @@ void CS_Main(int3 threadIndex : SV_DispatchThreadID)
             float3 dir = (noise - 0.5f) * 2.f;
 
             g_particle[threadIndex.x].worldDir = normalize(dir);
-            g_particle[threadIndex.x].worldPos = (noise.xyz - 0.5f) * 25;
+            if(gravity == 1)
+                g_particle[threadIndex.x].worldPos = (noise.xyz - 0.5f) * 25;
+            if (gravity == 0)
+            {
+                float oldy = g_particle[threadIndex.x].worldPos.y;
+                g_particle[threadIndex.x].worldPos = (noise.xyz - 0.5f) * 7500;
+                g_particle[threadIndex.x].worldPos.y = oldy * (noise.xyz - 0.5f) * 75;
+
+            }
             g_particle[threadIndex.x].lifeTime = ((maxLifeTime - minLifeTime) * noise.x) + minLifeTime;
             g_particle[threadIndex.x].curTime = 0.f;
         }
     }
+    
     else
     {
         g_particle[threadIndex.x].curTime += deltaTime;
@@ -201,7 +212,12 @@ void CS_Main(int3 threadIndex : SV_DispatchThreadID)
 
         float ratio = g_particle[threadIndex.x].curTime / g_particle[threadIndex.x].lifeTime;
         float speed = (maxSpeed - minSpeed) * ratio + minSpeed;
+        float oldypos = g_particle[threadIndex.x].worldPos.y;
         g_particle[threadIndex.x].worldPos += g_particle[threadIndex.x].worldDir * speed * deltaTime;
+        if (gravity == 1)
+            g_particle[threadIndex.x].worldPos.y -= g_particle[threadIndex.x].curTime * 5.f;
+        if (gravity == 0)
+            g_particle[threadIndex.x].worldPos.y = oldypos;
     }
 }
 
