@@ -62,7 +62,7 @@ void Enemy::Update()
 
 		if (!ResponeCheck)
 		{
-			//Respone();
+			Respone();
 		}
 		Time += DELTA_TIME;
 		if (Time > 1.1)
@@ -406,26 +406,21 @@ void Enemy::Respone()
 	{
 		if (PlayerPos.z < -3500)
 		{
-			ResponeNumber = rand() % 9 + 1;
-			if (ResponeNumber != 1)
-			{
-				CheckPoint = ResponeNumber;
-			}
-			else if (ResponeNumber == 1)
-			{
-				CheckPoint = 2;
-			}
+			ResponeNumber = rand() % 6 + 4;
+			
+			CheckPoint = ResponeNumber;
+			
 		}
 		else if (PlayerPos.z >= -3500)
 		{
 			ResponeNumber = rand() % 9 + 1;
-			if (ResponeNumber != 7)
+			if (ResponeNumber != 4)
 			{
 				CheckPoint = ResponeNumber;
 			}
-			else if (ResponeNumber == 7)
+			else if (ResponeNumber == 4)
 			{
-				CheckPoint = 8;
+				CheckPoint = 5;
 			}
 		}
 	}
@@ -434,26 +429,21 @@ void Enemy::Respone()
 		if (PlayerPos.z < -3500)
 		{
 			ResponeNumber = rand() % 9 + 1;
-			if (ResponeNumber != 3)
-			{
-				CheckPoint = ResponeNumber;
-			}
-			else if (ResponeNumber == 3)
-			{
-				CheckPoint = 4;
-			}
-		}
-		else if (PlayerPos.z >= -3500)
-		{
-			ResponeNumber = rand() % 9 + 1;
 			if (ResponeNumber != 5)
 			{
 				CheckPoint = ResponeNumber;
 			}
 			else if (ResponeNumber == 5)
 			{
-				CheckPoint = 6;
+				CheckPoint = 4;
 			}
+		}
+		else if (PlayerPos.z >= -3500)
+		{
+			ResponeNumber = rand() % 5 + 1;
+			
+			CheckPoint = ResponeNumber;
+			
 		}
 	}
 
@@ -472,6 +462,21 @@ void Enemy::Respone()
 		break;
 	case 4:
 		GetTransform()->SetLocalPosition(ResponeArea4);
+		break;
+	case 5:
+		GetTransform()->SetLocalPosition(ResponeArea5);
+		break;
+	case 6:
+		GetTransform()->SetLocalPosition(ResponeArea6);
+		break;
+	case 7:
+		GetTransform()->SetLocalPosition(ResponeArea7);
+		break;
+	case 8:
+		GetTransform()->SetLocalPosition(ResponeArea8);
+		break;
+	case 9:
+		GetTransform()->SetLocalPosition(ResponeArea9);
 		break;
 	default:
 		break;
