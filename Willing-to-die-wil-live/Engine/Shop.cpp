@@ -10,6 +10,7 @@
 #include "Resources.h"
 #include "Shader.h"
 #include "Button.h"
+#include "Font.h"
 
 
 Shop::Shop() : Component(COMPONENT_TYPE::SHOP)
@@ -67,6 +68,37 @@ Shop::Shop() : Component(COMPONENT_TYPE::SHOP)
 		obj->AddComponent(button);
 		obj->AddComponent(meshRenderer);
 		_shopObject.push_back(obj);
+	}
+#pragma endregion
+
+#pragma region ShopText_Money
+	{
+		shared_ptr<GameObject> obj = make_shared<GameObject>();
+		obj->SetName(L"ShopMoneyText");
+		obj->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
+		obj->AddComponent(make_shared<Transform>());
+		obj->GetTransform()->SetLocalScale(Vec3(10.f, 10.f, 10.f));
+		obj->GetTransform()->SetLocalPosition(Vec3(-(GEngine->GetWindow().width / 2) + 100, (GEngine->GetWindow().height / 2) - 50, 900.f));
+		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+
+		shared_ptr<Font> font = make_shared<Font>();
+		font->BuildFont();
+		shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadFontMesh(font->GetTextVB("100000"));
+		meshRenderer->SetMesh(mesh);
+
+		{
+			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Font");
+
+			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"deathspirit", L"..\\Resources\\Font\\DeathSpirit.png");;
+
+			shared_ptr<Material> material = make_shared<Material>();
+			material->SetShader(shader);
+			material->SetTexture(0, texture);
+			meshRenderer->SetMaterial(material);
+			obj->AddComponent(meshRenderer);
+			obj->AddComponent(font);
+			_shopObject.push_back(obj);
+		}
 	}
 #pragma endregion
 

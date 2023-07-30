@@ -14,6 +14,7 @@
 #include "Component.h"
 #include <iostream>
 
+
 //cout 출력용 코드
 //#pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console")
 
@@ -55,12 +56,13 @@ void Enemy::Update()
 			break;
 		}
 
+
 		SetEnemyPosition(pos);
 		SetPlayerPos();
 
 		if (!ResponeCheck)
 		{
-			//Respone();
+			Respone();
 		}
 		Time += DELTA_TIME;
 		if (Time > 1.1)
@@ -236,8 +238,14 @@ void Enemy::LookPlayer()
 	int z = round(EPos.z - PlayerPos.z);
 	float dis = round(sqrt(pow(EPos.x - PlayerPos.x, 2) + pow(EPos.z - PlayerPos.z, 2)));
 	float ros = std::acos(z / dis);
-	GetTransform()->SetLocalRotation(Vec3(0, (py+ros), 0));
-	cout << ros << endl;
+	if (x < 0)
+	{
+		GetTransform()->SetLocalRotation(Vec3(0, ros, 0));
+	}
+	else if (x > 0)
+	{
+		GetTransform()->SetLocalRotation(Vec3(0, -ros, 0));
+	}
 }
 
 void Enemy::SetPlayerPos()
@@ -382,9 +390,9 @@ int(*Enemy::CreateMap())[Height]
 	return tileMap;
 }
 
-void Enemy::LostHp()
+void Enemy::LostHp(int damage)
 {
-	_hp -= 30;
+	_hp -= damage;
 }
 
 void Enemy::Respone()
@@ -392,19 +400,54 @@ void Enemy::Respone()
 	shared_ptr<Scene> scene = GET_SINGLE(SceneManager)->GetActiveScene();
 	Vec3 PlayerPos = scene->GetPlayerPosToEnemy();
 
+	srand((unsigned int)time(NULL));
+
 	if (PlayerPos.x > 3500)
+	{
 		if (PlayerPos.z < -3500)
-			CheckPoint = 1;
+		{
+			ResponeNumber = rand() % 6 + 4;
+			
+			CheckPoint = ResponeNumber;
+			
+		}
 		else if (PlayerPos.z >= -3500)
-			CheckPoint = 2;
-	if (PlayerPos.x <= 3500)
+		{
+			ResponeNumber = rand() % 9 + 1;
+			if (ResponeNumber != 4)
+			{
+				CheckPoint = ResponeNumber;
+			}
+			else if (ResponeNumber == 4)
+			{
+				CheckPoint = 5;
+			}
+		}
+	}
+	else if (PlayerPos.x <= 3500)
+	{
 		if (PlayerPos.z < -3500)
-			CheckPoint = 3;
+		{
+			ResponeNumber = rand() % 9 + 1;
+			if (ResponeNumber != 5)
+			{
+				CheckPoint = ResponeNumber;
+			}
+			else if (ResponeNumber == 5)
+			{
+				CheckPoint = 4;
+			}
+		}
 		else if (PlayerPos.z >= -3500)
-			CheckPoint = 4;
-	
+		{
+			ResponeNumber = rand() % 5 + 1;
+			
+			CheckPoint = ResponeNumber;
+			
+		}
+	}
+
 	//체크용 
-	CheckPoint = 1;
 
 	switch (CheckPoint)
 	{
@@ -419,6 +462,21 @@ void Enemy::Respone()
 		break;
 	case 4:
 		GetTransform()->SetLocalPosition(ResponeArea4);
+		break;
+	case 5:
+		GetTransform()->SetLocalPosition(ResponeArea5);
+		break;
+	case 6:
+		GetTransform()->SetLocalPosition(ResponeArea6);
+		break;
+	case 7:
+		GetTransform()->SetLocalPosition(ResponeArea7);
+		break;
+	case 8:
+		GetTransform()->SetLocalPosition(ResponeArea8);
+		break;
+	case 9:
+		GetTransform()->SetLocalPosition(ResponeArea9);
 		break;
 	default:
 		break;

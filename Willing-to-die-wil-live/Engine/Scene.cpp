@@ -46,6 +46,7 @@ void Scene::Awake()
 
 	_shopSelectedNum = 1000;
 	_menuOpened = false;
+	_diedTime = 3.f;
 
 	thread t1 = thread(&Scene::LoadAllFBX, this);
 	t1.detach();
@@ -81,17 +82,99 @@ void Scene::Update()
 
 	GetAllFBX();
 	
-
+	//끝나는 조건(사망)
 	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
 	{
 		if (gameObject->GetName() == L"Player")
 		{
-			Vec3 pos = gameObject->GetTransform()->GetLocalPosition();
-			cout << pos.x << ", " << pos.y << ", " << pos.z << endl;
+			if (gameObject->GetPlayer()->GetHP() <= 0)
+			{
+				_diedTime -= DELTA_TIME;
+				cout << _diedTime << endl;
+				for (const shared_ptr<GameObject>& Text_Died : _gameObjects)
+				{
+					if (Text_Died->GetName() == L"DiedText")
+					{
+						Text_Died->GetTransform()->SetLocalPosition(Vec3((GEngine->GetWindow().width / 2) - 1000, -(GEngine->GetWindow().height / 2) + 400, 900.f));
+					}
+				}
+				if (_diedTime < 0.f)
+				{
+					_diedTime = 3.f;
+					for (const shared_ptr<GameObject>& Text_Died : _gameObjects)
+					{
+						if (Text_Died->GetName() == L"DiedText")
+						{
+							Text_Died->GetTransform()->SetLocalPosition(Vec3(0, 0, 0));
+						}
+					}
+					//웨이브 초기화
+					IsRest = true;
+					DeathCount = 0;
+					FSTZCount = 0;
+					FBrZCount = 0;
+					FZCount = 0;
+					WaveTime = 0;
+					CurCount = 0;
+					CurrentWave = 1;
+					for (const shared_ptr<GameObject>& Enemy : _gameObjects)
+					{
+						if (Enemy->GetName() == L"Enemy")
+						{
+							_trashBin.push_back(Enemy);
+						}
+						if (Enemy->GetName() == L"STEnemy")
+						{
+							_trashBin.push_back(Enemy);
+						}
+						if (Enemy->GetName() == L"BrEnemy")
+						{
+							_trashBin.push_back(Enemy);
+						}
+					}
+
+					//플레이어 초기화
+					gameObject->AddComponent(make_shared<Player>());
+					gameObject->GetTransform()->SetLocalPosition(Vec3(3700.f, 0.f, -3600.f));
+					gameObject->GetPlayer()->Bleeding();
+					for (const shared_ptr<GameObject>& Camera : _gameObjects)
+					{
+						if (Camera->GetName() == L"Main_Camera")
+						{
+							Camera->AddComponent(make_shared<CameraScript>());
+						}
+					}
+					for (const shared_ptr<GameObject>& Gun : _gameObjects)
+					{
+						if (Gun->GetName() == L"Gun")
+						{
+							_trashBin.push_back(Gun);
+						}
+					}
+
+					//메뉴 다시 띄우기
+					_menuOpened = false;
+					for (const shared_ptr<GameObject>& Menu : _gameObjects)
+					{
+						if (Menu->GetName() == L"Menu")
+						{
+							Menu->GetMainMenu()->SetMenuState(true);
+						}
+					}
+				}
+				
+				
+			}
 		}
 	}
 
-		//메뉴
+	//끝나는 조건(승리)
+	if (CurrentWave == 8)
+	{
+		//UI뜨고 처음으로
+	}
+
+	//메뉴
 	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
 	{
 		if (gameObject->GetName() == L"Menu")
@@ -125,24 +208,30 @@ void Scene::Update()
 
 	if (!IsRest)
 	{
-		SponeTime += 1 * DELTA_TIME;
-
-		if (SponeTime >= 3)
+		if (CurCount < MaxCount)
 		{
-			//적 종류를 구별해서 제작필요
-			if (FZCount != ZCount)
+			SponeTime += 1 * DELTA_TIME;
+
+			if (SponeTime >= 3)
 			{
-				MakeNormal(CurrentWave);
+				//적 종류를 구별해서 제작필요
+				if (FZCount != ZCount)
+				{
+					MakeNormal(CurrentWave);
+					CurCount++;
+				}
+				if (FSTZCount != STZCount)
+				{
+					MakeStalker(CurrentWave);
+					CurCount++;
+				}
+				if (FBrZCount != BrZCount)
+				{
+					MakeBruser(CurrentWave);
+					CurCount++;
+				}
+				SponeTime = 0.0f;
 			}
-			if (FSTZCount != STZCount)
-			{
-				MakeStalker(CurrentWave);
-			}
-			if (FBrZCount != BrZCount)
-			{
-				MakeBruser(CurrentWave);
-			}
-			SponeTime = 0.0f;
 		}
 	}
  
@@ -195,6 +284,24 @@ void Scene::Update()
 		}
 	}
 
+	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
+	{
+		if (gameObject->GetName() == L"Player")
+		{
+			if (gameObject->GetPlayer()->GetWeaponChanged() == true)	//구매시
+			{
+				for (const shared_ptr<GameObject>& trash : _gameObjects)
+				{
+					if (trash->GetName() == L"Gun")
+					{
+						_trashBin.push_back(trash);
+					}
+				}
+				_gameObjects.push_back(gameObject->GetPlayer()->GetGun()[0]);
+			}
+		}
+	}
+
 	//상점
 	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
 	{
@@ -216,16 +323,16 @@ void Scene::Update()
 					_shopSelectedNum = gameObject->GetShop()->GetSelectedNum();
 					_gameObjects.push_back(gameObject->GetShop()->GetSelectedObject());
 				}
-
 				if (gameObject->GetShop()->GetPurchase() == true)	//구매시
 				{
+					GET_SINGLE(SoundManager)->PlaySound("Buyingsound", 0.3f);
 					for (auto& object : _gameObjects)
 					{
 						if (object->GetName() == L"Player")
 						{
 							if (gameObject->GetShop()->GetSelected()->GetButton()->GetMerchandiseType() == MERCHANDISE_TYPE::GUN)
 							{
-								object->GetPlayer()->ChangeWeapon(gameObject->GetShop()->GetSelected()->GetButton()->GetMerchandise());
+								object->GetPlayer()->ChangeWeapon(gameObject->GetShop()->GetSelected()->GetButton()->GetMerchandise(), false);
 								for (auto& makeTrash : _gameObjects)	// 무기를 사면 총을 지우고
 								{
 									if (makeTrash->GetName() == L"Gun")
@@ -337,7 +444,6 @@ void Scene::Update()
 				{
 					_gameObjects.push_back(muzzleflash);
 					muzzleflash->GetMuzzleFlash()->SetState(MUZZLEFLASH_STATE::SHOOT);
-					cout << "erase" << endl;
 				}
 			}
 		}
@@ -372,7 +478,10 @@ void Scene::LateUpdate()
 	{
 		if (gameObject->GetName() == L"Main_Camera")
 			SetCameraPosToPlayer();
-
+		if (gameObject->GetName() == L"Player")
+		{
+			_damage = gameObject->GetPlayer()->GetDamage();
+		}
 		//총알 <-> 적  충돌처리
 		if (gameObject->GetName() == L"Bullet")
 		{
@@ -383,7 +492,8 @@ void Scene::LateUpdate()
 					if (Object->GetBoxCollider()->Intersects(gameObject->GetBoxCollider()->GetColliderBox()) == true)
 					{
 						gameObject->GetBullet()->SetState(BULLET_STATE::DEAD);
-						Object->GetEnemy()->LostHp();
+						
+						Object->GetEnemy()->LostHp(_damage);
 						EnemyHp = Object->GetEnemy()->CurHp();
 						//파티클
 						Vec3 particlePos = Object->GetTransform()->GetLocalPosition();
@@ -395,6 +505,7 @@ void Scene::LateUpdate()
 						if (EnemyHp <= 0)
 						{
 							Object->GetBoxCollider()->SetOnOff(false);
+							CurCount--;
 							DeathCount++;
 							_trashBin.push_back(gameObject);
 						}
@@ -406,7 +517,7 @@ void Scene::LateUpdate()
 					if (Object->GetBoxCollider()->Intersects(gameObject->GetBoxCollider()->GetColliderBox()) == true)
 					{
 						gameObject->GetBullet()->SetState(BULLET_STATE::DEAD);
-						Object->GetBruserEnemy()->LostHp();
+						Object->GetBruserEnemy()->LostHp(_damage);
 						EnemyHp = Object->GetBruserEnemy()->CurHp();
 						//파티클
 						Vec3 particlePos = Object->GetTransform()->GetLocalPosition();
@@ -419,6 +530,7 @@ void Scene::LateUpdate()
 						{
 							Object->GetBoxCollider()->SetOnOff(false);
 						
+							CurCount--;
 							DeathCount++;
 						}
 					}
@@ -429,7 +541,7 @@ void Scene::LateUpdate()
 					if (Object->GetBoxCollider()->Intersects(gameObject->GetBoxCollider()->GetColliderBox()) == true)
 					{
 						gameObject->GetBullet()->SetState(BULLET_STATE::DEAD);
-						Object->GetStalkerEnemy()->LostHp();
+						Object->GetStalkerEnemy()->LostHp(_damage);
 						EnemyHp = Object->GetStalkerEnemy()->CurHp();
 						//파티클
 						Vec3 particlePos = Object->GetTransform()->GetLocalPosition();
@@ -442,6 +554,7 @@ void Scene::LateUpdate()
 						{
 							Object->GetBoxCollider()->SetOnOff(false);
 							DeathCount++;
+							CurCount--;
 						}
 					}
 				}
@@ -483,6 +596,12 @@ void Scene::LateUpdate()
 					Object->GetMeshRenderer()->SetMesh(GET_SINGLE(Resources)->LoadFontMesh(Object->GetFont()->GetTextVB(temp)));
 				}
 				if (Object->GetName() == L"MoneyText")
+				{
+					shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+					string temp = to_string(gameObject->GetPlayer()->GetMoney()) + "$";
+					Object->GetMeshRenderer()->SetMesh(GET_SINGLE(Resources)->LoadFontMesh(Object->GetFont()->GetTextVB(temp)));
+				}
+				if (Object->GetName() == L"ShopMoneyText")
 				{
 					shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 					string temp = to_string(gameObject->GetPlayer()->GetMoney()) + "$";
@@ -546,7 +665,7 @@ void Scene::LateUpdate()
 							if (Time > 2)
 							{
 								PlayerHp = gameObject->GetPlayer()->GetHP();
-								PlayerHp -= 10;
+								PlayerHp -= Object->GetEnemy()->GetAtk();
 								gameObject->GetPlayer()->SetHP(PlayerHp);
 								Time = 0;
 							}
@@ -558,55 +677,55 @@ void Scene::LateUpdate()
 					}
 				}
 
-				//if (Object->GetName() == L"BrEnemy")
-				//{
-				//	//EnemyPosition = Object->GetTransform()->GetLocalPosition();
-				//	//PlayerPosition = gameObject->GetTransform()->GetLocalPosition();
-				//	//if (Object->GetBruserEnemy()->GetAttack() == false)
-				//	//{
-				//	//	Distance = sqrt(pow(EnemyPosition.x - PlayerPosition.x, 2) + pow(EnemyPosition.z - PlayerPosition.z, 2));
-				//	//	if (Distance < 500)
-				//	//	{
-				//	//		Time += DELTA_TIME;
-				//	//		if (Time > 2)
-				//	//		{
-				//	//			PlayerHp = gameObject->GetPlayer()->GetHP();
-				//	//			PlayerHp -= 10;
-				//	//			gameObject->GetPlayer()->SetHP(PlayerHp);
-				//	//			Time = 0;
-				//	//		}
-				//	//	}
-				//	//}
-				//	//else if (Object->GetBruserEnemy()->GetAttack() != false)
-				//	//{
-				//	//	Time = 0;
-				//	//}
-				//}
+				if (Object->GetName() == L"BrEnemy")
+				{
+					EnemyPosition = Object->GetTransform()->GetLocalPosition();
+					PlayerPosition = gameObject->GetTransform()->GetLocalPosition();
+					if (Object->GetBruserEnemy()->GetAttack() == false)
+					{
+						Distance = sqrt(pow(EnemyPosition.x - PlayerPosition.x, 2) + pow(EnemyPosition.z - PlayerPosition.z, 2));
+						if (Distance < 500)
+						{
+							Time += DELTA_TIME;
+							if (Time > 2)
+							{
+								PlayerHp = gameObject->GetPlayer()->GetHP();
+								PlayerHp -= Object->GetBruserEnemy()->GetAtk();
+								gameObject->GetPlayer()->SetHP(PlayerHp);
+								Time = 0;
+							}
+						}
+					}
+					else if (Object->GetBruserEnemy()->GetAttack() != false)
+					{
+						Time = 0;
+					}
+				}
 
-				//if (Object->GetName() == L"STEnemy")
-				//{
-				//	//EnemyPosition = Object->GetTransform()->GetLocalPosition();
-				//	//PlayerPosition = gameObject->GetTransform()->GetLocalPosition();
-				//	//if (Object->GetEnemy()->GetAttack() == false)
-				//	//{
-				//	//	Distance = sqrt(pow(EnemyPosition.x - PlayerPosition.x, 2) + pow(EnemyPosition.z - PlayerPosition.z, 2));
-				//	//	if (Distance < 500)
-				//	//	{
-				//	//		Time += DELTA_TIME;
-				//	//		if (Time > 2)
-				//	//		{
-				//	//			PlayerHp = gameObject->GetPlayer()->GetHP();
-				//	//			PlayerHp -= 10;
-				//	//			gameObject->GetPlayer()->SetHP(PlayerHp);
-				//	//			Time = 0;
-				//	//		}
-				//	//	}
-				//	//}
-				//	//else if (Object->GetEnemy()->GetAttack() != false)
-				//	//{
-				//	//	Time = 0; enemy stalker로
-				//	//}
-				//}
+				if (Object->GetName() == L"STEnemy")
+				{
+					EnemyPosition = Object->GetTransform()->GetLocalPosition();
+					PlayerPosition = gameObject->GetTransform()->GetLocalPosition();
+					if (Object->GetStalkerEnemy()->GetAttack() == false)
+					{
+						Distance = sqrt(pow(EnemyPosition.x - PlayerPosition.x, 2) + pow(EnemyPosition.z - PlayerPosition.z, 2));
+						if (Distance < 500)
+						{
+							Time += DELTA_TIME;
+							if (Time > 2)
+							{
+								PlayerHp = gameObject->GetPlayer()->GetHP();
+								PlayerHp -= Object->GetStalkerEnemy()->GetAtk();
+								gameObject->GetPlayer()->SetHP(PlayerHp);
+								Time = 0;
+							}
+						}
+					}
+					else if (Object->GetStalkerEnemy()->GetAttack() != false)
+					{
+						Time = 0; 
+					}
+				}
 			}
 
 		}
@@ -1101,12 +1220,28 @@ void Scene::CheckWave()
 		BrZCount = 2;
 		EnemyCount = ZCount + STZCount + BrZCount;
 	case 4:
+		ZCount = 2;
+		STZCount = 2;
+		BrZCount = 2;
+		EnemyCount = ZCount + STZCount + BrZCount;
 		break;
 	case 5:
+		ZCount = 2;
+		STZCount = 2;
+		BrZCount = 2;
+		EnemyCount = ZCount + STZCount + BrZCount;
 		break;
 	case 6:
+		ZCount = 2;
+		STZCount = 2;
+		BrZCount = 2;
+		EnemyCount = ZCount + STZCount + BrZCount;
 		break;
 	case 7:
+		ZCount = 2;
+		STZCount = 2;
+		BrZCount = 2;
+		EnemyCount = ZCount + STZCount + BrZCount;
 		break;
 
 	default:
@@ -1198,6 +1333,7 @@ void Scene::MakeBruser(int wave)
 
 void Scene::LoadAllFBX()
 {
+	GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\beretta m9.fbx");
 	GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Normal.fbx");
 	loadingResource++;
 	GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\StalkerZombie2.fbx");
@@ -1206,6 +1342,7 @@ void Scene::LoadAllFBX()
 	loadingResource++;
 	GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\m4a1_s.fbx");
 	loadingResource++;
+	GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\shotgun.fbx");
 	return;
 }
 

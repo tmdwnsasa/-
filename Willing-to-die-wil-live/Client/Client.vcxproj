@@ -75,19 +75,19 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(SolutionDir)Library/Include/;$(SolutionDir)Engine\;$(SolutionDir)Library/Include/FBX/;$(SolutionDir)Library/Include/Fmod/;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Library/Include/;$(SolutionDir)Engine/;$(SolutionDir)Library/Include/FBX/;$(SolutionDir)Library/Include/Fmod/;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)Library/Lib/;$(SolutionDir)Output/;$(SolutionDir)Library/Lib/Fmod/;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(SolutionDir)Library/Include/;$(SolutionDir)Engine\;$(SolutionDir)Library/Include/FBX/;$(SolutionDir)Library/Include/Fmod/;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Library/Include/;$(SolutionDir)Engine/;$(SolutionDir)Library/Include/FBX/;$(SolutionDir)Library/Include/Fmod/;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)Library/Lib/;$(SolutionDir)Output/;$(SolutionDir)Library/Lib/Fmod/;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(SolutionDir)Library/Include/;$(SolutionDir)Engine\;$(SolutionDir)Library/Include/FBX/;$(SolutionDir)Library/Include/Fmod/;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Library/Include/;$(SolutionDir)Engine/;$(SolutionDir)Library/Include/FBX/;$(SolutionDir)Library/Include/Fmod/;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)Library/Lib/;$(SolutionDir)Output/;$(SolutionDir)Library/Lib/Fmod/;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(SolutionDir)Library/Include/;$(SolutionDir)Engine\;$(SolutionDir)Library/Include/FBX/;$(SolutionDir)Library/Include/Fmod/;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Library/Include/;$(SolutionDir)Engine/;$(SolutionDir)Library/Include/FBX/;$(SolutionDir)Library/Include/Fmod/;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)Library/Lib/;$(SolutionDir)Output/;$(SolutionDir)Library/Lib/Fmod/;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

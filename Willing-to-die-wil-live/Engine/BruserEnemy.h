@@ -211,11 +211,14 @@ public:
 	void AttackAnimation();
 	void BurserkAnimation();
 	void RunAnimation();
-	void LostHp();
+	void LostHp(int damage);
 	int CurHp() { return _hp; };
 
 	bool GetAttack() { return Attack; };
 	void SetAttack(bool _attack) { Attack = _attack; };
+
+	int GetAtk() { return _Atk; };
+	void SetAtk(int Att) { _Atk = Att; };
 
 	void Respone();
 	void LookPlayer();
@@ -253,7 +256,8 @@ public:
 	bool Attack = true;
 	bool Walk_State = true;
 	bool Awake = true;
-	int _hp = 100;
+	int _hp = 200;
+	int _Atk = 20;
 
 	int CheckPoint = 0;
 
@@ -265,5 +269,5 @@ public:
 	bool ResponeCheck = false;
 	BruserENEMY_STATE _currentState = BruserENEMY_STATE::WALK;
 private:
-	float		_speed = 50.0f;
+	float		_speed = 150.0f;
 };

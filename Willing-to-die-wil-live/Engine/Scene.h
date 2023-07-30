@@ -87,6 +87,9 @@ public:
 	int				FBrZCount = 0;
 	int				FZCount = 0;
 
+	int				MaxCount = 10;
+	int				CurCount = 0;
+
 	float			SponeTime = 0.0f;
 
 	int loadedResource = 0;
@@ -99,7 +102,9 @@ public:
 
 	int				PlayerHp = 0;
 	float			Time = 0;
-	float			MaxTime = 10.0f;
+	float			MaxTime = 20.0f;
+
+	int				_damage = 0;
 private:
 	vector<shared_ptr<GameObject>>		_gameObjects;
 	vector<shared_ptr<class Camera>>	_cameras;
@@ -109,6 +114,7 @@ private:
 	shared_ptr<MeshData>				StalkerZombieMesh;
 	shared_ptr<MeshData>				BruserZombieMesh;
 
+	float			_diedTime;
 	bool			_shopOpened;
 	bool			_menuOpened;
 	int				_shopSelectedNum = 1000;

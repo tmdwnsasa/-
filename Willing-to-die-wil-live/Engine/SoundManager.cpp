@@ -19,6 +19,7 @@ void SoundManager::Init()
 	//result = system->createSound("singing.wav", FMOD_LOOP_NORMAL, 0, &fsound);
 	CreateSound("..\\Resources\\Sound\\Footsteps.wav", "Footwalksound", true);
 	CreateSound("..\\Resources\\Sound\\BackgroundMusic.wav", "Backgroundsound", true);
+	CreateSound("..\\Resources\\Sound\\Reload.wav", "Reloadsound", true);
 
 	CreateSound("..\\Resources\\Sound\\PistolShot.wav", "Pistolsound", false);
 	CreateSound("..\\Resources\\Sound\\ShotgunShot.wav", "Shotgunsound", false);
@@ -28,7 +29,7 @@ void SoundManager::Init()
 	CreateSound("..\\Resources\\Sound\\SniperShot.wav", "Bruisersound", false);
 	CreateSound("..\\Resources\\Sound\\SmgShot.wav", "Stalkersound", false);
 	CreateSound("..\\Resources\\Sound\\SniperShot.wav", "Deadsound", false);
-	CreateSound("..\\Resources\\Sound\\SmgShot.wav", "Buyingsound", false);
+	CreateSound("..\\Resources\\Sound\\Buying.wav", "Buyingsound", false);
 }
 
 void SoundManager::Update()

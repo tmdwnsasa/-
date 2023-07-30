@@ -205,13 +205,14 @@ public:
 	void Animation();
 	void DeathAnimation();
 	void AttackAnimation();
-	void LostHp();
+	void LostHp(int damage);
 	bool GetAttack() { return Attack; };
 	void SetAttack(bool _attack) { Attack = _attack; };
 	void LookPlayer();
 	int CurHp() { return _hp; };
 
-	
+	int GetAtk() { return _Atk; };
+	void SetAtk(int Att) { _Atk = Att; };
 	void Respone();
 
 	void SetState(ENEMY_STATE state) { _currentState = state; };
@@ -242,14 +243,21 @@ public:
 	int EnemyCount = 0;
 	float _distance = 0;
  
-	int _hp = 100;
+	int _hp = 175;
+	int _Atk = 20;
 
 	int CheckPoint = 0;
+	int ResponeNumber = 0;
 
-	Vec3 ResponeArea1 = Vec3(3700, -100, -3600);
-	Vec3 ResponeArea2 = Vec3(0, -100, 0);
-	Vec3 ResponeArea3 = Vec3(0, -100, 0);
-	Vec3 ResponeArea4 = Vec3(3600, -100,-3600);
+	Vec3 ResponeArea1 = Vec3(6600, -100, -6800);
+	Vec3 ResponeArea2 = Vec3(3750, -100, -6300);
+	Vec3 ResponeArea3 = Vec3(6100, -100, -420);
+	Vec3 ResponeArea4 = Vec3(5500, -100,- 900);
+	Vec3 ResponeArea5 = Vec3(1350, -100, -6250);
+	Vec3 ResponeArea6 = Vec3(2000, -100, -2900);
+	Vec3 ResponeArea7 = Vec3(450, -100,  -3000);
+	Vec3 ResponeArea8 = Vec3(2850, -100, -300);
+	Vec3 ResponeArea9 = Vec3(450, -100,  -900);
 
 	bool ResponeCheck = false;
 private:

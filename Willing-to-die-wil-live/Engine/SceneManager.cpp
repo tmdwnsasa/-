@@ -472,7 +472,7 @@ shared_ptr<Scene> SceneManager::LoadGameScene()
 		obj->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
 		obj->AddComponent(make_shared<Transform>());
 		obj->GetTransform()->SetLocalScale(Vec3(10.f, 10.f, 10.f));
-		obj->GetTransform()->SetLocalPosition(Vec3(-(GEngine->GetWindow().width / 2) + 100, (GEngine->GetWindow().height / 2)-50, 10.f));
+		obj->GetTransform()->SetLocalPosition(Vec3(-(GEngine->GetWindow().width / 2) + 100, (GEngine->GetWindow().height / 2)-50, 900.f));
 		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 
 		shared_ptr<Font> font = make_shared<Font>();
@@ -509,6 +509,37 @@ shared_ptr<Scene> SceneManager::LoadGameScene()
 		shared_ptr<Font> font = make_shared<Font>();
 		font->BuildFont();
 		shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadFontMesh(font->GetTextVB("100000"));
+		meshRenderer->SetMesh(mesh);
+
+		{
+			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Font");
+
+			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"deathspirit", L"..\\Resources\\Font\\DeathSpirit.png");;
+
+			shared_ptr<Material> material = make_shared<Material>();
+			material->SetShader(shader);
+			material->SetTexture(0, texture);
+			meshRenderer->SetMaterial(material);
+			obj->AddComponent(meshRenderer);
+			obj->AddComponent(font);
+			scene->AddGameObject(obj);
+		}
+	}
+#pragma endregion
+
+#pragma region Text_Died
+	{
+		shared_ptr<GameObject> obj = make_shared<GameObject>();
+		obj->SetName(L"DiedText");
+		obj->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
+		obj->AddComponent(make_shared<Transform>());
+		obj->GetTransform()->SetLocalScale(Vec3(20.f, 20.f, 20.f));
+		obj->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 0.f));
+		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+
+		shared_ptr<Font> font = make_shared<Font>();
+		font->BuildFont();
+		shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadFontMesh(font->GetTextVB("You Died"));
 		meshRenderer->SetMesh(mesh);
 
 		{
@@ -782,7 +813,7 @@ void SceneManager::MakeWall(bool horizontal, int value, float xchange, float ych
 {
 	for (int i = 0; i < value; i++)
 	{
-		float gapAmount = 0.01;
+		float gapAmount = 0.1;
 		shared_ptr<GameObject> obj = make_shared<GameObject>();
 		obj->AddComponent(make_shared<Transform>());
 		obj->SetName(L"Wall");

@@ -45,6 +45,18 @@ void Player::Update()
 	Vec3 oldPos = pos;
 	_isMoving = false;
 	_curRateOfFire -= DELTA_TIME;
+	if (_hp < 0)
+		_hp = 0;
+	
+	if (_reloading == true && _reloadsound == false)
+	{
+		GET_SINGLE(SoundManager)->PlayLoopSound("Reloadsound", 0.4f);
+		_reloadsound = true;
+	}
+	else if(_reloading == false)
+	{
+		GET_SINGLE(SoundManager)->StopLoopSound("Reloadsound");
+	}
 
 	if (INPUT->GetButton(KEY_TYPE::W))
 	{
@@ -151,23 +163,29 @@ void Player::Update()
 		_hp += 10;
 
 
-	//if (INPUT->GetButtonDown(KEY_TYPE::KEY_1))
-	//{
-	//	int32 count = GetAnimator()->GetAnimCount();
-	//	int32 currentIndex = GetAnimator()->GetCurrentClipIndex();
+	if (INPUT->GetButtonDown(KEY_TYPE::KEY_1))
+	{
+		if(weapons[PLAYER_WEAPON::PISTOL] == true && _currWeapon != PLAYER_WEAPON::PISTOL)
+			ChangeWeapon(PLAYER_WEAPON::PISTOL, true);
+	}
 
-	//	int32 index = (currentIndex + 1) % count;
-	//	GetAnimator()->Play(index);
-	//}
+	if (INPUT->GetButtonDown(KEY_TYPE::KEY_2))
+	{
+		if (weapons[PLAYER_WEAPON::SMG] == true && _currWeapon != PLAYER_WEAPON::SMG)
+			ChangeWeapon(PLAYER_WEAPON::SMG, true);
+	}
 
-	//if (INPUT->GetButtonDown(KEY_TYPE::KEY_2))
-	//{
-	//	int32 count = GetAnimator()->GetAnimCount();
-	//	int32 currentIndex = GetAnimator()->GetCurrentClipIndex();
+	if (INPUT->GetButtonDown(KEY_TYPE::KEY_3))
+	{
+		if (weapons[PLAYER_WEAPON::SHOTGUN] == true && _currWeapon != PLAYER_WEAPON::SHOTGUN)
+			ChangeWeapon(PLAYER_WEAPON::SHOTGUN, true);
+	}
 
-	//	int32 index = (currentIndex - 1 + count) % count;
-	//	GetAnimator()->Play(index);
-	//}
+	if (INPUT->GetButtonDown(KEY_TYPE::KEY_4))
+	{
+		if (weapons[PLAYER_WEAPON::SNIPER] == true && _currWeapon != PLAYER_WEAPON::SNIPER)
+			ChangeWeapon(PLAYER_WEAPON::SNIPER, true);
+	}
 
 	if (_rotateLock == false && _shopOpened == false)
 	{
@@ -299,8 +317,18 @@ void Player::PlayerRotate()
 	GetTransform()->SetLocalRotation(rotation);
 }
 
-void Player::ChangeWeapon(PLAYER_WEAPON weapon)		
+void Player::ChangeWeapon(PLAYER_WEAPON weapon, bool swap)		
 {
+	PLAYER_WEAPON oldweapon = _currWeapon;
+
+	if (swap == true && weapons[weapon] == false)
+	{
+		return;
+	}
+
+	_reloadTime = _reloadMaxTime;
+	_reloading = false;
+
 	_currWeapon = weapon;
 	gunObject.clear();
 	if (_currWeapon == PLAYER_WEAPON::PISTOL)
@@ -309,13 +337,19 @@ void Player::ChangeWeapon(PLAYER_WEAPON weapon)
 		_pellet = 1;
 		_maxAmmo = 15;
 		_rateOfFire = 0.5f;
-		_reloadMaxTime = 0.5f;
+		_reloadMaxTime = 2.0f;
 		_reloadPerAmmo = _maxAmmo;
 		_price = 500;
-		_ammoPrice = 50;
+		_ammoPrice = 100;
 		_accuracy = 5000;
 		_weaponRecoil = 2;
 		_fullauto = false;
+
+		if (swap == false && _money < _price)
+		{
+			_currWeapon = oldweapon;
+			return;
+		}
 
 #pragma region Pistol
 		{
@@ -326,7 +360,7 @@ void Player::ChangeWeapon(PLAYER_WEAPON weapon)
 			{
 				gameObject->SetName(L"Gun");
 				gameObject->SetCheckFrustum(false);
-				gameObject->GetTransform()->SetLocalPosition(cameraPosForBullet);
+				gameObject->GetTransform()->SetLocalPosition(Vec3( -10000, 5000, -10000));
 				gameObject->GetTransform()->SetLocalScale(Vec3(0.2f, 0.2f, 0.2f));
 				gameObject->GetTransform()->LookAt(cameraLookForBullet);
 				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"GunDeffered");
@@ -336,6 +370,10 @@ void Player::ChangeWeapon(PLAYER_WEAPON weapon)
 			}
 		}
 #pragma endregion
+		if (swap == true)
+		{
+			_weaponChanged = true;
+		}
 	}
 
 	if (_currWeapon == PLAYER_WEAPON::SMG)
@@ -344,14 +382,18 @@ void Player::ChangeWeapon(PLAYER_WEAPON weapon)
 		_pellet = 1;
 		_maxAmmo = 30;
 		_rateOfFire = 0.15f;
-		_reloadMaxTime = 2.5f;
+		_reloadMaxTime = 3.0f;
 		_reloadPerAmmo = _maxAmmo;
 		_price = 1000;
-		_ammoPrice = 100;
+		_ammoPrice = 200;
 		_accuracy = 3000;
 		_weaponRecoil = 1;
 		_fullauto = true;
-
+		if (swap == false && _money < _price)
+		{
+			_currWeapon = oldweapon;
+			return;
+		}
 #pragma region SMG
 		{
 			shared_ptr<MeshData> GunMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\m4a1_s.fbx");
@@ -361,7 +403,7 @@ void Player::ChangeWeapon(PLAYER_WEAPON weapon)
 			{
 				gameObject->SetName(L"Gun");
 				gameObject->SetCheckFrustum(false);
-				gameObject->GetTransform()->SetLocalPosition(cameraPosForBullet);
+				gameObject->GetTransform()->SetLocalPosition(Vec3(-10000, 5000, -10000));
 				gameObject->GetTransform()->SetLocalScale(Vec3(0.2f, 0.2f, 0.2f));
 				gameObject->GetTransform()->LookAt(cameraLookForBullet);
 				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"GunDeffered");
@@ -370,8 +412,8 @@ void Player::ChangeWeapon(PLAYER_WEAPON weapon)
 				gunObject.push_back(gameObject);
 			}
 		}
-#pragma endregion
 	}
+#pragma endregion
 
 	if (_currWeapon == PLAYER_WEAPON::SHOTGUN)
 	{
@@ -382,11 +424,15 @@ void Player::ChangeWeapon(PLAYER_WEAPON weapon)
 		_reloadMaxTime = 0.5f;
 		_reloadPerAmmo = 1;
 		_price = 2000;
-		_ammoPrice = 200;
+		_ammoPrice = 400;
 		_accuracy = 1000;
 		_weaponRecoil = 0.3;
 		_fullauto = false;
-
+		if (swap == false && _money < _price)
+		{
+			_currWeapon = oldweapon;
+			return;
+		}
 #pragma region Shotgun
 		{
 			shared_ptr<MeshData> GunMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\shotgun.fbx");
@@ -396,7 +442,7 @@ void Player::ChangeWeapon(PLAYER_WEAPON weapon)
 			{
 				gameObject->SetName(L"Gun");
 				gameObject->SetCheckFrustum(false);
-				gameObject->GetTransform()->SetLocalPosition(cameraPosForBullet);
+				gameObject->GetTransform()->SetLocalPosition(Vec3(-10000, 5000, -10000));
 				gameObject->GetTransform()->SetLocalScale(Vec3(0.2f, 0.2f, 0.2f));
 				gameObject->GetTransform()->LookAt(cameraLookForBullet);
 				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"GunDeffered");
@@ -410,18 +456,22 @@ void Player::ChangeWeapon(PLAYER_WEAPON weapon)
 
 	if (_currWeapon == PLAYER_WEAPON::SNIPER)	
 	{
-		_damage = 200.f;
+		_damage = 300.f;
 		_pellet = 1;
-		_maxAmmo = 20;
+		_maxAmmo = 5;
 		_rateOfFire = 1.0f;
-		_reloadMaxTime = 2.5f;
+		_reloadMaxTime = 3.0f;
 		_reloadPerAmmo = _maxAmmo;
 		_price = 2500;
-		_ammoPrice = 250;
+		_ammoPrice = 500;
 		_accuracy = 10000;
 		_weaponRecoil = 3;
 		_fullauto = false;
-
+		if (swap == false && _money < _price)
+		{
+			_currWeapon = oldweapon;
+			return;
+		}
 #pragma region Rifle
 		{
 			shared_ptr<MeshData> GunMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\AWP_Dragon_Lore.fbx");
@@ -431,7 +481,7 @@ void Player::ChangeWeapon(PLAYER_WEAPON weapon)
 			{
 				gameObject->SetName(L"Gun");
 				gameObject->SetCheckFrustum(false);
-				gameObject->GetTransform()->SetLocalPosition(cameraPosForBullet);
+				gameObject->GetTransform()->SetLocalPosition(Vec3(-10000, 5000, -10000));
 				gameObject->GetTransform()->SetLocalScale(Vec3(0.2f, 0.2f, 0.2f));
 				gameObject->GetTransform()->LookAt(cameraLookForBullet);
 				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"GunDeffered");
@@ -441,9 +491,12 @@ void Player::ChangeWeapon(PLAYER_WEAPON weapon)
 			}
 		}
 #pragma endregion
-	
 	}
-	_money -= _price;
+	if(swap == false)
+	{
+		_money -= _price;
+		weapons[weapon] = true;
+	}
 }
 
 bool Player::MoneyChange(int amount)
@@ -760,6 +813,66 @@ void Player::Bleeding()
 		bleedingUI = obj;
 	}
 #pragma endregion
+}
+
+void Player::Reset()
+{
+	_front = false;
+	_back = false;
+	_right = false;
+	_left = false;
+	_jump = false;
+	_isMoving = false;
+	_running = false;
+	_stamina = 100;
+
+
+	_rotateLock = false;
+	_shopOpened = false;
+
+
+	_speed = 2500.0f;
+	_mousePos = {};
+	_oldMousePos = {};
+	_cxdelta = 0.f;
+	_hp = 100;
+	_Magazine = 0;
+	_reloading = false;
+	_curRateOfFire = 0.f;
+	_isShot = false;
+	_money = 65000;
+	_recoil = 0;
+	bleedingUI;
+
+
+	_currWeapon = PLAYER_WEAPON::NONE;
+	weapons;
+	_currMagazine = 0;
+	_maxAmmo = 0;
+	_damage = 25;
+	_pellet = 0;
+	_reloadPerAmmo = 0;
+	_rateOfFire = 0.5f;
+	_reloadMaxTime = 3.f;
+	_reloadTime = 3.f;
+	_price = 0;
+	_accuracy = 5000;
+	_weaponRecoil = 10;
+	_readyToShot = true;
+	_fullauto = false;
+	_isShooting = false;
+	_weaponChanged = false;
+	_ammoPrice = 0;
+
+	// Ammo
+	PistolAmmo = 0;
+	SmgAmmo = 0;
+	ShotgunAmmo = 0;
+	SniperAmmo = 0;
+	currPistolAmmo = 0;
+	currSmgAmmo = 0;
+	currShotgunAmmo = 0;
+	currSniperAmmo = 0;
 }
 
 //////////////////////////////////////////////////

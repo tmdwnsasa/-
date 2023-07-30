@@ -370,6 +370,9 @@ void BruserEnemy::BurserkAnimation()
 		BuffTime += DELTA_TIME;
 		if (BuffTime > 2.5)
 		{
+			_speed = 300;
+			_hp = 400;
+			SetAtk(40);
 			Awake = true;
 			SetState(BruserENEMY_STATE::RUN);
 		}
@@ -430,9 +433,9 @@ int(*BruserEnemy::CreateMap())[BrHeight]
 	return BrtileMap;
 }
 
-void BruserEnemy::LostHp()
+void BruserEnemy::LostHp(int damage)
 {
-	_hp -= 30;
+	_hp -= damage;
 	SetState(BruserENEMY_STATE::BURSERKER);
 }
 

@@ -201,13 +201,13 @@
     <ClInclude Include="BruserEnemy.h">
       <Filter>Object\Component</Filter>
     </ClInclude>
-    <ClInclude Include="SoundManager.h">
+    <ClInclude Include="Scene.h">
       <Filter>Manager</Filter>
     </ClInclude>
     <ClInclude Include="MainMenu.h">
       <Filter>Object\Component\UI</Filter>
     </ClInclude>
-    <ClInclude Include="Scene.h">
+    <ClInclude Include="SoundManager.h">
       <Filter>Manager</Filter>
     </ClInclude>
   </ItemGroup>
@@ -371,13 +371,13 @@
     <ClCompile Include="BruserEnemy.cpp">
       <Filter>Object\Component</Filter>
     </ClCompile>
-    <ClCompile Include="SoundManager.cpp">
+    <ClCompile Include="Scene.cpp">
       <Filter>Manager</Filter>
     </ClCompile>
     <ClCompile Include="MainMenu.cpp">
       <Filter>Object\Component\UI</Filter>
     </ClCompile>
-    <ClCompile Include="Scene.cpp">
+    <ClCompile Include="SoundManager.cpp">
       <Filter>Manager</Filter>
     </ClCompile>
   </ItemGroup>
