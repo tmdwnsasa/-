@@ -114,22 +114,25 @@ void Scene::Update()
 		{
 			SponeTime += 1 * DELTA_TIME;
 
-			if (SponeTime >= 3)
+			if (SponeTime >= 2)
 			{
 				//적 종류를 구별해서 제작필요
 				if (FZCount != ZCount)
 				{
 					MakeNormal(CurrentWave);
+					//GET_SINGLE(SoundManager)->PlaySound("StalkerSpawn", 0.3f);
 					CurCount++;
 				}
 				if (FSTZCount != STZCount)
 				{
 					MakeStalker(CurrentWave);
+					//GET_SINGLE(SoundManager)->PlaySound("StalkerSpawn", 0.1f);
 					CurCount++;
 				}
 				if (FBrZCount != BrZCount)
 				{
 					MakeBruser(CurrentWave);
+					//GET_SINGLE(SoundManager)->PlaySound("BruiserSpawn", 0.6f);
 					CurCount++;
 				}
 				SponeTime = 0.0f;
@@ -343,7 +346,6 @@ void Scene::Update()
 				{
 					_gameObjects.push_back(muzzleflash);
 					muzzleflash->GetMuzzleFlash()->SetState(MUZZLEFLASH_STATE::SHOOT);
-					cout << "erase" << endl;
 				}
 			}
 		}
@@ -390,7 +392,6 @@ void Scene::LateUpdate()
 							Object->GetBoxCollider()->SetOnOff(false);
 							CurCount--;
 							DeathCount++;
-							_trashBin.push_back(gameObject);
 						}
 					}
 				}
@@ -407,7 +408,6 @@ void Scene::LateUpdate()
 						if (EnemyHp <= 0)
 						{
 							Object->GetBoxCollider()->SetOnOff(false);
-						
 							CurCount--;
 							DeathCount++;
 						}
@@ -448,6 +448,15 @@ void Scene::LateUpdate()
 				FZCount = 0;
 				FSTZCount = 0;
 				FBrZCount = 0;
+				for (const shared_ptr<GameObject>& Object : _gameObjects)
+				{
+					if (Object->GetName() == L"Enemy")
+						_trashBin.push_back(Object);
+					if (Object->GetName() == L"BrEnemy")
+						_trashBin.push_back(Object);
+					if (Object->GetName() == L"STEnemy")
+						_trashBin.push_back(Object);
+				}
 			}
 
 			for (const shared_ptr<GameObject>& Object : _gameObjects)
@@ -526,14 +535,18 @@ void Scene::LateUpdate()
 					if (Object->GetEnemy()->GetAttack() == false)
 					{
 						Distance = sqrt(pow(EnemyPosition.x - PlayerPosition.x, 2) + pow(EnemyPosition.z - PlayerPosition.z, 2));
-						if (Distance < 500)
+						if (Distance < 600)
 						{
 							Time += DELTA_TIME;
 							if (Time > 2)
 							{
-								PlayerHp = gameObject->GetPlayer()->GetHP();
-								PlayerHp -= Object->GetEnemy()->GetAtk();
-								gameObject->GetPlayer()->SetHP(PlayerHp);
+								if (Object->GetEnemy()->GetDead() == false)
+								{
+									PlayerHp = gameObject->GetPlayer()->GetHP();
+									PlayerHp -= Object->GetEnemy()->GetAtk();
+									gameObject->GetPlayer()->SetHP(PlayerHp);
+									//Time = 0;
+								}
 								Time = 0;
 							}
 						}
@@ -551,21 +564,24 @@ void Scene::LateUpdate()
 					if (Object->GetBruserEnemy()->GetAttack() == false)
 					{
 						Distance = sqrt(pow(EnemyPosition.x - PlayerPosition.x, 2) + pow(EnemyPosition.z - PlayerPosition.z, 2));
-						if (Distance < 500)
+						if (Distance < 600)
 						{
-							Time += DELTA_TIME;
-							if (Time > 2)
+							BruserTime += DELTA_TIME;
+							if (BruserTime > 2)
 							{
-								PlayerHp = gameObject->GetPlayer()->GetHP();
-								PlayerHp -= Object->GetBruserEnemy()->GetAtk();
-								gameObject->GetPlayer()->SetHP(PlayerHp);
-								Time = 0;
+								if (Object->GetBruserEnemy()->GetDead() == false)
+								{
+									PlayerHp = gameObject->GetPlayer()->GetHP();
+									PlayerHp -= Object->GetBruserEnemy()->GetAtk();
+									gameObject->GetPlayer()->SetHP(PlayerHp);
+									BruserTime = 0;
+								}
 							}
 						}
 					}
 					else if (Object->GetBruserEnemy()->GetAttack() != false)
 					{
-						Time = 0;
+						BruserTime = 0;
 					}
 				}
 
@@ -576,21 +592,24 @@ void Scene::LateUpdate()
 					if (Object->GetStalkerEnemy()->GetAttack() == false)
 					{
 						Distance = sqrt(pow(EnemyPosition.x - PlayerPosition.x, 2) + pow(EnemyPosition.z - PlayerPosition.z, 2));
-						if (Distance < 500)
+						if (Distance < 600)
 						{
-							Time += DELTA_TIME;
-							if (Time > 2)
+							StalkerTime += DELTA_TIME;
+							if (StalkerTime > 2)
 							{
-								PlayerHp = gameObject->GetPlayer()->GetHP();
-								PlayerHp -= Object->GetStalkerEnemy()->GetAtk();
-								gameObject->GetPlayer()->SetHP(PlayerHp);
-								Time = 0;
+								if (Object->GetStalkerEnemy()->GetDead()==false)
+								{
+									PlayerHp = gameObject->GetPlayer()->GetHP();
+									PlayerHp -= Object->GetStalkerEnemy()->GetAtk();
+									gameObject->GetPlayer()->SetHP(PlayerHp);
+									StalkerTime = 0;
+								}
 							}
 						}
 					}
 					else if (Object->GetStalkerEnemy()->GetAttack() != false)
 					{
-						Time = 0; 
+						StalkerTime = 0;
 					}
 				}
 			}
@@ -1070,15 +1089,15 @@ void Scene::CheckWave()
 	switch (CurrentWave)
 	{
 	case 1:
-		ZCount = 0;
-		STZCount = 0;
+		ZCount = 1;
+		STZCount = 1;
 		BrZCount = 1;
 		EnemyCount = ZCount + STZCount + BrZCount;
 		break;
 	case 2:
-		ZCount = 0;
-		STZCount = 0;
-		BrZCount = 2;
+		ZCount = 1;
+		STZCount = 1;
+		BrZCount = 1;
 		EnemyCount = ZCount + STZCount + BrZCount;
 		break;
 	case 3:
@@ -1202,16 +1221,16 @@ void Scene::LoadAllFBX()
 {
 	GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Normal.fbx");
 	loadingResource++;
-	cout << 1 << endl;
+	
 	GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\StalkerZombie2.fbx");
 	loadingResource++;
-	cout << 2 << endl;
+	
 	GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\bURSERKER.fbx");
 	loadingResource++;
-	cout << 3 << endl;
+	
 	GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\m4a1_s.fbx");
 	loadingResource++;
-	cout << 4 << endl;
+	
 	return;
 }
 
@@ -1221,24 +1240,24 @@ void Scene::GetAllFBX()
 	{
 		ZombieMesh = GET_SINGLE(Resources)->Get<MeshData>(L"..\\Resources\\FBX\\Normal.fbx");
 		loadedResource++;
-		cout << 1111 << endl;
+		
 	}
 	if (loadingResource == 2 && loadedResource < 2)
 	{
 		StalkerZombieMesh = GET_SINGLE(Resources)->Get<MeshData>(L"..\\Resources\\FBX\\StalkerZombie2.fbx");
 		loadedResource++;
-		cout << 2222 << endl;
+		
 	}
 	if (loadingResource == 3 && loadedResource < 3)
 	{
 		BruserZombieMesh = GET_SINGLE(Resources)->Get<MeshData>(L"..\\Resources\\FBX\\bURSERKER.fbx");
 		loadedResource++;
-		cout << 3333 << endl;
+		
 	}
 	if (loadingResource == 4 && loadedResource < 4)
 	{
 		shared_ptr<MeshData> GunMesh = GET_SINGLE(Resources)->Get<MeshData>(L"..\\Resources\\FBX\\m4a1_s.fbx");
 		loadedResource++;
-		cout << 4444 << endl;
+		
 	}
 }

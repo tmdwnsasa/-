@@ -101,7 +101,9 @@ public:
 
 	int				PlayerHp = 0;
 	float			Time = 0;
-	float			MaxTime = 50.0f;
+	float			BruserTime = 0;
+	float			StalkerTime = 0;
+	float			MaxTime = 10.0f;
 
 	int				_damage = 0;
 private:

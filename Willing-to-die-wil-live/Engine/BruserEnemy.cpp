@@ -91,7 +91,7 @@ void BruserEnemy::Update()
 	}
 	if (_hp > 0)
 	{
-		if (_distance >= 300)
+		if (_distance >= 200)
 		{
 			Moving += DELTA_TIME;
 			if (Moving > 2.0)
@@ -106,7 +106,7 @@ void BruserEnemy::Update()
 
 	if (Dead == false)
 	{
-		if (_distance >= 300)
+		if (_distance >= 200)
 		{
 			if (Attack == false)
 			{
@@ -129,7 +129,7 @@ void BruserEnemy::Update()
 
 	if (Dead == false)
 	{
-		if (_distance < 300)
+		if (_distance < 200)
 		{
 			SetState(BruserENEMY_STATE::ATTACK);
 		}
@@ -330,6 +330,7 @@ void BruserEnemy::DeathAnimation()
 		int32 index = 2 % count;
 		GetAnimator()->Play(index);
 		Dead = true;
+		SetDead(true);
 	}
 
 	else if (Dead==true)
@@ -350,6 +351,7 @@ void BruserEnemy::RunAnimation()
 		int32 index = 3 % count;
 		GetAnimator()->Play(index);
 		Run_State = true;
+		Attack = true;
 	}
 }
 
@@ -370,7 +372,7 @@ void BruserEnemy::BurserkAnimation()
 		BuffTime += DELTA_TIME;
 		if (BuffTime > 2.5)
 		{
-			_speed = 300;
+			_speed = 400;
 			_hp = 400;
 			SetAtk(40);
 			Awake = true;
@@ -410,7 +412,7 @@ void BruserEnemy::LookPlayer()
 	int x = round(EPos.x - PlayerPos.x);
 	int z = round(EPos.z - PlayerPos.z);
 	float dis = round(sqrt(pow(EPos.x - PlayerPos.x, 2) + pow(EPos.z - PlayerPos.z, 2)));
-	float ros = std::acos(z / dis);
+	float ros = std::acos(-z / dis);
 	if (x < 0)
 	{
 		GetTransform()->SetLocalRotation(Vec3(0, ros, 0));
@@ -445,16 +447,54 @@ void BruserEnemy::Respone()
 	shared_ptr<Scene> scene = GET_SINGLE(SceneManager)->GetActiveScene();
 	Vec3 PlayerPos = scene->GetPlayerPosToEnemy();
 
+	srand((unsigned int)time(NULL));
+
 	if (PlayerPos.x > 3500)
+	{
 		if (PlayerPos.z < -3500)
-			CheckPoint = 1;
+		{
+			ResponeNumber = rand() % 6 + 4;
+
+			CheckPoint = ResponeNumber;
+
+		}
 		else if (PlayerPos.z >= -3500)
-			CheckPoint = 2;
-	if (PlayerPos.x <= 3500)
+		{
+			ResponeNumber = rand() % 9 + 1;
+			if (ResponeNumber != 4)
+			{
+				CheckPoint = ResponeNumber;
+			}
+			else if (ResponeNumber == 4)
+			{
+				CheckPoint = 5;
+			}
+		}
+	}
+	else if (PlayerPos.x <= 3500)
+	{
 		if (PlayerPos.z < -3500)
-			CheckPoint = 3;
+		{
+			ResponeNumber = rand() % 9 + 1;
+			if (ResponeNumber != 5)
+			{
+				CheckPoint = ResponeNumber;
+			}
+			else if (ResponeNumber == 5)
+			{
+				CheckPoint = 4;
+			}
+		}
 		else if (PlayerPos.z >= -3500)
-			CheckPoint = 4;
+		{
+			ResponeNumber = rand() % 5 + 1;
+
+			CheckPoint = ResponeNumber;
+
+		}
+	}
+
+	//Ã¼Å©¿ë 
 
 	switch (CheckPoint)
 	{
@@ -469,6 +509,21 @@ void BruserEnemy::Respone()
 		break;
 	case 4:
 		GetTransform()->SetLocalPosition(ResponeArea4);
+		break;
+	case 5:
+		GetTransform()->SetLocalPosition(ResponeArea5);
+		break;
+	case 6:
+		GetTransform()->SetLocalPosition(ResponeArea6);
+		break;
+	case 7:
+		GetTransform()->SetLocalPosition(ResponeArea7);
+		break;
+	case 8:
+		GetTransform()->SetLocalPosition(ResponeArea8);
+		break;
+	case 9:
+		GetTransform()->SetLocalPosition(ResponeArea9);
 		break;
 	default:
 		break;

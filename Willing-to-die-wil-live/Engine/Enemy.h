@@ -213,6 +213,8 @@ public:
 
 	int GetAtk() { return _Atk; };
 	void SetAtk(int Att) { _Atk = Att; };
+	bool GetDead() { return Dead; };
+	void SetDead(bool Death) { Dead = Death; };
 	void Respone();
 
 	void SetState(ENEMY_STATE state) { _currentState = state; };
@@ -251,7 +253,7 @@ public:
 
 	Vec3 ResponeArea1 = Vec3(6600, -100, -6800);
 	Vec3 ResponeArea2 = Vec3(3750, -100, -6300);
-	Vec3 ResponeArea3 = Vec3(6100, -100, -420);
+	Vec3 ResponeArea3 = Vec3(6100, -100, -4200);
 	Vec3 ResponeArea4 = Vec3(5500, -100,- 900);
 	Vec3 ResponeArea5 = Vec3(1350, -100, -6250);
 	Vec3 ResponeArea6 = Vec3(2000, -100, -2900);
@@ -260,6 +262,7 @@ public:
 	Vec3 ResponeArea9 = Vec3(450, -100,  -900);
 
 	bool ResponeCheck = false;
+	bool WalkState = true;
 private:
-	float		_speed = 150.f;
+	float		_speed = 230.f;
 };

@@ -59,7 +59,7 @@ void Player::Update()
 
 	if (INPUT->GetButton(KEY_TYPE::S))
 	{
-		//pos -= GetTransform()->GetLook() * _speed * DELTA_TIME;
+		pos -= GetTransform()->GetLook() * _speed * DELTA_TIME;
 		//if (GET_SINGLE(SoundManager)->IsPlaying("Footwalksound") == false)
 		//{
 		//	GET_SINGLE(SoundManager)->PlayLoopSound("Footwalksound", 0.4f);
@@ -69,7 +69,7 @@ void Player::Update()
 
 	if (INPUT->GetButton(KEY_TYPE::A))
 	{
-		//pos -= GetTransform()->GetRight() * _speed * DELTA_TIME;
+		pos -= GetTransform()->GetRight() * _speed * DELTA_TIME;
 		//if (GET_SINGLE(SoundManager)->IsPlaying("Footwalksound") == false)
 		//{
 		//	GET_SINGLE(SoundManager)->PlayLoopSound("Footwalksound", 0.4f);
