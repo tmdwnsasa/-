@@ -30,24 +30,38 @@ StalkerEnemy::~StalkerEnemy()
 
 void StalkerEnemy::Update()
 {
+	switch (_currentState)
+	{
+	case StalkerENEMY_STATE::IDLE:
+		break;
+	case StalkerENEMY_STATE::WALK:
+		WalkAnimation();
+		break;
+	case StalkerENEMY_STATE::ATTACK:
+		AttackAnimation();
+		break;
+	case StalkerENEMY_STATE::DIE:
+		DeathAnimation();
+		break;
+	case StalkerENEMY_STATE::END:
+		break;
+	default:
+		break;
+	}
 	Vec3 pos = GetTransform()->GetLocalPosition();
 
-	//pos += GetTransform()->GetLook() * _speed * 10 * DELTA_TIME;
-	//pos += GetTransform()->GetRight() * _speed * DELTA_TIME;
-
-
-	//GetTransform()->SetLocalPosition(pos);
-	// 1 °ø°Ý 2 Á×À½ 3 °È±â
+	shared_ptr<Scene> scene = GET_SINGLE(SceneManager)->GetActiveScene();
+	Vec3 PlayerPos = scene->GetPlayerPosToEnemy();
 
 	SetEnemyPosition(pos);
-
 	SetPlayerPos();
+
 	if (!ResponeCheck)
 	{
 		//Respone();
 	}
 	Time += DELTA_TIME;
-	if (Time > 0.1)
+	if (Time > 1.1)
 	{
 		if (_hp > 0)
 		{
@@ -55,18 +69,49 @@ void StalkerEnemy::Update()
 		}
 		Time = 0;
 	}
+	//AstarMove(firstx, firsty, secondx, secondy);
+
+
 	if (_hp > 0)
 	{
-		AstarMove(firstx, firsty, secondx, secondy);
+		if (_distance >= 300)
+		{
+			Moving += DELTA_TIME;
+			if (Moving > 2.0)
+			{
+				AstarMove(firstx, firsty, secondx, secondy);
+			}
+		}
+	}
+	if (Dead == false)
+	{
+		if (_distance >= 300)
+		{
+			if (Attack == false)
+			{
+				AttackDelay += DELTA_TIME;
+				if (AttackDelay > 2.0)
+				{
+					WalkState = true;
+					SetAttack(true);
+					SetState(StalkerENEMY_STATE::WALK);
+				}
+			}
+		}
 	}
 
-	Animation();
-
+	_distance = sqrt(pow(pos.x - PlayerPos.x, 2) + pow(pos.z - PlayerPos.z, 2));
+	if (Dead == false)
+	{
+		if (_distance < 300)
+		{
+			SetState(StalkerENEMY_STATE::ATTACK);
+		}
+	}
 	if (_hp <= 0)
 	{
-		AnimationCount();
+		SetState(StalkerENEMY_STATE::DIE);
 	}
-
 }
 
 
@@ -239,30 +284,30 @@ void StalkerEnemy::SetPlayerPos()
 	int w = x + y;
 }
 
-void StalkerEnemy::Animation()
+void StalkerEnemy::WalkAnimation()
 {
-	if (AnimeCount == 0)
+	if (WalkState==true)
 	{
 		int32 count = GetAnimator()->GetAnimCount();
 		
 		int32 index = 2 % count;
 		GetAnimator()->Play(index);
-		AnimeCount++;
+		WalkState = false;
 	}
 }
 
-void StalkerEnemy::AnimationCount()
+void StalkerEnemy::DeathAnimation()
 {
-	if (AnimeCount == 1)
+	if (Dead==false)
 	{
 		int32 count = GetAnimator()->GetAnimCount();
 		
-		int32 index =1 % count;
+		int32 index = 1 % count;
 		GetAnimator()->Play(index);
-		AnimeCount++;
+		Dead = true;
 	}
 
-	else if (AnimeCount == 2)
+	else if (Dead == true)
 	{
 		DieTime += DELTA_TIME;
 		if (DieTime > 2.2)
@@ -272,16 +317,55 @@ void StalkerEnemy::AnimationCount()
 	}
 }
 
+void StalkerEnemy::AttackAnimation()
+{
+	if (Attack == true)
+	{
+		AttackTime = 3.0f;
+	}
+	AttackTime += DELTA_TIME;
+	if (AttackTime > 3)
+	{
+		int32 count = GetAnimator()->GetAnimCount();
+		int32 currentIndex = GetAnimator()->GetCurrentClipIndex();
+		int32 index = 0 % count;
+		GetAnimator()->Play(index);
+		AttackTime = 0;
+		Attack = false;
+		AttackDelay = 0;
+		Moving = 0;
+		SetAttack(false);
+		LookPlayer();
+	}
+}
 
+void StalkerEnemy::LookPlayer()
+{
+	shared_ptr<Scene> scene = GET_SINGLE(SceneManager)->GetActiveScene();
+	Vec3 PlayerPos = scene->GetPlayerPosToEnemy();
+	Vec3 EPos = GetEnemyPosition();
+	int x = round(EPos.x - PlayerPos.x);
+	int z = round(EPos.z - PlayerPos.z);
+	float dis = round(sqrt(pow(EPos.x - PlayerPos.x, 2) + pow(EPos.z - PlayerPos.z, 2)));
+	float ros = std::acos(z / dis);
+	if (x < 0)
+	{
+		GetTransform()->SetLocalRotation(Vec3(0, ros, 0));
+	}
+	else if (x > 0)
+	{
+		GetTransform()->SetLocalRotation(Vec3(0, -ros, 0));
+	}
+}
 
 int(*StalkerEnemy::CreateMap())[STHeight]
 {
 	return STtileMap;
 }
 
-void StalkerEnemy::LostHp()
+void StalkerEnemy::LostHp(int damage)
 {
-	_hp -= 30;
+	_hp -= damage;
 }
 
 void StalkerEnemy::Respone()

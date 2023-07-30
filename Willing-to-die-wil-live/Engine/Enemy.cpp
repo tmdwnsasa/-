@@ -14,6 +14,7 @@
 #include "Component.h"
 #include <iostream>
 
+
 //cout 출력용 코드
 //#pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console")
 
@@ -54,6 +55,7 @@ void Enemy::Update()
 		default:
 			break;
 		}
+
 
 		SetEnemyPosition(pos);
 		SetPlayerPos();
@@ -236,8 +238,14 @@ void Enemy::LookPlayer()
 	int z = round(EPos.z - PlayerPos.z);
 	float dis = round(sqrt(pow(EPos.x - PlayerPos.x, 2) + pow(EPos.z - PlayerPos.z, 2)));
 	float ros = std::acos(z / dis);
-	GetTransform()->SetLocalRotation(Vec3(0, (py+ros), 0));
-	cout << ros << endl;
+	if (x < 0)
+	{
+		GetTransform()->SetLocalRotation(Vec3(0, ros, 0));
+	}
+	else if (x > 0)
+	{
+		GetTransform()->SetLocalRotation(Vec3(0, -ros, 0));
+	}
 }
 
 void Enemy::SetPlayerPos()
@@ -382,9 +390,9 @@ int(*Enemy::CreateMap())[Height]
 	return tileMap;
 }
 
-void Enemy::LostHp()
+void Enemy::LostHp(int damage)
 {
-	_hp -= 30;
+	_hp -= damage;
 }
 
 void Enemy::Respone()
@@ -392,19 +400,64 @@ void Enemy::Respone()
 	shared_ptr<Scene> scene = GET_SINGLE(SceneManager)->GetActiveScene();
 	Vec3 PlayerPos = scene->GetPlayerPosToEnemy();
 
+	srand((unsigned int)time(NULL));
+
 	if (PlayerPos.x > 3500)
+	{
 		if (PlayerPos.z < -3500)
-			CheckPoint = 1;
+		{
+			ResponeNumber = rand() % 9 + 1;
+			if (ResponeNumber != 1)
+			{
+				CheckPoint = ResponeNumber;
+			}
+			else if (ResponeNumber == 1)
+			{
+				CheckPoint = 2;
+			}
+		}
 		else if (PlayerPos.z >= -3500)
-			CheckPoint = 2;
-	if (PlayerPos.x <= 3500)
+		{
+			ResponeNumber = rand() % 9 + 1;
+			if (ResponeNumber != 7)
+			{
+				CheckPoint = ResponeNumber;
+			}
+			else if (ResponeNumber == 7)
+			{
+				CheckPoint = 8;
+			}
+		}
+	}
+	else if (PlayerPos.x <= 3500)
+	{
 		if (PlayerPos.z < -3500)
-			CheckPoint = 3;
+		{
+			ResponeNumber = rand() % 9 + 1;
+			if (ResponeNumber != 3)
+			{
+				CheckPoint = ResponeNumber;
+			}
+			else if (ResponeNumber == 3)
+			{
+				CheckPoint = 4;
+			}
+		}
 		else if (PlayerPos.z >= -3500)
-			CheckPoint = 4;
-	
+		{
+			ResponeNumber = rand() % 9 + 1;
+			if (ResponeNumber != 5)
+			{
+				CheckPoint = ResponeNumber;
+			}
+			else if (ResponeNumber == 5)
+			{
+				CheckPoint = 6;
+			}
+		}
+	}
+
 	//체크용 
-	CheckPoint = 1;
 
 	switch (CheckPoint)
 	{

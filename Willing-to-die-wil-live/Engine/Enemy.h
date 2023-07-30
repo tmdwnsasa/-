@@ -205,13 +205,14 @@ public:
 	void Animation();
 	void DeathAnimation();
 	void AttackAnimation();
-	void LostHp();
+	void LostHp(int damage);
 	bool GetAttack() { return Attack; };
 	void SetAttack(bool _attack) { Attack = _attack; };
 	void LookPlayer();
 	int CurHp() { return _hp; };
 
-	
+	int GetAtk() { return _Atk; };
+	void SetAtk(int Att) { _Atk = Att; };
 	void Respone();
 
 	void SetState(ENEMY_STATE state) { _currentState = state; };
@@ -242,9 +243,11 @@ public:
 	int EnemyCount = 0;
 	float _distance = 0;
  
-	int _hp = 100;
+	int _hp = 175;
+	int _Atk = 20;
 
 	int CheckPoint = 0;
+	int ResponeNumber = 0;
 
 	Vec3 ResponeArea1 = Vec3(3700, -100, -3600);
 	Vec3 ResponeArea2 = Vec3(0, -100, 0);

@@ -13,7 +13,7 @@
 #include "MeshRenderer.h"
 #include "BoxCollider.h"
 #include "Resources.h"
-#include "SoundManager.h"
+//#include "SoundManager.h"
 #include "SceneManager.h"
 #include <iostream>
 
@@ -50,59 +50,59 @@ void Player::Update()
 	{
 		pos += GetTransform()->GetLook() * _speed * DELTA_TIME;
 		
-		if (GET_SINGLE(SoundManager)->IsPlaying("Footwalksound") == false)
-		{
-			GET_SINGLE(SoundManager)->PlayLoopSound("Footwalksound", 0.4f);
-		}
+		//if (GET_SINGLE(SoundManager)->IsPlaying("Footwalksound") == false)
+		//{
+		//	GET_SINGLE(SoundManager)->PlayLoopSound("Footwalksound", 0.4f);
+		//}
 		_isMoving = true;
 	}
 
 	if (INPUT->GetButton(KEY_TYPE::S))
 	{
-		pos -= GetTransform()->GetLook() * _speed * DELTA_TIME;
-		if (GET_SINGLE(SoundManager)->IsPlaying("Footwalksound") == false)
-		{
-			GET_SINGLE(SoundManager)->PlayLoopSound("Footwalksound", 0.4f);
-		}
+		//pos -= GetTransform()->GetLook() * _speed * DELTA_TIME;
+		//if (GET_SINGLE(SoundManager)->IsPlaying("Footwalksound") == false)
+		//{
+		//	GET_SINGLE(SoundManager)->PlayLoopSound("Footwalksound", 0.4f);
+		//}
 		_isMoving = true;
 	}
 
 	if (INPUT->GetButton(KEY_TYPE::A))
 	{
-		pos -= GetTransform()->GetRight() * _speed * DELTA_TIME;
-		if (GET_SINGLE(SoundManager)->IsPlaying("Footwalksound") == false)
-		{
-			GET_SINGLE(SoundManager)->PlayLoopSound("Footwalksound", 0.4f);
-		}
+		//pos -= GetTransform()->GetRight() * _speed * DELTA_TIME;
+		//if (GET_SINGLE(SoundManager)->IsPlaying("Footwalksound") == false)
+		//{
+		//	GET_SINGLE(SoundManager)->PlayLoopSound("Footwalksound", 0.4f);
+		//}
 		_isMoving = true;
 	}
 
 	if (INPUT->GetButton(KEY_TYPE::D))
 	{
 		pos += GetTransform()->GetRight() * _speed * DELTA_TIME;
-		if (GET_SINGLE(SoundManager)->IsPlaying("Footwalksound") == false)
-		{
-			GET_SINGLE(SoundManager)->PlayLoopSound("Footwalksound", 0.4f);
-		}
+		//if (GET_SINGLE(SoundManager)->IsPlaying("Footwalksound") == false)
+		//{
+		//	GET_SINGLE(SoundManager)->PlayLoopSound("Footwalksound", 0.4f);
+		//}
 		_isMoving = true;
 	}
 
-	if (INPUT->GetButtonUp(KEY_TYPE::W) && _isMoving == false)
-	{
-		GET_SINGLE(SoundManager)->StopLoopSound("Footwalksound");
-	}
-	if (INPUT->GetButtonUp(KEY_TYPE::A) && _isMoving == false)
-	{
-		GET_SINGLE(SoundManager)->StopLoopSound("Footwalksound");
-	}	
-	if (INPUT->GetButtonUp(KEY_TYPE::S) && _isMoving == false)
-	{
-		GET_SINGLE(SoundManager)->StopLoopSound("Footwalksound");
-	}
-	if (INPUT->GetButtonUp(KEY_TYPE::D) && _isMoving == false)
-	{
-		GET_SINGLE(SoundManager)->StopLoopSound("Footwalksound");
-	}
+	//if (INPUT->GetButtonUp(KEY_TYPE::W) && _isMoving == false)
+	//{
+	//	GET_SINGLE(SoundManager)->StopLoopSound("Footwalksound");
+	//}
+	//if (INPUT->GetButtonUp(KEY_TYPE::A) && _isMoving == false)
+	//{
+	//	GET_SINGLE(SoundManager)->StopLoopSound("Footwalksound");
+	//}	
+	//if (INPUT->GetButtonUp(KEY_TYPE::S) && _isMoving == false)
+	//{
+	//	GET_SINGLE(SoundManager)->StopLoopSound("Footwalksound");
+	//}
+	//if (INPUT->GetButtonUp(KEY_TYPE::D) && _isMoving == false)
+	//{
+	//	GET_SINGLE(SoundManager)->StopLoopSound("Footwalksound");
+	//}
 
 	//점프 구현 필요
 	if (INPUT->GetButton(KEY_TYPE::SPACE))
@@ -197,14 +197,14 @@ void Player::Update()
 				_isShot = true;
 			}
 
-			if(_currWeapon == PLAYER_WEAPON::PISTOL)
-				GET_SINGLE(SoundManager)->PlaySound("Pistolsound", 0.3f);
-			if (_currWeapon == PLAYER_WEAPON::SMG)
-				GET_SINGLE(SoundManager)->PlaySound("Smgsound", 0.25f);
-			if (_currWeapon == PLAYER_WEAPON::SHOTGUN)
-				GET_SINGLE(SoundManager)->PlaySound("Shotgunsound", 0.25f);
-			if (_currWeapon == PLAYER_WEAPON::SNIPER)
-				GET_SINGLE(SoundManager)->PlaySound("Snipersound", 0.20f);
+			//if(_currWeapon == PLAYER_WEAPON::PISTOL)
+			//	GET_SINGLE(SoundManager)->PlaySound("Pistolsound", 0.3f);
+			//if (_currWeapon == PLAYER_WEAPON::SMG)
+			//	GET_SINGLE(SoundManager)->PlaySound("Smgsound", 0.25f);
+			//if (_currWeapon == PLAYER_WEAPON::SHOTGUN)
+			//	GET_SINGLE(SoundManager)->PlaySound("Shotgunsound", 0.25f);
+			//if (_currWeapon == PLAYER_WEAPON::SNIPER)
+			//	GET_SINGLE(SoundManager)->PlaySound("Snipersound", 0.20f);
 
 			MakeBullet();
 			MakeMuzzleFlash();
@@ -340,7 +340,7 @@ void Player::ChangeWeapon(PLAYER_WEAPON weapon)
 
 	if (_currWeapon == PLAYER_WEAPON::SMG)
 	{
-		_damage = 25.f;
+		_damage = 20.f;
 		_pellet = 1;
 		_maxAmmo = 25;
 		_rateOfFire = 0.15f;
@@ -410,10 +410,10 @@ void Player::ChangeWeapon(PLAYER_WEAPON weapon)
 
 	if (_currWeapon == PLAYER_WEAPON::SNIPER)	
 	{
-		_damage = 50.f;
+		_damage = 200.f;
 		_pellet = 1;
 		_maxAmmo = 20;
-		_rateOfFire = 1.5f;
+		_rateOfFire = 1.0f;
 		_reloadMaxTime = 2.5f;
 		_reloadPerAmmo = _maxAmmo;
 		_price = 2500;

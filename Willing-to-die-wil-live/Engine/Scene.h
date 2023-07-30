@@ -53,6 +53,7 @@ public:
 	void MakeStalker(int Wave);
 	void MakeBruser(int Wave);
 
+
 private:
 	void PushLightData();
 	int  DistanceWall = 70;
@@ -85,6 +86,9 @@ public:
 	int				FBrZCount = 0;
 	int				FZCount = 0;
 
+	int				MaxCount = 10;
+	int				CurCount = 0;
+
 	float			SponeTime = 0.0f;
 
 	int loadedResource = 0;
@@ -98,6 +102,8 @@ public:
 	int				PlayerHp = 0;
 	float			Time = 0;
 	float			MaxTime = 50.0f;
+
+	int				_damage = 0;
 private:
 	vector<shared_ptr<GameObject>>		_gameObjects;
 	vector<shared_ptr<class Camera>>	_cameras;

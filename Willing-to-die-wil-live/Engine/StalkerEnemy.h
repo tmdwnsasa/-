@@ -9,8 +9,7 @@ enum class StalkerENEMY_STATE : uint8
 {
 	IDLE,
 	WALK,
-
-
+	ATTACK,
 	DIE,
 	END
 };
@@ -205,12 +204,22 @@ public:
 	void SetPlayerPos();
 	int(*CreateMap())[STHeight];
 	void SetWallPos();
-	void Animation();
-	void AnimationCount();
-	void LostHp();
+	void WalkAnimation();
+	void DeathAnimation();
+	void AttackAnimation();
+	void LookPlayer();
+	void LostHp(int damage);
 	int CurHp() { return _hp; };
 
+	bool GetAttack() { return Attack; };
+	void SetAttack(bool _attack) { Attack = _attack; };
+
+	int GetAtk() { return _Atk; };
+	void SetAtk(int Att) { _Atk = Att; };
+
 	void Respone();
+	void SetState(StalkerENEMY_STATE state) { _currentState = state; };
+	StalkerENEMY_STATE GetState() { return _currentState; };
 
 	Vec3 EnemyPos;
 
@@ -231,7 +240,17 @@ public:
 	int AnimeCount = 0;
 	int EnemyCount = 0;
 
-	int _hp = 100;
+	float AttackTime = 3.0f;
+	float AttackDelay = 0;
+	float Moving = 2.0f;
+	bool Attack = true;
+	bool Dead = false;
+	float _distance = 0;
+
+	bool WalkState = true;
+
+	int _hp = 175;
+	int _Atk = 25;
 
 	int CheckPoint = 0;
 
@@ -239,6 +258,8 @@ public:
 	Vec3 ResponeArea2 = Vec3(0, -100, 0);
 	Vec3 ResponeArea3 = Vec3(0, -100, 0);
 	Vec3 ResponeArea4 = Vec3(3600, -100, -3600);
+
+	StalkerENEMY_STATE _currentState = StalkerENEMY_STATE::WALK;
 
 	bool ResponeCheck = false;
 private:

@@ -57,8 +57,8 @@ void Scene::Start()
 	{
 		gameObject->Start();
 	}
-	GET_SINGLE(SoundManager)->Init();
-	GET_SINGLE(SoundManager)->PlayLoopSound("Backgroundsound", 0.4f);
+	//GET_SINGLE(SoundManager)->Init();
+	//GET_SINGLE(SoundManager)->PlayLoopSound("Backgroundsound", 0.4f);
 }
 
 void Scene::Update()
@@ -110,24 +110,30 @@ void Scene::Update()
 
 	if (!IsRest)
 	{
-		SponeTime += 1 * DELTA_TIME;
-
-		if (SponeTime >= 3)
+		if (CurCount < MaxCount)
 		{
-			//적 종류를 구별해서 제작필요
-			if (FZCount != ZCount)
+			SponeTime += 1 * DELTA_TIME;
+
+			if (SponeTime >= 3)
 			{
-				MakeNormal(CurrentWave);
+				//적 종류를 구별해서 제작필요
+				if (FZCount != ZCount)
+				{
+					MakeNormal(CurrentWave);
+					CurCount++;
+				}
+				if (FSTZCount != STZCount)
+				{
+					MakeStalker(CurrentWave);
+					CurCount++;
+				}
+				if (FBrZCount != BrZCount)
+				{
+					MakeBruser(CurrentWave);
+					CurCount++;
+				}
+				SponeTime = 0.0f;
 			}
-			if (FSTZCount != STZCount)
-			{
-				MakeStalker(CurrentWave);
-			}
-			if (FBrZCount != BrZCount)
-			{
-				MakeBruser(CurrentWave);
-			}
-			SponeTime = 0.0f;
 		}
 	}
  
@@ -360,7 +366,10 @@ void Scene::LateUpdate()
 	{
 		if (gameObject->GetName() == L"Main_Camera")
 			SetCameraPosToPlayer();
-
+		if (gameObject->GetName() == L"Player")
+		{
+			_damage = gameObject->GetPlayer()->GetDamage();
+		}
 		//총알 <-> 적  충돌처리
 		if (gameObject->GetName() == L"Bullet")
 		{
@@ -371,13 +380,15 @@ void Scene::LateUpdate()
 					if (Object->GetBoxCollider()->Intersects(gameObject->GetBoxCollider()->GetColliderBox()) == true)
 					{
 						gameObject->GetBullet()->SetState(BULLET_STATE::DEAD);
-						Object->GetEnemy()->LostHp();
+						
+						Object->GetEnemy()->LostHp(_damage);
 						EnemyHp = Object->GetEnemy()->CurHp();
 						_trashBin.push_back(gameObject);
 
 						if (EnemyHp <= 0)
 						{
 							Object->GetBoxCollider()->SetOnOff(false);
+							CurCount--;
 							DeathCount++;
 							_trashBin.push_back(gameObject);
 						}
@@ -389,7 +400,7 @@ void Scene::LateUpdate()
 					if (Object->GetBoxCollider()->Intersects(gameObject->GetBoxCollider()->GetColliderBox()) == true)
 					{
 						gameObject->GetBullet()->SetState(BULLET_STATE::DEAD);
-						Object->GetBruserEnemy()->LostHp();
+						Object->GetBruserEnemy()->LostHp(_damage);
 						EnemyHp = Object->GetBruserEnemy()->CurHp();
 						_trashBin.push_back(gameObject);
 
@@ -397,6 +408,7 @@ void Scene::LateUpdate()
 						{
 							Object->GetBoxCollider()->SetOnOff(false);
 						
+							CurCount--;
 							DeathCount++;
 						}
 					}
@@ -407,7 +419,7 @@ void Scene::LateUpdate()
 					if (Object->GetBoxCollider()->Intersects(gameObject->GetBoxCollider()->GetColliderBox()) == true)
 					{
 						gameObject->GetBullet()->SetState(BULLET_STATE::DEAD);
-						Object->GetStalkerEnemy()->LostHp();
+						Object->GetStalkerEnemy()->LostHp(_damage);
 						EnemyHp = Object->GetStalkerEnemy()->CurHp();
 						_trashBin.push_back(gameObject);
 
@@ -415,6 +427,7 @@ void Scene::LateUpdate()
 						{
 							Object->GetBoxCollider()->SetOnOff(false);
 							DeathCount++;
+							CurCount--;
 						}
 					}
 				}
@@ -519,7 +532,7 @@ void Scene::LateUpdate()
 							if (Time > 2)
 							{
 								PlayerHp = gameObject->GetPlayer()->GetHP();
-								PlayerHp -= 10;
+								PlayerHp -= Object->GetEnemy()->GetAtk();
 								gameObject->GetPlayer()->SetHP(PlayerHp);
 								Time = 0;
 							}
@@ -531,55 +544,55 @@ void Scene::LateUpdate()
 					}
 				}
 
-				//if (Object->GetName() == L"BrEnemy")
-				//{
-				//	//EnemyPosition = Object->GetTransform()->GetLocalPosition();
-				//	//PlayerPosition = gameObject->GetTransform()->GetLocalPosition();
-				//	//if (Object->GetBruserEnemy()->GetAttack() == false)
-				//	//{
-				//	//	Distance = sqrt(pow(EnemyPosition.x - PlayerPosition.x, 2) + pow(EnemyPosition.z - PlayerPosition.z, 2));
-				//	//	if (Distance < 500)
-				//	//	{
-				//	//		Time += DELTA_TIME;
-				//	//		if (Time > 2)
-				//	//		{
-				//	//			PlayerHp = gameObject->GetPlayer()->GetHP();
-				//	//			PlayerHp -= 10;
-				//	//			gameObject->GetPlayer()->SetHP(PlayerHp);
-				//	//			Time = 0;
-				//	//		}
-				//	//	}
-				//	//}
-				//	//else if (Object->GetBruserEnemy()->GetAttack() != false)
-				//	//{
-				//	//	Time = 0;
-				//	//}
-				//}
+				if (Object->GetName() == L"BrEnemy")
+				{
+					EnemyPosition = Object->GetTransform()->GetLocalPosition();
+					PlayerPosition = gameObject->GetTransform()->GetLocalPosition();
+					if (Object->GetBruserEnemy()->GetAttack() == false)
+					{
+						Distance = sqrt(pow(EnemyPosition.x - PlayerPosition.x, 2) + pow(EnemyPosition.z - PlayerPosition.z, 2));
+						if (Distance < 500)
+						{
+							Time += DELTA_TIME;
+							if (Time > 2)
+							{
+								PlayerHp = gameObject->GetPlayer()->GetHP();
+								PlayerHp -= Object->GetBruserEnemy()->GetAtk();
+								gameObject->GetPlayer()->SetHP(PlayerHp);
+								Time = 0;
+							}
+						}
+					}
+					else if (Object->GetBruserEnemy()->GetAttack() != false)
+					{
+						Time = 0;
+					}
+				}
 
-				//if (Object->GetName() == L"STEnemy")
-				//{
-				//	//EnemyPosition = Object->GetTransform()->GetLocalPosition();
-				//	//PlayerPosition = gameObject->GetTransform()->GetLocalPosition();
-				//	//if (Object->GetEnemy()->GetAttack() == false)
-				//	//{
-				//	//	Distance = sqrt(pow(EnemyPosition.x - PlayerPosition.x, 2) + pow(EnemyPosition.z - PlayerPosition.z, 2));
-				//	//	if (Distance < 500)
-				//	//	{
-				//	//		Time += DELTA_TIME;
-				//	//		if (Time > 2)
-				//	//		{
-				//	//			PlayerHp = gameObject->GetPlayer()->GetHP();
-				//	//			PlayerHp -= 10;
-				//	//			gameObject->GetPlayer()->SetHP(PlayerHp);
-				//	//			Time = 0;
-				//	//		}
-				//	//	}
-				//	//}
-				//	//else if (Object->GetEnemy()->GetAttack() != false)
-				//	//{
-				//	//	Time = 0; enemy stalker로
-				//	//}
-				//}
+				if (Object->GetName() == L"STEnemy")
+				{
+					EnemyPosition = Object->GetTransform()->GetLocalPosition();
+					PlayerPosition = gameObject->GetTransform()->GetLocalPosition();
+					if (Object->GetStalkerEnemy()->GetAttack() == false)
+					{
+						Distance = sqrt(pow(EnemyPosition.x - PlayerPosition.x, 2) + pow(EnemyPosition.z - PlayerPosition.z, 2));
+						if (Distance < 500)
+						{
+							Time += DELTA_TIME;
+							if (Time > 2)
+							{
+								PlayerHp = gameObject->GetPlayer()->GetHP();
+								PlayerHp -= Object->GetStalkerEnemy()->GetAtk();
+								gameObject->GetPlayer()->SetHP(PlayerHp);
+								Time = 0;
+							}
+						}
+					}
+					else if (Object->GetStalkerEnemy()->GetAttack() != false)
+					{
+						Time = 0; 
+					}
+				}
 			}
 
 		}

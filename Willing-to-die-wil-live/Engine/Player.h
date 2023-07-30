@@ -55,6 +55,7 @@ public:
 	void SetBulletPos(Vec3 pos) { cameraPosForBullet = pos; };
 	void SetBulletLook(Vec3 Look) { cameraLookForBullet = Look; };
 
+	int GetDamage() { return _damage; };
 	int GetHP() { return _hp; };
 	int GetCurrAmmo(PLAYER_WEAPON weapon);
 	int GetMaxAmmo();
