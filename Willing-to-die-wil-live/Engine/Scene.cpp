@@ -1087,12 +1087,28 @@ void Scene::CheckWave()
 		BrZCount = 2;
 		EnemyCount = ZCount + STZCount + BrZCount;
 	case 4:
+		ZCount = 2;
+		STZCount = 2;
+		BrZCount = 2;
+		EnemyCount = ZCount + STZCount + BrZCount;
 		break;
 	case 5:
+		ZCount = 2;
+		STZCount = 2;
+		BrZCount = 2;
+		EnemyCount = ZCount + STZCount + BrZCount;
 		break;
 	case 6:
+		ZCount = 2;
+		STZCount = 2;
+		BrZCount = 2;
+		EnemyCount = ZCount + STZCount + BrZCount;
 		break;
 	case 7:
+		ZCount = 2;
+		STZCount = 2;
+		BrZCount = 2;
+		EnemyCount = ZCount + STZCount + BrZCount;
 		break;
 
 	default:
