@@ -444,7 +444,30 @@ void Scene::LateUpdate()
 				CurrentWave++;
 				IsRest = true;
 				DeathCount = 0;
-				gameObject->GetPlayer()->MoneyChange(1000);
+				switch (CurrentWave)
+				{
+				case 2:
+					gameObject->GetPlayer()->MoneyChange(1300);
+					break;
+				case 3:
+					gameObject->GetPlayer()->MoneyChange(1400);
+					break;
+				case 4:
+					gameObject->GetPlayer()->MoneyChange(1500);
+					break;
+				case 5:
+					gameObject->GetPlayer()->MoneyChange(1600);
+					break;
+				case 6:
+					gameObject->GetPlayer()->MoneyChange(3000);
+					break;
+				case 7:
+					gameObject->GetPlayer()->MoneyChange(3200);
+					break;
+
+				default:
+					break;
+				}
 				FZCount = 0;
 				FSTZCount = 0;
 				FBrZCount = 0;
@@ -535,10 +558,11 @@ void Scene::LateUpdate()
 					if (Object->GetEnemy()->GetAttack() == false)
 					{
 						Distance = sqrt(pow(EnemyPosition.x - PlayerPosition.x, 2) + pow(EnemyPosition.z - PlayerPosition.z, 2));
-						if (Distance < 600)
+						if (Distance < 450)
 						{
-							Time += DELTA_TIME;
-							if (Time > 2)
+							Object->GetEnemy()->SetTime(Object->GetEnemy()->GetTime() + DELTA_TIME);
+					
+							if (Object->GetEnemy()->GetTime() > 1.3)
 							{
 								if (Object->GetEnemy()->GetDead() == false)
 								{
@@ -547,13 +571,13 @@ void Scene::LateUpdate()
 									gameObject->GetPlayer()->SetHP(PlayerHp);
 									//Time = 0;
 								}
-								Time = 0;
+								Object->GetEnemy()->SetTime(0);
 							}
 						}
 					}
 					else if (Object->GetEnemy()->GetAttack() != false)
 					{
-						Time = 0;
+						Object->GetEnemy()->SetTime(0);
 					}
 				}
 
@@ -564,24 +588,24 @@ void Scene::LateUpdate()
 					if (Object->GetBruserEnemy()->GetAttack() == false)
 					{
 						Distance = sqrt(pow(EnemyPosition.x - PlayerPosition.x, 2) + pow(EnemyPosition.z - PlayerPosition.z, 2));
-						if (Distance < 600)
+						if (Distance < 450)
 						{
-							BruserTime += DELTA_TIME;
-							if (BruserTime > 2)
+							Object->GetBruserEnemy()->SetTime(Object->GetBruserEnemy()->GetTime() + DELTA_TIME);
+
+							if (Object->GetBruserEnemy()->GetTime() > 1.3)
 							{
 								if (Object->GetBruserEnemy()->GetDead() == false)
 								{
 									PlayerHp = gameObject->GetPlayer()->GetHP();
 									PlayerHp -= Object->GetBruserEnemy()->GetAtk();
 									gameObject->GetPlayer()->SetHP(PlayerHp);
-									BruserTime = 0;
 								}
 							}
 						}
 					}
 					else if (Object->GetBruserEnemy()->GetAttack() != false)
 					{
-						BruserTime = 0;
+						Object->GetBruserEnemy()->SetTime(0);
 					}
 				}
 
@@ -592,24 +616,23 @@ void Scene::LateUpdate()
 					if (Object->GetStalkerEnemy()->GetAttack() == false)
 					{
 						Distance = sqrt(pow(EnemyPosition.x - PlayerPosition.x, 2) + pow(EnemyPosition.z - PlayerPosition.z, 2));
-						if (Distance < 600)
+						if (Distance < 450)
 						{
-							StalkerTime += DELTA_TIME;
-							if (StalkerTime > 2)
+							Object->GetStalkerEnemy()->SetTime(Object->GetStalkerEnemy()->GetTime() + DELTA_TIME);
+							if (Object->GetStalkerEnemy()->GetTime() > 1.3)
 							{
 								if (Object->GetStalkerEnemy()->GetDead()==false)
 								{
 									PlayerHp = gameObject->GetPlayer()->GetHP();
 									PlayerHp -= Object->GetStalkerEnemy()->GetAtk();
 									gameObject->GetPlayer()->SetHP(PlayerHp);
-									StalkerTime = 0;
 								}
 							}
 						}
 					}
 					else if (Object->GetStalkerEnemy()->GetAttack() != false)
 					{
-						StalkerTime = 0;
+						Object->GetStalkerEnemy()->SetTime(0);
 					}
 				}
 			}
@@ -1089,44 +1112,44 @@ void Scene::CheckWave()
 	switch (CurrentWave)
 	{
 	case 1:
-		ZCount = 1;
-		STZCount = 1;
-		BrZCount = 1;
+		ZCount = 5;
+		STZCount = 0;
+		BrZCount = 0;
 		EnemyCount = ZCount + STZCount + BrZCount;
 		break;
 	case 2:
-		ZCount = 1;
-		STZCount = 1;
-		BrZCount = 1;
+		ZCount = 0;
+		STZCount = 3;
+		BrZCount = 0;
 		EnemyCount = ZCount + STZCount + BrZCount;
 		break;
 	case 3:
-		ZCount = 2;
-		STZCount = 2;
-		BrZCount = 2;
+		ZCount = 5;
+		STZCount = 0;
+		BrZCount = 1;
 		EnemyCount = ZCount + STZCount + BrZCount;
 	case 4:
 		ZCount = 2;
-		STZCount = 2;
-		BrZCount = 2;
+		STZCount = 1;
+		BrZCount = 3;
 		EnemyCount = ZCount + STZCount + BrZCount;
 		break;
 	case 5:
-		ZCount = 2;
-		STZCount = 2;
-		BrZCount = 2;
+		ZCount = 5;
+		STZCount = 3;
+		BrZCount = 3;
 		EnemyCount = ZCount + STZCount + BrZCount;
 		break;
 	case 6:
-		ZCount = 2;
-		STZCount = 2;
-		BrZCount = 2;
+		ZCount = 0;
+		STZCount = 4;
+		BrZCount = 5;
 		EnemyCount = ZCount + STZCount + BrZCount;
 		break;
 	case 7:
-		ZCount = 2;
-		STZCount = 2;
-		BrZCount = 2;
+		ZCount = 0;
+		STZCount = 15;
+		BrZCount = 10;
 		EnemyCount = ZCount + STZCount + BrZCount;
 		break;
 
@@ -1150,7 +1173,7 @@ void Scene::MakeNormal(int Wave)
 		gameObject->SetName(L"Enemy");
 		gameObject->SetCheckFrustum(false);
 		gameObject->GetTransform()->SetLocalPosition(Vec3(3500.f, -100.f, -3000.f));
-		gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+		gameObject->GetTransform()->SetLocalScale(Vec3(0.8f, 0.8f, 0.8f));
 		gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
 
 		gameObject->AddComponent(boxCollider);

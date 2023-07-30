@@ -219,6 +219,9 @@ public:
 	bool GetDead() { return Dead; };
 	void SetDead(bool Death) { Dead = Death; };
 
+	void SetTime(float _Time) { _AttackTime = _Time; };
+	float GetTime() { return _AttackTime; };
+	float _AttackTime = 0.0f;
 
 	void Respone();
 	void SetState(StalkerENEMY_STATE state) { _currentState = state; };

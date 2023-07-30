@@ -107,7 +107,7 @@ private:
 	bool			_reloading = false;
 	float			_curRateOfFire = 0.f;
 	bool			_isShot = false;
-	int				_money = 100000;
+	int				_money = 1200;
 	float			_recoil = 0;
 	shared_ptr<GameObject> bleedingUI;
 

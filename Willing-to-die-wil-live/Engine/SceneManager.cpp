@@ -386,7 +386,7 @@ shared_ptr<Scene> SceneManager::LoadGameScene()
 		obj->SetName(L"WaveText");
 		obj->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
 		obj->AddComponent(make_shared<Transform>());
-		obj->GetTransform()->SetLocalScale(Vec3(30.f, 30.f, 30.f));
+		obj->GetTransform()->SetLocalScale(Vec3(28.f, 28.f, 28.f));
 		obj->GetTransform()->SetLocalPosition(Vec3((GEngine->GetWindow().width / 2) - 1000, -(GEngine->GetWindow().height / 2) + 500, 900.f));
 		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 

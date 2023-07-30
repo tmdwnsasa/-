@@ -222,6 +222,9 @@ public:
 	bool GetDead() { return Dead; };
 	void SetDead(bool Death) { Dead = Death; };
 
+	void SetTime(float _Time) { _AttackTime = _Time; };
+	float GetTime() { return _AttackTime; };
+	float _AttackTime = 0.0f;
 	void Respone();
 	void LookPlayer();
 	void SetState(BruserENEMY_STATE state) { _currentState = state; };
@@ -258,7 +261,7 @@ public:
 	bool Attack = true;
 	bool Walk_State = true;
 	bool Awake = true;
-	int _hp = 200;
+	int _hp = 300;
 	int _Atk = 20;
 
 	int CheckPoint = 0;

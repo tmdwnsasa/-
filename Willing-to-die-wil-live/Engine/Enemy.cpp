@@ -62,10 +62,10 @@ void Enemy::Update()
 
 		if (!ResponeCheck)
 		{
-			//Respone();
+			Respone();
 		}
 		Time += DELTA_TIME;
-		if (Time > 1.1)
+		if (Time > 0.1)
 		{
 			if (_hp > 0)
 			{

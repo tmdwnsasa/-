@@ -312,7 +312,7 @@ void Player::ChangeWeapon(PLAYER_WEAPON weapon)
 		_reloadMaxTime = 0.5f;
 		_reloadPerAmmo = _maxAmmo;
 		_price = 500;
-		_ammoPrice = 50;
+		_ammoPrice = 100;
 		_accuracy = 5000;
 		_weaponRecoil = 2;
 		_fullauto = false;
@@ -347,7 +347,7 @@ void Player::ChangeWeapon(PLAYER_WEAPON weapon)
 		_reloadMaxTime = 2.5f;
 		_reloadPerAmmo = _maxAmmo;
 		_price = 1000;
-		_ammoPrice = 100;
+		_ammoPrice = 200;
 		_accuracy = 3000;
 		_weaponRecoil = 1;
 		_fullauto = true;
@@ -382,7 +382,7 @@ void Player::ChangeWeapon(PLAYER_WEAPON weapon)
 		_reloadMaxTime = 0.5f;
 		_reloadPerAmmo = 1;
 		_price = 2000;
-		_ammoPrice = 200;
+		_ammoPrice = 400;
 		_accuracy = 1000;
 		_weaponRecoil = 0.3;
 		_fullauto = false;
@@ -410,14 +410,14 @@ void Player::ChangeWeapon(PLAYER_WEAPON weapon)
 
 	if (_currWeapon == PLAYER_WEAPON::SNIPER)	
 	{
-		_damage = 200.f;
+		_damage = 300.f;
 		_pellet = 1;
-		_maxAmmo = 20;
+		_maxAmmo = 5;
 		_rateOfFire = 1.0f;
 		_reloadMaxTime = 2.5f;
 		_reloadPerAmmo = _maxAmmo;
 		_price = 2500;
-		_ammoPrice = 250;
+		_ammoPrice = 500;
 		_accuracy = 10000;
 		_weaponRecoil = 3;
 		_fullauto = false;
