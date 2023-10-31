@@ -126,16 +126,16 @@ void ParticleSystem::Parameter()
 		_minSpeed = 60;
 		_maxSpeed = 30;
 		_startScale = 20.f;
-		_endScale = 10.f;
+		_endScale = 3.f;
 	}
 	if (particleName == "Smoke")
 	{
-		_createInterval = 0.1f;
-		_minLifeTime = 50.f;
+		_createInterval = 0.05f;
+		_minLifeTime = 100.f;
 		_maxLifeTime = 100.f;
-		_minSpeed = 2;
-		_maxSpeed = 1;
-		_startScale = 2000.f;
+		_minSpeed = 0;
+		_maxSpeed = 0;
+		_startScale = 1000.f;
 		_endScale = 1000.f;
 	}
 }

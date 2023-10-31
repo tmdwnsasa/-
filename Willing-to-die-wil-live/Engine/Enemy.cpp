@@ -65,7 +65,7 @@ void Enemy::Update()
 			Respone();
 		}
 		Time += DELTA_TIME;
-		if (Time > 1.1)
+		if (Time > 0.1)
 		{
 			if (_hp > 0)
 			{
@@ -78,25 +78,22 @@ void Enemy::Update()
 
 		if (_hp > 0)
 		{
-			if (_distance >= 300)
-			{
 				Moving += DELTA_TIME;
-				if (Moving > 2.0)
+				if (Moving > 1.0)
 				{
 					AstarMove(firstx, firsty, secondx, secondy);
 				}
-			}
 		}
 		if (Dead == false)
 		{
-			if (_distance >= 300)
+			if (_distance >= 200)
 			{
 				if (Attack == false)
 				{
 					AttackDelay += DELTA_TIME;
 					if (AttackDelay > 2.0)
 					{
-						AnimeCount = 0;
+						WalkState = true;
 						SetAttack(true);
 						SetState(ENEMY_STATE::WALK);
 					}
@@ -107,7 +104,7 @@ void Enemy::Update()
 		_distance = sqrt(pow(pos.x - PlayerPos.x, 2) + pow(pos.z - PlayerPos.z, 2));
 		if (Dead == false)
 		{
-			if (_distance < 300)
+			if (_distance < 200)
 			{
 				SetState(ENEMY_STATE::Attack);
 			}
@@ -133,7 +130,6 @@ void Enemy::AstarCall()
 	auto nodeList = pathFinder.DoFindPath(startPos, endPos);
 	//tileMap.Display(nodeList);
 
-	//std::cout <<EPos.x <<"ZÁÂÇ¥ :    "<< EPos.z << std::endl;
 
 	if (nodeList.size() != 0)
 	{
@@ -237,12 +233,13 @@ void Enemy::LookPlayer()
 	int x = round(EPos.x - PlayerPos.x);
 	int z = round(EPos.z - PlayerPos.z);
 	float dis = round(sqrt(pow(EPos.x - PlayerPos.x, 2) + pow(EPos.z - PlayerPos.z, 2)));
-	float ros = std::acos(z / dis);
+	float ros = std::acos(-z / dis);
+	float radian = ros * 180 / 3.14;
 	if (x < 0)
 	{
 		GetTransform()->SetLocalRotation(Vec3(0, ros, 0));
 	}
-	else if (x > 0)
+	else if (x >= 0)
 	{
 		GetTransform()->SetLocalRotation(Vec3(0, -ros, 0));
 	}
@@ -256,12 +253,6 @@ void Enemy::SetPlayerPos()
 			if (tileMap[i][j] == 2)
 			{
 				tileMap[i][j] = 0;
-				/*EnemyCount++;
-				if (EnemyCount == 10)
-				{
-					tileMap[i][j] = 0;
-					EnemyCount = 0;
-				}*/
 			}
 			else if (tileMap[i][j] == 3)
 			{
@@ -305,37 +296,15 @@ void Enemy::SetPlayerPos()
 
 void Enemy::Animation()
 {
-	if (AnimeCount == 0)
+	if (WalkState == true)
 	{
 		int32 count = GetAnimator()->GetAnimCount();
 		//int32 currentIndex = GetAnimator()->GetCurrentClipIndex();
 
 		int32 index = 1 % count;
 		GetAnimator()->Play(index);
-		AnimeCount++;
+		WalkState = false;
 		Attack = true;
-	}
-	if (INPUT->GetButtonDown(KEY_TYPE::KEY_1))
-	{
-		int32 count = GetAnimator()->GetAnimCount();
-		int32 currentIndex = GetAnimator()->GetCurrentClipIndex();
-
-		int32 index = (currentIndex + 1) % count;
-		GetAnimator()->Play(index);
-	}
-
-	if (INPUT->GetButtonDown(KEY_TYPE::KEY_2))
-	{
-		int32 count = GetAnimator()->GetAnimCount();
-		int32 currentIndex = GetAnimator()->GetCurrentClipIndex();
-
-		int32 index = (currentIndex - 1 + count) % count;
-		GetAnimator()->Play(index);
-	}
-
-	if (INPUT->GetButtonDown(KEY_TYPE::KEY_5))
-	{
-		GetAnimator()->Stop();
 	}
 }
 
@@ -349,6 +318,7 @@ void Enemy::DeathAnimation()
 		int32 index = 3 % count;
 		GetAnimator()->Play(index);
 		Dead = true;
+		SetDead(true);
 	}
 
 	else if (Dead==true)

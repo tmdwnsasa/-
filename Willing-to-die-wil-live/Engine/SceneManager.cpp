@@ -284,6 +284,19 @@ shared_ptr<Scene> SceneManager::LoadGameScene()
 	}
 #pragma endregion
 
+#pragma region ParticleSystem2
+	for (int i = 0; i < 3; i++)
+	{
+		shared_ptr<GameObject> particle = make_shared<GameObject>();
+		particle->SetName(L"BloodParticle");
+		particle->AddComponent(make_shared<Transform>());
+		particle->AddComponent(make_shared<ParticleSystem>("Blood"));
+		particle->SetCheckFrustum(false);
+		particle->GetTransform()->SetLocalPosition(Vec3(3700.f, 0.f, -3400.f + (100.f * i)));
+		scene->AddGameObject(particle);
+	}
+#pragma endregion
+
 #pragma region ParticleSystem
 	{
 		shared_ptr<GameObject> particle = make_shared<GameObject>();
@@ -296,18 +309,6 @@ shared_ptr<Scene> SceneManager::LoadGameScene()
 	}
 #pragma endregion
 
-#pragma region ParticleSystem2
-	for(int i=0; i<3; i++)
-	{
-		shared_ptr<GameObject> particle = make_shared<GameObject>();
-		particle->SetName(L"BloodParticle");
-		particle->AddComponent(make_shared<Transform>());
-		particle->AddComponent(make_shared<ParticleSystem>("Blood"));
-		particle->SetCheckFrustum(false);
-		particle->GetTransform()->SetLocalPosition(Vec3(3700.f, 0.f, -3400.f + (100.f * i)));
-		scene->AddGameObject(particle);
-	}
-#pragma endregion
 
 #pragma region Text_HP
 	{
@@ -315,8 +316,8 @@ shared_ptr<Scene> SceneManager::LoadGameScene()
 		obj->SetName(L"HealthText");
 		obj->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
 		obj->AddComponent(make_shared<Transform>());
-		obj->GetTransform()->SetLocalScale(Vec3(10.f, 10.f, 1.f));
-		obj->GetTransform()->SetLocalPosition(Vec3(-(GEngine->GetWindow().width / 2) + 100 , -(GEngine->GetWindow().height / 2) + 100, 900.f));
+		obj->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+		obj->GetTransform()->SetLocalPosition(Vec3(-(GEngine->GetWindow().width / 2) + 50 , -(GEngine->GetWindow().height / 2) + 100, 900.f));
 		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 
 		shared_ptr<Font> font = make_shared<Font>();
@@ -347,8 +348,8 @@ shared_ptr<Scene> SceneManager::LoadGameScene()
 		obj->SetName(L"BulletText");
 		obj->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
 		obj->AddComponent(make_shared<Transform>());
-		obj->GetTransform()->SetLocalScale(Vec3(10.f, 10.f, 10.f));
-		obj->GetTransform()->SetLocalPosition(Vec3((GEngine->GetWindow().width / 2) - 170, -(GEngine->GetWindow().height / 2) + 100, 900.f));
+		obj->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+		obj->GetTransform()->SetLocalPosition(Vec3((GEngine->GetWindow().width / 2) - 280, -(GEngine->GetWindow().height / 2) + 100, 900.f));
 		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 
 		shared_ptr<Font> font = make_shared<Font>();
@@ -372,14 +373,14 @@ shared_ptr<Scene> SceneManager::LoadGameScene()
 	}
 #pragma endregion
 
-#pragma region Text_Wave
+#pragma region Text_WaveTime
 	{
 		shared_ptr<GameObject> obj = make_shared<GameObject>();
 		obj->SetName(L"LeftTime");
 		obj->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
 		obj->AddComponent(make_shared<Transform>());
-		obj->GetTransform()->SetLocalScale(Vec3(10.f, 10.f, 10.f));
-		obj->GetTransform()->SetLocalPosition(Vec3((GEngine->GetWindow().width / 2) - 650, -(GEngine->GetWindow().height / 2) + 650, 900.f));
+		obj->GetTransform()->SetLocalScale(Vec3(2.f, 2.f, 2.f));
+		obj->GetTransform()->SetLocalPosition(Vec3((GEngine->GetWindow().width / 2) - 600, -(GEngine->GetWindow().height / 2) + 650, 900.f));
 		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 
 		shared_ptr<Font> font = make_shared<Font>();
@@ -403,14 +404,14 @@ shared_ptr<Scene> SceneManager::LoadGameScene()
 	}
 #pragma endregion
 
-#pragma region Text_WaveFont
+#pragma region Text_WaveText
 	{
 		shared_ptr<GameObject> obj = make_shared<GameObject>();
 		obj->SetName(L"WaveText");
 		obj->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
 		obj->AddComponent(make_shared<Transform>());
-		obj->GetTransform()->SetLocalScale(Vec3(30.f, 30.f, 30.f));
-		obj->GetTransform()->SetLocalPosition(Vec3((GEngine->GetWindow().width / 2) - 1000, -(GEngine->GetWindow().height / 2) + 500, 900.f));
+		obj->GetTransform()->SetLocalScale(Vec3(4.f, 4.f, 4.f));
+		obj->GetTransform()->SetLocalPosition(Vec3(0.f - 100.f, -(GEngine->GetWindow().height / 2) + 500, 900.f));
 		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 
 		shared_ptr<Font> font = make_shared<Font>();
@@ -440,8 +441,8 @@ shared_ptr<Scene> SceneManager::LoadGameScene()
 		obj->SetName(L"MaxBulletText");
 		obj->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
 		obj->AddComponent(make_shared<Transform>());
-		obj->GetTransform()->SetLocalScale(Vec3(8.f, 8.f, 8.f));
-		obj->GetTransform()->SetLocalPosition(Vec3((GEngine->GetWindow().width / 2) - 120, -(GEngine->GetWindow().height / 2) + 100, 900.f));
+		obj->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+		obj->GetTransform()->SetLocalPosition(Vec3((GEngine->GetWindow().width / 2) - 170, -(GEngine->GetWindow().height / 2) + 100, 900.f));
 		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 
 		shared_ptr<Font> font = make_shared<Font>();
@@ -471,8 +472,8 @@ shared_ptr<Scene> SceneManager::LoadGameScene()
 		obj->SetName(L"MoneyText");
 		obj->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
 		obj->AddComponent(make_shared<Transform>());
-		obj->GetTransform()->SetLocalScale(Vec3(10.f, 10.f, 10.f));
-		obj->GetTransform()->SetLocalPosition(Vec3(-(GEngine->GetWindow().width / 2) + 100, (GEngine->GetWindow().height / 2)-50, 900.f));
+		obj->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+		obj->GetTransform()->SetLocalPosition(Vec3(-(GEngine->GetWindow().width / 2) + 50, (GEngine->GetWindow().height / 2)-50, 900.f));
 		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 
 		shared_ptr<Font> font = make_shared<Font>();
@@ -502,8 +503,8 @@ shared_ptr<Scene> SceneManager::LoadGameScene()
 		obj->SetName(L"StaminaText");
 		obj->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
 		obj->AddComponent(make_shared<Transform>());
-		obj->GetTransform()->SetLocalScale(Vec3(7.f, 7.f, 7.f));
-		obj->GetTransform()->SetLocalPosition(Vec3(0.f, -(GEngine->GetWindow().height / 2) + 150, 10.f));
+		obj->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+		obj->GetTransform()->SetLocalPosition(Vec3(-50.f, -(GEngine->GetWindow().height / 2) + 150, 10.f));
 		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 
 		shared_ptr<Font> font = make_shared<Font>();
@@ -533,8 +534,8 @@ shared_ptr<Scene> SceneManager::LoadGameScene()
 		obj->SetName(L"DiedText");
 		obj->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
 		obj->AddComponent(make_shared<Transform>());
-		obj->GetTransform()->SetLocalScale(Vec3(20.f, 20.f, 20.f));
-		obj->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 0.f));
+		obj->GetTransform()->SetLocalScale(Vec3(3.f, 3.f, 3.f));
+		obj->GetTransform()->SetLocalPosition(Vec3(0.f - 100.0f, 0.f, 0.f));
 		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 
 		shared_ptr<Font> font = make_shared<Font>();
@@ -558,6 +559,36 @@ shared_ptr<Scene> SceneManager::LoadGameScene()
 	}
 #pragma endregion
 
+#pragma region Text_Win
+	{
+		shared_ptr<GameObject> obj = make_shared<GameObject>();
+		obj->SetName(L"WinText");
+		obj->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
+		obj->AddComponent(make_shared<Transform>());
+		obj->GetTransform()->SetLocalScale(Vec3(3.f, 3.f, 3.f));
+		obj->GetTransform()->SetLocalPosition(Vec3(0.f - 100.0f, 0.f, 0.f));
+		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+
+		shared_ptr<Font> font = make_shared<Font>();
+		font->BuildFont();
+		shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadFontMesh(font->GetTextVB("You Win"));
+		meshRenderer->SetMesh(mesh);
+
+		{
+			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Font");
+
+			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"deathspirit", L"..\\Resources\\Font\\DeathSpirit.png");;
+
+			shared_ptr<Material> material = make_shared<Material>();
+			material->SetShader(shader);
+			material->SetTexture(0, texture);
+			meshRenderer->SetMaterial(material);
+			obj->AddComponent(meshRenderer);
+			obj->AddComponent(font);
+			scene->AddGameObject(obj);
+		}
+	}
+#pragma endregion
 //#pragma region Object
 //	{
 //		shared_ptr<GameObject> obj = make_shared<GameObject>();
@@ -805,7 +836,6 @@ shared_ptr<Scene> SceneManager::LoadGameScene()
 	}
 #pragma endregion
 
-	cout << "over" << endl;
 	return scene;
 }
 

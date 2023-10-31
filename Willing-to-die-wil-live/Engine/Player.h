@@ -64,7 +64,9 @@ public:
 	int GetMoney() { return _money; };
 	float GetRecoil() { return _weaponRecoil; };
 	bool GetWeaponChanged() { return _weaponChanged; };
-	void SetHP(int hp) { _hp = hp; };
+	float GetPrice(bool gun, PLAYER_WEAPON weapon);
+	bool GetWeaponInventory(PLAYER_WEAPON weapon) { return weapons[weapon]; };
+	void SetHP(int hp) { _hp = hp; if (_hp > 100) _hp = 100; };
 	void MakeMuzzleFlash();
 	void MakeBullet();
 
@@ -93,6 +95,8 @@ private:
 	bool			_back = false;
 	bool			_right = false;
 	bool			_left = false;
+	bool			_moveHorizon = false;
+	bool			_moveVertical = false;
 	bool			_jump = false;
 	bool			_isMoving = false;
 	bool			_running = false;
@@ -114,7 +118,7 @@ private:
 	bool			_reloading = false;
 	float			_curRateOfFire = 0.f;
 	bool			_isShot = false;
-	int				_money = 30000;
+	int				_money = 900;
 	float			_recoil = 0;
 	shared_ptr<GameObject> bleedingUI;
 
@@ -172,7 +176,7 @@ private:
 	float			_lifeTime = 5.f;
 	float			_currLifeTime = 5.f;
 	BULLET_STATE	_currState = BULLET_STATE::LIVE;
-	float			_speed = 1500.0f;
+	float			_speed = 2000.0f;
 };
 
 class MuzzleFlash : public Component

@@ -40,19 +40,19 @@ MainMenu::MainMenu() : Component(COMPONENT_TYPE::MAINMENU)
 	}
 #pragma endregion
 
-#pragma region Text_Stamina
+#pragma region Text_Start
 	{
 		shared_ptr<GameObject> obj = make_shared<GameObject>();
 		obj->SetName(L"StartText");
 		obj->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
 		obj->AddComponent(make_shared<Transform>());
-		obj->GetTransform()->SetLocalScale(Vec3(12.f, 12.f, 12.f));
-		obj->GetTransform()->SetLocalPosition(Vec3(0.f - 300.f, 0.f - 150.f, 10.f));
+		obj->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+		obj->GetTransform()->SetLocalPosition(Vec3(0.f - 500.f, 0.f - 100.f, 10.f));
 		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 
 		shared_ptr<Font> font = make_shared<Font>();
 		font->BuildFont();
-		shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadFontMesh(font->GetTextVB("Press enter to start"));
+		shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadFontMesh(font->GetTextVB("Press   enter   to   start"));
 		meshRenderer->SetMesh(mesh);
 
 		{

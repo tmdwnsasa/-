@@ -15,10 +15,11 @@
 #include "Resources.h"
 #include "SoundManager.h"
 #include "SceneManager.h"
+#include "Button.h"
 #include <iostream>
 
 //cout 출력용 코드
-#pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console")
+//#pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console")
  
 //////////////////////////////////////////////////
 // Player
@@ -45,9 +46,14 @@ void Player::Update()
 	Vec3 oldPos = pos;
 	_isMoving = false;
 	_curRateOfFire -= DELTA_TIME;
+	_moveVertical = false;
+	_moveHorizon = false;
 	if (_hp < 0)
 		_hp = 0;
 	
+	if (_currWeapon == PLAYER_WEAPON::NONE)
+		_reloading = false;
+
 	if (_reloading == true && _reloadsound == false)
 	{
 		GET_SINGLE(SoundManager)->PlayLoopSound("Reloadsound", 0.4f);
@@ -56,47 +62,63 @@ void Player::Update()
 	else if(_reloading == false)
 	{
 		GET_SINGLE(SoundManager)->StopLoopSound("Reloadsound");
+		_reloadsound = false;
 	}
 
-	if (INPUT->GetButton(KEY_TYPE::W))
+	if (_hp > 0)
 	{
-		pos += GetTransform()->GetLook() * _speed * DELTA_TIME;
-		
-		if (GET_SINGLE(SoundManager)->IsPlaying("Footwalksound") == false)
+		if (INPUT->GetButton(KEY_TYPE::W))
 		{
-			GET_SINGLE(SoundManager)->PlayLoopSound("Footwalksound", 0.4f);
-		}
-		_isMoving = true;
-	}
+			pos += GetTransform()->GetLook() * _speed * DELTA_TIME;
 
-	if (INPUT->GetButton(KEY_TYPE::S))
-	{
-		pos -= GetTransform()->GetLook() * _speed * DELTA_TIME;
-		if (GET_SINGLE(SoundManager)->IsPlaying("Footwalksound") == false)
-		{
-			GET_SINGLE(SoundManager)->PlayLoopSound("Footwalksound", 0.4f);
+			if (GET_SINGLE(SoundManager)->IsPlaying("Footwalksound") == false)
+			{
+				GET_SINGLE(SoundManager)->PlayLoopSound("Footwalksound", 0.4f);
+			}
+			_isMoving = true;
+			_moveVertical = true;
 		}
-		_isMoving = true;
-	}
 
-	if (INPUT->GetButton(KEY_TYPE::A))
-	{
-		pos -= GetTransform()->GetRight() * _speed * DELTA_TIME;
-		if (GET_SINGLE(SoundManager)->IsPlaying("Footwalksound") == false)
+		if (INPUT->GetButton(KEY_TYPE::S))
 		{
-			GET_SINGLE(SoundManager)->PlayLoopSound("Footwalksound", 0.4f);
+			pos -= GetTransform()->GetLook() * _speed * DELTA_TIME;
+			if (GET_SINGLE(SoundManager)->IsPlaying("Footwalksound") == false)
+			{
+				GET_SINGLE(SoundManager)->PlayLoopSound("Footwalksound", 0.4f);
+			}
+			_isMoving = true;
+			_moveVertical = true;
 		}
-		_isMoving = true;
-	}
 
-	if (INPUT->GetButton(KEY_TYPE::D))
-	{
-		pos += GetTransform()->GetRight() * _speed * DELTA_TIME;
-		if (GET_SINGLE(SoundManager)->IsPlaying("Footwalksound") == false)
+		if (INPUT->GetButton(KEY_TYPE::A))
 		{
-			GET_SINGLE(SoundManager)->PlayLoopSound("Footwalksound", 0.4f);
+			pos -= GetTransform()->GetRight() * _speed * DELTA_TIME;
+			if (GET_SINGLE(SoundManager)->IsPlaying("Footwalksound") == false)
+			{
+				GET_SINGLE(SoundManager)->PlayLoopSound("Footwalksound", 0.4f);
+			}
+			_isMoving = true;
+			_moveHorizon = true;
 		}
-		_isMoving = true;
+
+		if (INPUT->GetButton(KEY_TYPE::D))
+		{
+			pos += GetTransform()->GetRight() * _speed * DELTA_TIME;
+			if (GET_SINGLE(SoundManager)->IsPlaying("Footwalksound") == false)
+			{
+				GET_SINGLE(SoundManager)->PlayLoopSound("Footwalksound", 0.4f);
+			}
+			_isMoving = true;
+			_moveHorizon = true;
+		}
+	}
+	if (_moveHorizon == true && _moveVertical == true)
+	{
+		_speed = 1800;
+	}
+	else
+	{
+		_speed = 2500;
 	}
 
 	if (INPUT->GetButtonUp(KEY_TYPE::W) && _isMoving == false)
@@ -192,7 +214,7 @@ void Player::Update()
 		PlayerRotate();
 	}
 
-	if (INPUT->GetButtonDown(KEY_TYPE::ESC))
+	if (INPUT->GetButtonDown(KEY_TYPE::ESC) && _shopOpened == false)
 	{
 		_rotateLock = true;
 	}
@@ -216,17 +238,16 @@ void Player::Update()
 			}
 
 			if(_currWeapon == PLAYER_WEAPON::PISTOL)
-				GET_SINGLE(SoundManager)->PlaySound("Pistolsound", 0.3f);
+				GET_SINGLE(SoundManager)->PlaySound("Pistolsound", 0.4f);
 			if (_currWeapon == PLAYER_WEAPON::SMG)
-				GET_SINGLE(SoundManager)->PlaySound("Smgsound", 0.25f);
+				GET_SINGLE(SoundManager)->PlaySound("Smgsound", 0.35f);
 			if (_currWeapon == PLAYER_WEAPON::SHOTGUN)
-				GET_SINGLE(SoundManager)->PlaySound("Shotgunsound", 0.25f);
+				GET_SINGLE(SoundManager)->PlaySound("Shotgunsound", 0.35f);
 			if (_currWeapon == PLAYER_WEAPON::SNIPER)
-				GET_SINGLE(SoundManager)->PlaySound("Snipersound", 0.20f);
+				GET_SINGLE(SoundManager)->PlaySound("Snipersound", 0.3f);
 
 			MakeBullet();
 			MakeMuzzleFlash();
-			cout << "make" << endl;
 
 			if (_currWeapon == PLAYER_WEAPON::PISTOL)
 			{
@@ -319,18 +340,20 @@ void Player::PlayerRotate()
 
 void Player::ChangeWeapon(PLAYER_WEAPON weapon, bool swap)		
 {
-	PLAYER_WEAPON oldweapon = _currWeapon;
-
 	if (swap == true && weapons[weapon] == false)
 	{
 		return;
 	}
-
+	if (swap == true && weapons[weapon] == true)
+	{
+		_weaponChanged = true;
+	}
 	_reloadTime = _reloadMaxTime;
 	_reloading = false;
 
 	_currWeapon = weapon;
 	gunObject.clear();
+
 	if (_currWeapon == PLAYER_WEAPON::PISTOL)
 	{
 		_damage = 25.f;
@@ -345,13 +368,8 @@ void Player::ChangeWeapon(PLAYER_WEAPON weapon, bool swap)
 		_weaponRecoil = 2;
 		_fullauto = false;
 
-		if (swap == false && _money < _price)
-		{
-			_currWeapon = oldweapon;
-			return;
-		}
 
-#pragma region Pistol
+		#pragma region Pistol
 		{
 			shared_ptr<MeshData> GunMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\beretta m9.fbx");
 			vector<shared_ptr<GameObject>> gun = GunMesh->Instantiate();
@@ -360,7 +378,7 @@ void Player::ChangeWeapon(PLAYER_WEAPON weapon, bool swap)
 			{
 				gameObject->SetName(L"Gun");
 				gameObject->SetCheckFrustum(false);
-				gameObject->GetTransform()->SetLocalPosition(Vec3( -10000, 5000, -10000));
+				gameObject->GetTransform()->SetLocalPosition(Vec3(-10000, 5000, -10000));
 				gameObject->GetTransform()->SetLocalScale(Vec3(0.2f, 0.2f, 0.2f));
 				gameObject->GetTransform()->LookAt(cameraLookForBullet);
 				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"GunDeffered");
@@ -369,11 +387,10 @@ void Player::ChangeWeapon(PLAYER_WEAPON weapon, bool swap)
 				gunObject.push_back(gameObject);
 			}
 		}
-#pragma endregion
-		if (swap == true)
-		{
-			_weaponChanged = true;
-		}
+		#pragma endregion
+		if (swap == false)
+			weapons[PLAYER_WEAPON::PISTOL] = true;
+
 	}
 
 	if (_currWeapon == PLAYER_WEAPON::SMG)
@@ -389,14 +406,11 @@ void Player::ChangeWeapon(PLAYER_WEAPON weapon, bool swap)
 		_accuracy = 3000;
 		_weaponRecoil = 1;
 		_fullauto = true;
-		if (swap == false && _money < _price)
+
+		weapons[PLAYER_WEAPON::SMG] = true;
+		#pragma region SMG
 		{
-			_currWeapon = oldweapon;
-			return;
-		}
-#pragma region SMG
-		{
-			shared_ptr<MeshData> GunMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\m4a1_s.fbx");
+			shared_ptr<MeshData> GunMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\m4a1_s1_test.fbx");
 			vector<shared_ptr<GameObject>> gun = GunMesh->Instantiate();
 
 			for (auto& gameObject : gun)
@@ -412,8 +426,11 @@ void Player::ChangeWeapon(PLAYER_WEAPON weapon, bool swap)
 				gunObject.push_back(gameObject);
 			}
 		}
+		#pragma endregion
+
+		if (swap == false)
+			weapons[PLAYER_WEAPON::SMG] = true;
 	}
-#pragma endregion
 
 	if (_currWeapon == PLAYER_WEAPON::SHOTGUN)
 	{
@@ -428,12 +445,9 @@ void Player::ChangeWeapon(PLAYER_WEAPON weapon, bool swap)
 		_accuracy = 1000;
 		_weaponRecoil = 0.3;
 		_fullauto = false;
-		if (swap == false && _money < _price)
-		{
-			_currWeapon = oldweapon;
-			return;
-		}
-#pragma region Shotgun
+
+		weapons[PLAYER_WEAPON::SHOTGUN] = true;
+		#pragma region Shotgun
 		{
 			shared_ptr<MeshData> GunMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\shotgun.fbx");
 			vector<shared_ptr<GameObject>> gun = GunMesh->Instantiate();
@@ -451,7 +465,10 @@ void Player::ChangeWeapon(PLAYER_WEAPON weapon, bool swap)
 				gunObject.push_back(gameObject);
 			}
 		}
-#pragma endregion
+		#pragma endregion
+
+		if (swap == false)
+			weapons[PLAYER_WEAPON::SHOTGUN] = true;
 	}
 
 	if (_currWeapon == PLAYER_WEAPON::SNIPER)	
@@ -459,7 +476,7 @@ void Player::ChangeWeapon(PLAYER_WEAPON weapon, bool swap)
 		_damage = 300.f;
 		_pellet = 1;
 		_maxAmmo = 5;
-		_rateOfFire = 1.0f;
+		_rateOfFire = 0.2f;
 		_reloadMaxTime = 3.0f;
 		_reloadPerAmmo = _maxAmmo;
 		_price = 2500;
@@ -467,12 +484,9 @@ void Player::ChangeWeapon(PLAYER_WEAPON weapon, bool swap)
 		_accuracy = 10000;
 		_weaponRecoil = 3;
 		_fullauto = false;
-		if (swap == false && _money < _price)
-		{
-			_currWeapon = oldweapon;
-			return;
-		}
-#pragma region Rifle
+
+		weapons[PLAYER_WEAPON::SNIPER] = true;
+		#pragma region Sniper
 		{
 			shared_ptr<MeshData> GunMesh = GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\AWP_Dragon_Lore.fbx");
 			vector<shared_ptr<GameObject>> gun = GunMesh->Instantiate();
@@ -490,7 +504,10 @@ void Player::ChangeWeapon(PLAYER_WEAPON weapon, bool swap)
 				gunObject.push_back(gameObject);
 			}
 		}
-#pragma endregion
+		#pragma endregion
+
+		if (swap == false)
+			weapons[PLAYER_WEAPON::SNIPER] = true;
 	}
 	if(swap == false)
 	{
@@ -683,6 +700,48 @@ int Player::GetMaxAmmo()
 	}
 }
 
+float Player::GetPrice(bool gun, PLAYER_WEAPON weapon)
+{
+	if (gun == true)
+	{
+		if (weapon == PLAYER_WEAPON::PISTOL)
+		{
+			return 500.f;
+		}
+		if (weapon == PLAYER_WEAPON::SMG)
+		{
+			return 1000.f;
+		}
+		if (weapon == PLAYER_WEAPON::SHOTGUN)
+		{
+			return 2000.f;
+		}
+		if (weapon == PLAYER_WEAPON::SNIPER)
+		{
+			return 2500.f;
+		}
+	}
+	else
+	{
+		if (weapon == PLAYER_WEAPON::PISTOL)
+		{
+			return 100.f;
+		}
+		if (weapon == PLAYER_WEAPON::SMG)
+		{
+			return 200.f;
+		}
+		if (weapon == PLAYER_WEAPON::SHOTGUN)
+		{
+			return 400.f;
+		}
+		if (weapon == PLAYER_WEAPON::SNIPER)
+		{
+			return 500.f;
+		}
+	}
+}
+
 void Player::MakeMuzzleFlash()
 {
 	shared_ptr<GameObject> muzzleflash = make_shared<GameObject>();
@@ -779,7 +838,7 @@ void Player::AddMaxAmmo(PLAYER_WEAPON weapon)
 	}
 	else if (weapon == PLAYER_WEAPON::SMG)
 	{
-		SmgAmmo += 25;
+		SmgAmmo += 30;
 	}
 	else if (weapon == PLAYER_WEAPON::SHOTGUN)
 	{
@@ -787,9 +846,9 @@ void Player::AddMaxAmmo(PLAYER_WEAPON weapon)
 	}
 	else if (weapon == PLAYER_WEAPON::SNIPER)
 	{
-		SniperAmmo += 20;
+		SniperAmmo += 5;
 	}
-	_money -= _ammoPrice;
+	_money -= GetPrice(false, weapon);
 }
 
 void Player::Bleeding()

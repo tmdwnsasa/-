@@ -77,7 +77,7 @@ Shop::Shop() : Component(COMPONENT_TYPE::SHOP)
 		obj->SetName(L"ShopMoneyText");
 		obj->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
 		obj->AddComponent(make_shared<Transform>());
-		obj->GetTransform()->SetLocalScale(Vec3(10.f, 10.f, 10.f));
+		obj->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 		obj->GetTransform()->SetLocalPosition(Vec3(-(GEngine->GetWindow().width / 2) + 100, (GEngine->GetWindow().height / 2) - 50, 900.f));
 		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 
@@ -118,9 +118,15 @@ void Shop::Update()
 	if (INPUT->GetButtonDown(KEY_TYPE::O))
 	{
 		if (_shopState == false)
+		{
 			_shopState = true;
+			ShowCursor(true);
+		}
 		else
+		{
 			_shopState = false;
+			ShowCursor(false);
+		}
 	}
 	if (INPUT->GetButtonDown(KEY_TYPE::LBUTTON))
 	{
@@ -154,7 +160,7 @@ void Shop::Update()
 
 void Shop::MakeMerchandise(int count, PLAYER_WEAPON weapon)
 {
-#pragma region Shop Button
+#pragma region Shop Button				//√— πË∞Ê
 	{
 		shared_ptr<GameObject> ButtonBG = make_shared<GameObject>();
 		ButtonBG->SetName(L"Button");
@@ -188,7 +194,7 @@ void Shop::MakeMerchandise(int count, PLAYER_WEAPON weapon)
 	}
 #pragma endregion
 
-#pragma region Shop Item Image
+#pragma region Shop Item Image				//√—
 	{
 		shared_ptr<GameObject> ItemBG = make_shared<GameObject>();
 		ItemBG->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI
@@ -254,7 +260,7 @@ void Shop::MakeMerchandise(int count, PLAYER_WEAPON weapon)
 	}
 #pragma endregion
 
-#pragma region Shop Magazine Image		//ªÛ«∞
+#pragma region Shop Magazine Image		//≈∫√¢
 	{
 		shared_ptr<GameObject> ItemBG = make_shared<GameObject>();
 		ItemBG->SetLayerIndex(GET_SINGLE(SceneManager)->LayerNameToIndex(L"UI")); // UI

@@ -30,6 +30,13 @@ void SoundManager::Init()
 	CreateSound("..\\Resources\\Sound\\SmgShot.wav", "Stalkersound", false);
 	CreateSound("..\\Resources\\Sound\\SniperShot.wav", "Deadsound", false);
 	CreateSound("..\\Resources\\Sound\\Buying.wav", "Buyingsound", false);
+	CreateSound("..\\Resources\\Sound\\Scream.wav", "Screamsound", false);
+
+
+	CreateSound("..\\Resources\\Sound\\StalkerSpawn.wav", "StalkerSpawn", false);
+	CreateSound("..\\Resources\\Sound\\BruiserSpawn.wav", "BruiserSpawn", false);
+	CreateSound("..\\Resources\\Sound\\WinSound.wav", "WinSound", false);
+
 }
 
 void SoundManager::Update()
@@ -47,19 +54,22 @@ void SoundManager::CreateSound(const std::string& filename, const std::string& s
 	
 	if (result != FMOD_OK)
 	{
-		std::cout << filename << " is not loaded";
+		//std::cout << filename << " is not loaded";
 	}
 }
 
 void SoundManager::PlaySound(const std::string& soundname, float volume)
 {
-	result = system->playSound(_SoundMap[soundname], 0, false, &channel);
+	result = system->playSound(_SoundMap[soundname], 0, false, &_ChannelMap[soundname]);
 	channel->setVolume(volume);
+	_PlayingSoundVector.push_back(soundname);
 }
 
 void SoundManager::StopSound(const std::string& soundname)
 {
-	result = system->playSound(_SoundMap[soundname], 0, true, &channel);
+	_ChannelMap[soundname]->stop();
+	_PlayingSoundVector.erase(remove(_PlayingSoundVector.begin(), _PlayingSoundVector.end(), soundname), _PlayingSoundVector.end());
+
 }
 
 void SoundManager::PlayLoopSound(const string& soundname, float volume)
@@ -73,7 +83,7 @@ void SoundManager::PlayLoopSound(const string& soundname, float volume)
 
 void SoundManager::StopLoopSound(const string& soundname)
 {
-	_ChannelMap[soundname]->setPaused(true);
+	_ChannelMap[soundname]->stop();
 	_PlayingSoundVector.erase(remove(_PlayingSoundVector.begin(), _PlayingSoundVector.end(), soundname), _PlayingSoundVector.end());
 }
 

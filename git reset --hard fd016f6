@@ -1,0 +1,58 @@
+[33m3d7a610[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m)[m HEAD@{0}: reset: moving to 3d7a61073d990f05cba0ba97783899454100c052
+[33mfd016f6[m HEAD@{1}: reset: moving to fd016f6c7e2a9fb0556171815536df3527e4726c
+[33mfd016f6[m HEAD@{2}: reset: moving to fd016f6c7e2a9fb0556171815536df3527e4726c
+[33mfd016f6[m HEAD@{3}: reset: moving to fd016f6c7e2a9fb0556171815536df3527e4726c
+[33mfd016f6[m HEAD@{4}: reset: moving to fd016f6c7e2a9fb0556171815536df3527e4726c
+[33mfd016f6[m HEAD@{5}: commit: 안개 피효과 만들기
+[33m3d7a610[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m)[m HEAD@{6}: commit (merge): Merge branch 'main' of https://github.com/tmdwnsasa/willing-to-die-will-live
+[33mf77c778[m HEAD@{7}: commit: 스레드 적용으로 로딩 뒤로 빼기
+[33m6222f56[m HEAD@{8}: pull origin main: Fast-forward
+[33m86ecc96[m HEAD@{9}: commit: 사운드 문제 해결
+[33m5eff810[m HEAD@{10}: commit (merge): merge한 뒤 fmod는 작동하나 소리가 들리지 않는 버그가 생김
+[33m6e7bc06[m HEAD@{11}: commit: 정리
+[33m567d039[m HEAD@{12}: reset: moving to 567d039c7dc5d00480944ac62fa49063e10afa74
+[33m567d039[m HEAD@{13}: commit: 장전, 총구화염(저격총, 권총), 상점 업데이트
+[33mbd97b35[m HEAD@{14}: commit: 폰트 해상도 리소스 변경
+[33mbf4888b[m HEAD@{15}: commit: fmod 설차용 커밋
+[33mcca9789[m HEAD@{16}: commit: 버그 수정 및 머지 확인
+[33m904bc88[m HEAD@{17}: pull origin main: Fast-forward
+[33m65d355e[m HEAD@{18}: commit: 병합 부산물 제거
+[33m7fdee24[m HEAD@{19}: commit (merge): Merge branch 'main' of https://github.com/tmdwnsasa/willing-to-die-will-live
+[33md14e832[m HEAD@{20}: commit: 사운드 추가 반동 추가
+[33m36043eb[m HEAD@{21}: commit: fbx로딩 속도 빠르게 변환
+[33md221f8a[m HEAD@{22}: checkout: moving from main to main
+[33md221f8a[m HEAD@{23}: commit (merge): Merge branch 'main' of https://github.com/tmdwnsasa/willing-to-die-will-live
+[33m9335587[m HEAD@{24}: commit: 그림자 생성
+[33m4d6e678[m HEAD@{25}: pull origin main: Fast-forward
+[33m8caa39e[m HEAD@{26}: pull origin main: Fast-forward
+[33me792055[m HEAD@{27}: commit: 총 부착 및 벽 충돌
+[33m33a1cd6[m HEAD@{28}: pull origin main: Fast-forward
+[33mfd1ad12[m HEAD@{29}: commit: raycasting으로 벽 충돌 제작 중
+[33m7689179[m HEAD@{30}: commit: 무기 생성 및 부착 시야x축 회전 제한
+[33mc1b735e[m HEAD@{31}: pull origin main: Fast-forward
+[33md746787[m HEAD@{32}: commit: 총알 탄퍼짐 적용 상점 버그 수정
+[33m0f34f8e[m HEAD@{33}: commit: 상점제작 끝
+[33ma2585ec[m HEAD@{34}: commit: 카메라 스크립트 이름 변경 및 마우스 가둘 때 생기는 버그 수정
+[33m958c047[m HEAD@{35}: commit: 간단한 버그 수정
+[33m14b3f49[m HEAD@{36}: pull origin main: Merge made by the 'ort' strategy.
+[33m1c797e2[m HEAD@{37}: commit: 상점 제작 시작
+[33m9ed6bc1[m HEAD@{38}: commit: 충돌처리 총발사 UI 제작
+[33m67612e1[m HEAD@{39}: pull origin main: Fast-forward
+[33m68beac9[m HEAD@{40}: commit: font 완료 merge
+[33mc96c767[m HEAD@{41}: commit (merge): Merge branch 'main' of https://github.com/tmdwnsasa/willing-to-die-will-live
+[33me01f8e8[m HEAD@{42}: commit: Font 추가
+[33mb0046ae[m HEAD@{43}: commit: 플레이어도 마우스 따라 회전
+[33ma8c0d1a[m HEAD@{44}: pull origin main: Fast-forward
+[33m74f3487[m HEAD@{45}: pull origin main: Fast-forward
+[33m3cf0737[m HEAD@{46}: commit: Engine 프로젝트 언로드 현상 수정
+[33m6d9803b[m HEAD@{47}: pull origin main: Fast-forward
+[33m3201615[m HEAD@{48}: reset: moving to 32016159f7f44a54e17cf509e6bae98cf2a7ee98
+[33m6d9803b[m HEAD@{49}: commit (merge): Merge branch 'main' of https://github.com/tmdwnsasa/willing-to-die-will-live
+[33m3201615[m HEAD@{50}: commit: 마우스에 따른 카메라 회전
+[33m283cef8[m HEAD@{51}: commit: 카메라 플레이어에 부착
+[33mae30dbc[m HEAD@{52}: reset: moving to ae30dbca930d4d0deb35ca6721931fdfda49baeb
+[33mb40399a[m HEAD@{53}: commit: 카메라 플레이어 부착
+[33mae30dbc[m HEAD@{54}: pull origin main: Fast-forward
+[33mc19c0cb[m HEAD@{55}: commit: 프로젝트 등록
+[33m1c090d7[m HEAD@{56}: commit: 발표자료 업데이트
+[33m726adf2[m HEAD@{57}: clone: from https://github.com/tmdwnsasa/willing-to-die-will-live

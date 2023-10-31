@@ -58,10 +58,10 @@ void StalkerEnemy::Update()
 
 	if (!ResponeCheck)
 	{
-		//Respone();
+		Respone();
 	}
 	Time += DELTA_TIME;
-	if (Time > 1.1)
+	if (Time > 0.1)
 	{
 		if (_hp > 0)
 		{
@@ -74,7 +74,7 @@ void StalkerEnemy::Update()
 
 	if (_hp > 0)
 	{
-		if (_distance >= 300)
+		if (_distance >= 200)
 		{
 			Moving += DELTA_TIME;
 			if (Moving > 2.0)
@@ -85,7 +85,7 @@ void StalkerEnemy::Update()
 	}
 	if (Dead == false)
 	{
-		if (_distance >= 300)
+		if (_distance >= 200)
 		{
 			if (Attack == false)
 			{
@@ -103,7 +103,7 @@ void StalkerEnemy::Update()
 	_distance = sqrt(pow(pos.x - PlayerPos.x, 2) + pow(pos.z - PlayerPos.z, 2));
 	if (Dead == false)
 	{
-		if (_distance < 300)
+		if (_distance < 200)
 		{
 			SetState(StalkerENEMY_STATE::ATTACK);
 		}
@@ -133,7 +133,6 @@ void StalkerEnemy::AstarCall()
 
 	Vec3 EPos = GetEnemyPosition();
 
-	//std::cout <<EPos.x <<"ZÁÂÇ¥ :    "<< EPos.z << std::endl;
 
 	if (nodeList.size() != 0)
 	{
@@ -293,6 +292,7 @@ void StalkerEnemy::WalkAnimation()
 		int32 index = 2 % count;
 		GetAnimator()->Play(index);
 		WalkState = false;
+		Attack = true;
 	}
 }
 
@@ -305,6 +305,7 @@ void StalkerEnemy::DeathAnimation()
 		int32 index = 1 % count;
 		GetAnimator()->Play(index);
 		Dead = true;
+		SetDead(true);
 	}
 
 	else if (Dead == true)
@@ -347,7 +348,7 @@ void StalkerEnemy::LookPlayer()
 	int x = round(EPos.x - PlayerPos.x);
 	int z = round(EPos.z - PlayerPos.z);
 	float dis = round(sqrt(pow(EPos.x - PlayerPos.x, 2) + pow(EPos.z - PlayerPos.z, 2)));
-	float ros = std::acos(z / dis);
+	float ros = std::acos(-z / dis);
 	if (x < 0)
 	{
 		GetTransform()->SetLocalRotation(Vec3(0, ros, 0));
@@ -373,16 +374,14 @@ void StalkerEnemy::Respone()
 	shared_ptr<Scene> scene = GET_SINGLE(SceneManager)->GetActiveScene();
 	Vec3 PlayerPos = scene->GetPlayerPosToEnemy();
 
-	if (PlayerPos.x > 3500)
-		if (PlayerPos.z < -3500)
-			CheckPoint = 1;
-		else if (PlayerPos.z >= -3500)
-			CheckPoint = 2;
-	if (PlayerPos.x <= 3500)
-		if (PlayerPos.z < -3500)
-			CheckPoint = 3;
-		else if (PlayerPos.z >= -3500)
-			CheckPoint = 4;
+	srand((unsigned int)time(NULL));
+
+	ResponeNumber = rand() % 9 + 1;
+
+	CheckPoint = ResponeNumber;
+
+
+	//Ã¼Å©¿ë 
 
 	switch (CheckPoint)
 	{
@@ -397,6 +396,21 @@ void StalkerEnemy::Respone()
 		break;
 	case 4:
 		GetTransform()->SetLocalPosition(ResponeArea4);
+		break;
+	case 5:
+		GetTransform()->SetLocalPosition(ResponeArea5);
+		break;
+	case 6:
+		GetTransform()->SetLocalPosition(ResponeArea6);
+		break;
+	case 7:
+		GetTransform()->SetLocalPosition(ResponeArea7);
+		break;
+	case 8:
+		GetTransform()->SetLocalPosition(ResponeArea8);
+		break;
+	case 9:
+		GetTransform()->SetLocalPosition(ResponeArea9);
 		break;
 	default:
 		break;

@@ -22,10 +22,7 @@ VS_OUT VS_Font(VS_IN input)
 	VS_OUT output = (VS_OUT)0.0f;
 
 	// Position
-	float4 posW = mul(float4(input.pos, 1.0f), g_matWVP);
-
-	output.PosW = posW.xyz;
-	output.pos = mul(posW, g_matWVP);
+    output.pos = mul(float4(input.pos, 1.0f), g_matWVP);
 
 	// uv
 	output.uv = input.uv;

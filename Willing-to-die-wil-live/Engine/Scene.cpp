@@ -58,6 +58,7 @@ void Scene::Awake()
 
 void Scene::Start()
 {
+	ShowCursor(false);
 	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
 	{
 		gameObject->Start();
@@ -68,17 +69,14 @@ void Scene::Start()
 
 void Scene::Update()
 {
-	//// 플레이어 위치 저장
-	//for (const shared_ptr<GameObject>& gameObject : _gameObjects)
-	//{
-	//	if (gameObject->GetName() == L"Player")
-	//	{
-	//		float x, y, z;
-	//		x = gameObject->GetTransform()->GetLocalPosition().x;
-	//		y = gameObject->GetTransform()->GetLocalPosition().y;
-	//		z = gameObject->GetTransform()->GetLocalPosition().z;
-	//	}
-	//}
+	// 플레이어 위치 저장
+	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
+	{
+		if (gameObject->GetName() == L"Player")
+		{
+			Vec3 PlayerPos = gameObject->GetTransform()->GetLocalPosition();
+		}
+	}
 
 	GetAllFBX();
 	
@@ -90,12 +88,11 @@ void Scene::Update()
 			if (gameObject->GetPlayer()->GetHP() <= 0)
 			{
 				_diedTime -= DELTA_TIME;
-				cout << _diedTime << endl;
 				for (const shared_ptr<GameObject>& Text_Died : _gameObjects)
 				{
 					if (Text_Died->GetName() == L"DiedText")
 					{
-						Text_Died->GetTransform()->SetLocalPosition(Vec3((GEngine->GetWindow().width / 2) - 1000, -(GEngine->GetWindow().height / 2) + 400, 900.f));
+						Text_Died->GetTransform()->SetLocalPosition(Vec3(-500.f, 100.f, 900.f));
 					}
 				}
 				if (_diedTime < 0.f)
@@ -162,8 +159,6 @@ void Scene::Update()
 						}
 					}
 				}
-				
-				
 			}
 		}
 	}
@@ -171,7 +166,87 @@ void Scene::Update()
 	//끝나는 조건(승리)
 	if (CurrentWave == 8)
 	{
-		//UI뜨고 처음으로
+		if(_diedTime == 3.f)
+			GET_SINGLE(SoundManager)->PlaySound("WinSound", 0.4f);
+		for (const shared_ptr<GameObject>& gameObject : _gameObjects)
+		{
+			if (gameObject->GetName() == L"Player")
+			{
+				_diedTime -= DELTA_TIME;
+				for (const shared_ptr<GameObject>& Text_Died : _gameObjects)
+				{
+					if (Text_Died->GetName() == L"WinText")
+					{
+						Text_Died->GetTransform()->SetLocalPosition(Vec3(-500.f, 100.f, 900.f));
+					}
+				}
+				if (_diedTime < 0.f)
+				{
+					_diedTime = 3.f;
+					for (const shared_ptr<GameObject>& Text_Died : _gameObjects)
+					{
+						if (Text_Died->GetName() == L"WinText")
+						{
+							Text_Died->GetTransform()->SetLocalPosition(Vec3(0, 0, 0));
+						}
+					}
+					//웨이브 초기화
+					IsRest = true;
+					DeathCount = 0;
+					FSTZCount = 0;
+					FBrZCount = 0;
+					FZCount = 0;
+					WaveTime = 0;
+					CurCount = 0;
+					CurrentWave = 1;
+					MaxTime = 20;
+					for (const shared_ptr<GameObject>& Enemy : _gameObjects)
+					{
+						if (Enemy->GetName() == L"Enemy")
+						{
+							_trashBin.push_back(Enemy);
+						}
+						if (Enemy->GetName() == L"STEnemy")
+						{
+							_trashBin.push_back(Enemy);
+						}
+						if (Enemy->GetName() == L"BrEnemy")
+						{
+							_trashBin.push_back(Enemy);
+						}
+					}
+
+					//플레이어 초기화
+					gameObject->AddComponent(make_shared<Player>());
+					gameObject->GetTransform()->SetLocalPosition(Vec3(3700.f, 0.f, -3600.f));
+					gameObject->GetPlayer()->Bleeding();
+					for (const shared_ptr<GameObject>& Camera : _gameObjects)
+					{
+						if (Camera->GetName() == L"Main_Camera")
+						{
+							Camera->AddComponent(make_shared<CameraScript>());
+						}
+					}
+					for (const shared_ptr<GameObject>& Gun : _gameObjects)
+					{
+						if (Gun->GetName() == L"Gun")
+						{
+							_trashBin.push_back(Gun);
+						}
+					}
+
+					//메뉴 다시 띄우기
+					_menuOpened = false;
+					for (const shared_ptr<GameObject>& Menu : _gameObjects)
+					{
+						if (Menu->GetName() == L"Menu")
+						{
+							Menu->GetMainMenu()->SetMenuState(true);
+						}
+					}
+				}
+			}
+		}
 	}
 
 	//메뉴
@@ -212,7 +287,7 @@ void Scene::Update()
 		{
 			SponeTime += 1 * DELTA_TIME;
 
-			if (SponeTime >= 3)
+			if (SponeTime >= 2)
 			{
 				//적 종류를 구별해서 제작필요
 				if (FZCount != ZCount)
@@ -223,11 +298,13 @@ void Scene::Update()
 				if (FSTZCount != STZCount)
 				{
 					MakeStalker(CurrentWave);
+					GET_SINGLE(SoundManager)->PlaySound("StalkerSpawn", 0.1f);
 					CurCount++;
 				}
 				if (FBrZCount != BrZCount)
 				{
 					MakeBruser(CurrentWave);
+					GET_SINGLE(SoundManager)->PlaySound("BruiserSpawn", 0.6f);
 					CurCount++;
 				}
 				SponeTime = 0.0f;
@@ -246,6 +323,8 @@ void Scene::Update()
 				// 휴식 끝 Wave시작
 				IsRest = false;
 				WaveTime = 0;
+				if (CurrentWave == 7)
+					MaxTime= 4;
 			}
 		}
 	}
@@ -288,7 +367,7 @@ void Scene::Update()
 	{
 		if (gameObject->GetName() == L"Player")
 		{
-			if (gameObject->GetPlayer()->GetWeaponChanged() == true)	//구매시
+			if (gameObject->GetPlayer()->GetWeaponChanged() == true)	//무기 바꿀 시
 			{
 				for (const shared_ptr<GameObject>& trash : _gameObjects)
 				{
@@ -301,7 +380,6 @@ void Scene::Update()
 			}
 		}
 	}
-
 	//상점
 	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
 	{
@@ -325,30 +403,46 @@ void Scene::Update()
 				}
 				if (gameObject->GetShop()->GetPurchase() == true)	//구매시
 				{
-					GET_SINGLE(SoundManager)->PlaySound("Buyingsound", 0.3f);
 					for (auto& object : _gameObjects)
 					{
 						if (object->GetName() == L"Player")
 						{
+							//총을 사려고  누르면
 							if (gameObject->GetShop()->GetSelected()->GetButton()->GetMerchandiseType() == MERCHANDISE_TYPE::GUN)
 							{
-								object->GetPlayer()->ChangeWeapon(gameObject->GetShop()->GetSelected()->GetButton()->GetMerchandise(), false);
-								for (auto& makeTrash : _gameObjects)	// 무기를 사면 총을 지우고
+								//돈이 있으면
+								if (object->GetPlayer()->GetPrice(true, gameObject->GetShop()->GetSelected()->GetButton()->GetMerchandise()) <= object->GetPlayer()->GetMoney() && 
+									object->GetPlayer()->GetWeaponInventory(gameObject->GetShop()->GetSelected()->GetButton()->GetMerchandise()) != true)
 								{
-									if (makeTrash->GetName() == L"Gun")
+									//사진다
+									GET_SINGLE(SoundManager)->PlaySound("Buyingsound", 0.3f);
+									object->GetPlayer()->ChangeWeapon(gameObject->GetShop()->GetSelected()->GetButton()->GetMerchandise(), false);
+									for (auto& makeTrash : _gameObjects)	// 무기를 사면 총을 지우고
 									{
-										_trashBin.push_back(makeTrash);
+										if (makeTrash->GetName() == L"Gun")
+										{
+											_trashBin.push_back(makeTrash);
+										}
+									}
+									for (auto& gunobject : object->GetPlayer()->GetGun())	//총을 만든다
+									{
+										_gameObjects.push_back(gunobject);
 									}
 								}
-								for (auto& gunobject : object->GetPlayer()->GetGun())	//총을 만든다
-								{
-									_gameObjects.push_back(gunobject);
-								}
 							}
+							//총알을 산다
 							else if (gameObject->GetShop()->GetSelected()->GetButton()->GetMerchandiseType() == MERCHANDISE_TYPE::BULLET)
 							{
-								object->GetPlayer()->AddMaxAmmo(gameObject->GetShop()->GetSelected()->GetButton()->GetMerchandise());
+								//돈이 있고 그 총이 있으면
+								if (object->GetPlayer()->GetPrice(false, gameObject->GetShop()->GetSelected()->GetButton()->GetMerchandise()) <= object->GetPlayer()->GetMoney() &&
+									object->GetPlayer()->GetWeaponInventory(gameObject->GetShop()->GetSelected()->GetButton()->GetMerchandise()) == true)
+								{
+									//사진다.
+									GET_SINGLE(SoundManager)->PlaySound("Buyingsound", 0.3f);
+									object->GetPlayer()->AddMaxAmmo(gameObject->GetShop()->GetSelected()->GetButton()->GetMerchandise());
+								}
 							}
+
 						}
 					}
 					gameObject->GetShop()->SetPurchase(false);
@@ -507,7 +601,6 @@ void Scene::LateUpdate()
 							Object->GetBoxCollider()->SetOnOff(false);
 							CurCount--;
 							DeathCount++;
-							_trashBin.push_back(gameObject);
 						}
 					}
 				}
@@ -529,7 +622,6 @@ void Scene::LateUpdate()
 						if (EnemyHp <= 0)
 						{
 							Object->GetBoxCollider()->SetOnOff(false);
-						
 							CurCount--;
 							DeathCount++;
 						}
@@ -561,7 +653,7 @@ void Scene::LateUpdate()
 			}
 		}
 
-		//체력, 총알, 돈 출력
+		//체력, 총알, 돈 폰트 출력
 		if (gameObject->GetName() == L"Player")
 		{
 			//wave 변경
@@ -571,10 +663,43 @@ void Scene::LateUpdate()
 				CurrentWave++;
 				IsRest = true;
 				DeathCount = 0;
-				gameObject->GetPlayer()->MoneyChange(1000);
+				gameObject->GetPlayer()->SetHP(gameObject->GetPlayer()->GetHP() + 50);
+				switch (CurrentWave)
+				{
+				case 2:
+					gameObject->GetPlayer()->MoneyChange(1600);
+					break;
+				case 3:
+					gameObject->GetPlayer()->MoneyChange(1400);
+					break;
+				case 4:
+					gameObject->GetPlayer()->MoneyChange(2000);
+					break;
+				case 5:
+					gameObject->GetPlayer()->MoneyChange(2500);
+					break;
+				case 6:
+					gameObject->GetPlayer()->MoneyChange(3000);
+					break;
+				case 7:
+					gameObject->GetPlayer()->MoneyChange(3200);
+					break;
+
+				default:
+					break;
+				}
 				FZCount = 0;
 				FSTZCount = 0;
 				FBrZCount = 0;
+				for (const shared_ptr<GameObject>& Object : _gameObjects)
+				{
+					if (Object->GetName() == L"Enemy")
+						_trashBin.push_back(Object);
+					if (Object->GetName() == L"BrEnemy")
+						_trashBin.push_back(Object);
+					if (Object->GetName() == L"STEnemy")
+						_trashBin.push_back(Object);
+				}
 			}
 
 			for (const shared_ptr<GameObject>& Object : _gameObjects)
@@ -612,7 +737,10 @@ void Scene::LateUpdate()
 				{
 					if (WaveTime > (MaxTime-4))
 					{
-						Object->GetTransform()->SetLocalPosition(Vec3((GEngine->GetWindow().width / 2) - 1000, -(GEngine->GetWindow().height / 2) + 500, 900.f));
+						if (CurrentWave <= 7)
+						{
+							Object->GetTransform()->SetLocalPosition(Vec3(-450, 100, 900.f));
+						}
 					}
 					else
 					{
@@ -641,7 +769,7 @@ void Scene::LateUpdate()
 					}
 					else
 					{
-						Object->GetTransform()->SetLocalPosition(Vec3((GEngine->GetWindow().width / 2) - 650, -(GEngine->GetWindow().height / 2) + 650, 900.f));
+						Object->GetTransform()->SetLocalPosition(Vec3(-70, (GEngine->GetWindow().height / 2) - 100, 900.f));
 					}
 
 					shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
@@ -659,21 +787,27 @@ void Scene::LateUpdate()
 					if (Object->GetEnemy()->GetAttack() == false)
 					{
 						Distance = sqrt(pow(EnemyPosition.x - PlayerPosition.x, 2) + pow(EnemyPosition.z - PlayerPosition.z, 2));
-						if (Distance < 500)
+						if (Distance < 450)
 						{
-							Time += DELTA_TIME;
-							if (Time > 2)
+							Object->GetEnemy()->SetTime(Object->GetEnemy()->GetTime() + DELTA_TIME);
+					
+							if (Object->GetEnemy()->GetTime() > 1.3)
 							{
-								PlayerHp = gameObject->GetPlayer()->GetHP();
-								PlayerHp -= Object->GetEnemy()->GetAtk();
-								gameObject->GetPlayer()->SetHP(PlayerHp);
-								Time = 0;
+								if (Object->GetEnemy()->GetDead() == false)
+								{
+									PlayerHp = gameObject->GetPlayer()->GetHP();
+									PlayerHp -= Object->GetEnemy()->GetAtk();
+									gameObject->GetPlayer()->SetHP(PlayerHp);
+									GET_SINGLE(SoundManager)->PlaySound("Screamsound", 0.3f);
+									//Time = 0;
+								}
+								Object->GetEnemy()->SetTime(0);
 							}
 						}
 					}
 					else if (Object->GetEnemy()->GetAttack() != false)
 					{
-						Time = 0;
+						Object->GetEnemy()->SetTime(0);
 					}
 				}
 
@@ -684,21 +818,26 @@ void Scene::LateUpdate()
 					if (Object->GetBruserEnemy()->GetAttack() == false)
 					{
 						Distance = sqrt(pow(EnemyPosition.x - PlayerPosition.x, 2) + pow(EnemyPosition.z - PlayerPosition.z, 2));
-						if (Distance < 500)
+						if (Distance < 450)
 						{
-							Time += DELTA_TIME;
-							if (Time > 2)
+							Object->GetBruserEnemy()->SetTime(Object->GetBruserEnemy()->GetTime() + DELTA_TIME);
+
+							if (Object->GetBruserEnemy()->GetTime() > 1.3)
 							{
-								PlayerHp = gameObject->GetPlayer()->GetHP();
-								PlayerHp -= Object->GetBruserEnemy()->GetAtk();
-								gameObject->GetPlayer()->SetHP(PlayerHp);
-								Time = 0;
+								if (Object->GetBruserEnemy()->GetDead() == false)
+								{
+									PlayerHp = gameObject->GetPlayer()->GetHP();
+									PlayerHp -= Object->GetBruserEnemy()->GetAtk();
+									gameObject->GetPlayer()->SetHP(PlayerHp);
+									GET_SINGLE(SoundManager)->PlaySound("Screamsound", 0.3f);
+								}
+								Object->GetBruserEnemy()->SetTime(0);
 							}
 						}
 					}
 					else if (Object->GetBruserEnemy()->GetAttack() != false)
 					{
-						Time = 0;
+						Object->GetBruserEnemy()->SetTime(0);
 					}
 				}
 
@@ -709,21 +848,25 @@ void Scene::LateUpdate()
 					if (Object->GetStalkerEnemy()->GetAttack() == false)
 					{
 						Distance = sqrt(pow(EnemyPosition.x - PlayerPosition.x, 2) + pow(EnemyPosition.z - PlayerPosition.z, 2));
-						if (Distance < 500)
+						if (Distance < 450)
 						{
-							Time += DELTA_TIME;
-							if (Time > 2)
+							Object->GetStalkerEnemy()->SetTime(Object->GetStalkerEnemy()->GetTime() + DELTA_TIME);
+							if (Object->GetStalkerEnemy()->GetTime() > 1.3)
 							{
-								PlayerHp = gameObject->GetPlayer()->GetHP();
-								PlayerHp -= Object->GetStalkerEnemy()->GetAtk();
-								gameObject->GetPlayer()->SetHP(PlayerHp);
-								Time = 0;
+								if (Object->GetStalkerEnemy()->GetDead()==false)
+								{
+									PlayerHp = gameObject->GetPlayer()->GetHP();
+									PlayerHp -= Object->GetStalkerEnemy()->GetAtk();
+									gameObject->GetPlayer()->SetHP(PlayerHp);
+									GET_SINGLE(SoundManager)->PlaySound("Screamsound", 0.3f);
+								}
+								Object->GetStalkerEnemy()->SetTime(0);
 							}
 						}
 					}
 					else if (Object->GetStalkerEnemy()->GetAttack() != false)
 					{
-						Time = 0; 
+						Object->GetStalkerEnemy()->SetTime(0);
 					}
 				}
 			}
@@ -1203,44 +1346,51 @@ void Scene::CheckWave()
 	switch (CurrentWave)
 	{
 	case 1:
-		ZCount = 3;
+		ZCount = 5;
 		STZCount = 0;
 		BrZCount = 0;
 		EnemyCount = ZCount + STZCount + BrZCount;
 		break;
+
 	case 2:
 		ZCount = 0;
-		STZCount = 0;
-		BrZCount = 2;
+		STZCount = 3;
+		BrZCount = 0;
 		EnemyCount = ZCount + STZCount + BrZCount;
 		break;
+
 	case 3:
-		ZCount = 2;
-		STZCount = 2;
-		BrZCount = 2;
+		ZCount = 5;
+		STZCount = 0;
+		BrZCount = 1;
 		EnemyCount = ZCount + STZCount + BrZCount;
+		break;
+
 	case 4:
 		ZCount = 2;
-		STZCount = 2;
-		BrZCount = 2;
+		STZCount = 1;
+		BrZCount = 3;
 		EnemyCount = ZCount + STZCount + BrZCount;
 		break;
+
 	case 5:
-		ZCount = 2;
-		STZCount = 2;
-		BrZCount = 2;
+		ZCount = 5;
+		STZCount = 3;
+		BrZCount = 3;
 		EnemyCount = ZCount + STZCount + BrZCount;
 		break;
+
 	case 6:
-		ZCount = 2;
-		STZCount = 2;
-		BrZCount = 2;
+		ZCount = 0;
+		STZCount = 4;
+		BrZCount = 5;
 		EnemyCount = ZCount + STZCount + BrZCount;
 		break;
+
 	case 7:
-		ZCount = 2;
-		STZCount = 2;
-		BrZCount = 2;
+		ZCount = 0;
+		STZCount = 10;
+		BrZCount = 8;
 		EnemyCount = ZCount + STZCount + BrZCount;
 		break;
 
@@ -1264,7 +1414,7 @@ void Scene::MakeNormal(int Wave)
 		gameObject->SetName(L"Enemy");
 		gameObject->SetCheckFrustum(false);
 		gameObject->GetTransform()->SetLocalPosition(Vec3(3500.f, -100.f, -3000.f));
-		gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+		gameObject->GetTransform()->SetLocalScale(Vec3(0.8f, 0.8f, 0.8f));
 		gameObject->GetTransform()->SetLocalRotation(Vec3(0.f, 0.f, 0.f));
 
 		gameObject->AddComponent(boxCollider);
@@ -1336,13 +1486,13 @@ void Scene::LoadAllFBX()
 	GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\beretta m9.fbx");
 	GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\Normal.fbx");
 	loadingResource++;
+	GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\m4a1_s1_test.fbx");
 	GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\StalkerZombie2.fbx");
 	loadingResource++;
 	GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\bURSERKER.fbx");
 	loadingResource++;
-	GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\m4a1_s.fbx");
-	loadingResource++;
 	GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\shotgun.fbx");
+	GET_SINGLE(Resources)->LoadFBX(L"..\\Resources\\FBX\\AWP_Dragon_Lore.fbx");
 	return;
 }
 
@@ -1361,11 +1511,6 @@ void Scene::GetAllFBX()
 	if (loadingResource == 3 && loadedResource < 3)
 	{
 		BruserZombieMesh = GET_SINGLE(Resources)->Get<MeshData>(L"..\\Resources\\FBX\\bURSERKER.fbx");
-		loadedResource++;
-	}
-	if (loadingResource == 4 && loadedResource < 4)
-	{
-		shared_ptr<MeshData> GunMesh = GET_SINGLE(Resources)->Get<MeshData>(L"..\\Resources\\FBX\\m4a1_s.fbx");
 		loadedResource++;
 	}
 }

@@ -73,8 +73,8 @@ vector<Vertex> Font::GetTextVB(string sentence)
     float drawY = -0.5f;
 
 
-    float scaleX = 100.0f;
-    float scaleY = 150.0f;
+    float scaleX = 5.0f;
+    float scaleY = 75.0f;
 
     for (size_t i = 0, k = 0; i < numLetters; ++i, k += 4)
     {
