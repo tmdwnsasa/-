@@ -67,51 +67,70 @@ void Player::Update()
 
 	if (_hp > 0)
 	{
-		if (INPUT->GetButton(KEY_TYPE::W))
+		if (INPUT->GetButtonDown(KEY_TYPE::W))
 		{
-			pos += GetTransform()->GetLook() * _speed * DELTA_TIME;
-
-			if (GET_SINGLE(SoundManager)->IsPlaying("Footwalksound") == false)
-			{
-				GET_SINGLE(SoundManager)->PlayLoopSound("Footwalksound", 0.4f);
-			}
-			_isMoving = true;
-			_moveVertical = true;
+			_frontButton = true;
 		}
 
-		if (INPUT->GetButton(KEY_TYPE::S))
+		if (INPUT->GetButtonDown(KEY_TYPE::S))
 		{
-			pos -= GetTransform()->GetLook() * _speed * DELTA_TIME;
-			if (GET_SINGLE(SoundManager)->IsPlaying("Footwalksound") == false)
-			{
-				GET_SINGLE(SoundManager)->PlayLoopSound("Footwalksound", 0.4f);
-			}
-			_isMoving = true;
-			_moveVertical = true;
+			_backButton = true;
 		}
 
-		if (INPUT->GetButton(KEY_TYPE::A))
+		if (INPUT->GetButtonDown(KEY_TYPE::A))
 		{
-			pos -= GetTransform()->GetRight() * _speed * DELTA_TIME;
-			if (GET_SINGLE(SoundManager)->IsPlaying("Footwalksound") == false)
-			{
-				GET_SINGLE(SoundManager)->PlayLoopSound("Footwalksound", 0.4f);
-			}
-			_isMoving = true;
-			_moveHorizon = true;
+			_leftButton = true;
 		}
 
-		if (INPUT->GetButton(KEY_TYPE::D))
+		if (INPUT->GetButtonDown(KEY_TYPE::D))
 		{
-			pos += GetTransform()->GetRight() * _speed * DELTA_TIME;
-			if (GET_SINGLE(SoundManager)->IsPlaying("Footwalksound") == false)
-			{
-				GET_SINGLE(SoundManager)->PlayLoopSound("Footwalksound", 0.4f);
-			}
-			_isMoving = true;
-			_moveHorizon = true;
+			_rightButton = true;
 		}
 	}
+
+	//ÀÌµ¿
+	if (_frontButton == true)
+	{
+		pos += GetTransform()->GetLook() * _speed * DELTA_TIME;
+		if (GET_SINGLE(SoundManager)->IsPlaying("Footwalksound") == false)
+		{
+			GET_SINGLE(SoundManager)->PlayLoopSound("Footwalksound", 0.4f);
+		}
+		_isMoving++;
+		_moveVertical = true;
+	}
+	if (_backButton == true)
+	{
+		pos -= GetTransform()->GetLook() * _speed * DELTA_TIME;
+		if (GET_SINGLE(SoundManager)->IsPlaying("Footwalksound") == false)
+		{
+			GET_SINGLE(SoundManager)->PlayLoopSound("Footwalksound", 0.4f);
+		}
+		_isMoving++;
+		_moveVertical = true;
+	}
+	if (_leftButton == true)
+	{
+		pos -= GetTransform()->GetRight() * _speed * DELTA_TIME;
+		if (GET_SINGLE(SoundManager)->IsPlaying("Footwalksound") == false)
+		{
+			GET_SINGLE(SoundManager)->PlayLoopSound("Footwalksound", 0.4f);
+		}
+		_isMoving++;
+		_moveHorizon = true;
+	}
+	if (_rightButton == true)
+	{
+		pos += GetTransform()->GetRight() * _speed * DELTA_TIME;
+		if (GET_SINGLE(SoundManager)->IsPlaying("Footwalksound") == false)
+		{
+			GET_SINGLE(SoundManager)->PlayLoopSound("Footwalksound", 0.4f);
+		}
+		_isMoving++;
+		_moveHorizon = true;
+	}
+
+
 	if (_moveHorizon == true && _moveVertical == true)
 	{
 		_speed = 1800;
@@ -121,19 +140,29 @@ void Player::Update()
 		_speed = 2500;
 	}
 
-	if (INPUT->GetButtonUp(KEY_TYPE::W) && _isMoving == false)
+
+	if (INPUT->GetButtonUp(KEY_TYPE::W))
 	{
-		GET_SINGLE(SoundManager)->StopLoopSound("Footwalksound");
+		_frontButton = false;
+		_isMoving--;
 	}
-	if (INPUT->GetButtonUp(KEY_TYPE::A) && _isMoving == false)
+	if (INPUT->GetButtonUp(KEY_TYPE::A))
 	{
-		GET_SINGLE(SoundManager)->StopLoopSound("Footwalksound");
+		_leftButton = false;
+		_isMoving--;
 	}	
-	if (INPUT->GetButtonUp(KEY_TYPE::S) && _isMoving == false)
+	if (INPUT->GetButtonUp(KEY_TYPE::S))
 	{
-		GET_SINGLE(SoundManager)->StopLoopSound("Footwalksound");
+		_backButton = false;
+		_isMoving--;
 	}
-	if (INPUT->GetButtonUp(KEY_TYPE::D) && _isMoving == false)
+	if (INPUT->GetButtonUp(KEY_TYPE::D))
+	{
+		_rightButton = false;
+		_isMoving--;
+	}
+
+	if (_isMoving == 0)
 	{
 		GET_SINGLE(SoundManager)->StopLoopSound("Footwalksound");
 	}
@@ -388,9 +417,9 @@ void Player::ChangeWeapon(PLAYER_WEAPON weapon, bool swap)
 			}
 		}
 		#pragma endregion
+
 		if (swap == false)
 			weapons[PLAYER_WEAPON::PISTOL] = true;
-
 	}
 
 	if (_currWeapon == PLAYER_WEAPON::SMG)
@@ -881,7 +910,7 @@ void Player::Reset()
 	_right = false;
 	_left = false;
 	_jump = false;
-	_isMoving = false;
+	_isMoving = 0;
 	_running = false;
 	_stamina = 100;
 

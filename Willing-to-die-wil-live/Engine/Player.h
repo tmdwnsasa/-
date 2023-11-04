@@ -90,6 +90,13 @@ public:
 private:
 	// Sound
 	bool			_reloadsound = false;
+
+	// Button
+	bool			_frontButton = false;
+	bool			_backButton = false;
+	bool			_leftButton = false;
+	bool			_rightButton = false;
+
 	// Move
 	bool			_front = false;
 	bool			_back = false;
@@ -98,7 +105,7 @@ private:
 	bool			_moveHorizon = false;
 	bool			_moveVertical = false;
 	bool			_jump = false;
-	bool			_isMoving = false;
+	int				_isMoving = 0;
 	bool			_running = false;
 	float			_stamina = 100;
 
