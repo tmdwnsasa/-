@@ -170,7 +170,7 @@ void Player::Update()
 	//점프 구현 필요
 	if (INPUT->GetButton(KEY_TYPE::SPACE))
 	{
-		pos += GetTransform()->GetUp() * _speed * DELTA_TIME;
+		//pos += GetTransform()->GetUp() * _speed * DELTA_TIME;
 		//if (!_jump)
 		//{
 		//	pos += GetTransform()->GetUp() * _speed * DELTA_TIME;
@@ -207,11 +207,11 @@ void Player::Update()
 		_reloading = true;
 	}
 
-	if (INPUT->GetButtonDown(KEY_TYPE::J))
-		_hp -= 10;
+	//if (INPUT->GetButtonDown(KEY_TYPE::J))
+	//	_hp -= 10;
 
-	if (INPUT->GetButtonDown(KEY_TYPE::K))
-		_hp += 10;
+	//if (INPUT->GetButtonDown(KEY_TYPE::K))
+	//	_hp += 10;
 
 
 	if (INPUT->GetButtonDown(KEY_TYPE::KEY_1))
